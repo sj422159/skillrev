@@ -2,13 +2,17 @@
 namespace App\Http\Controllers\nontechmanager\hostel;
 
 use App\Http\Controllers\Controller;
+use App\Imports\ExpenseItemImportNew;
 use Illuminate\Http\Request;
 use App\Models\HostelExpenseSubcategory;
 use Illuminate\Support\Facades\DB;
 use App\Models\ExpenseItem;
-use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
+use App\Imports\UsersImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HostelExpenseController extends Controller
 {
@@ -199,54 +203,24 @@ public function downloadTemplate()
     $filePath = storage_path('app/temp/expense_item_template.xlsx');
     return response()->download($filePath, 'expense_item_template.csv');
 }
-
 public function uploadExpenseItems(Request $request)
 {
-    if ($request->hasFile('excel_file')) {
-        try {
-            $file = $request->file('excel_file');
-            $fileHandle = fopen($file->getRealPath(), 'r');
+    // Validate the uploaded file format
+    $validator = Validator::make($request->all(), [
+        'excel_file' => 'required|file|mimes:xlsx,xls,csv|max:5000',
+    ]);
 
-            if (!$fileHandle) {
-                return back()->with('alert', 'Could not open the file. Please ensure it is a valid CSV file.');
-            }
-
-            $headerSkipped = false;
-            $rowIndex = 0;
-
-            while (($row = fgetcsv($fileHandle, 1000, ',')) !== false) {
-                // Skip header row
-                if (!$headerSkipped) {
-                    $headerSkipped = true;
-                    continue;
-                }
-
-                // Check row format
-                if (count($row) != 4) {
-                    fclose($fileHandle);
-                    return back()->with('alert', 'Incorrect file format in row '.($rowIndex + 1).'. Expected 4 columns but got '.count($row).'. Row content: ' . implode(", ", $row));
-                }
-
-                // Insert row data into database
-                DB::table('expenseitems')->insert([
-                    'group' => $row[0],
-                    'category' => $row[1],
-                    'subcategory' => $row[2],
-                    'items' => $row[3],
-                ]);
-
-                $rowIndex++;
-            }
-
-            fclose($fileHandle);
-            return back()->with('success', 'Expense items imported successfully!');
-        } catch (\Exception $e) {
-            return back()->with('alert', 'An error occurred: ' . $e->getMessage());
-        }
+    if ($validator->fails()) {
+        return back()->with('alert', 'Invalid file format. Please upload a valid Excel or CSV file.');
     }
 
-    return back()->with('alert', 'No file uploaded or file is invalid.');
+    try {
+        Excel::import(new UsersImport, $request->file('excel_file'));
+        return back()->with('success', 'Expense items imported successfully!');
+    } catch (\Exception $e) {
+        return back()->with('alert', 'Error uploading expense items: ' . $e->getMessage());
+    }
+    
+    
 }
-
-
 }

@@ -59,20 +59,12 @@
     <div>
         <h3>Bulk Upload</h3>
         <form action="{{ url('nontech/manager/hostel/expense/item/upload') }}" method="POST" enctype="multipart/form-data">
-            @csrf
+    @csrf
+    <label for="excel_file">Upload CSV File:</label>
+    <input type="file" name="excel_file" id="excel_file" required>
+    <button type="submit">Upload</button>
+</form>
 
-            <!-- Download Template Button -->
-            <a href="{{ url('nontech/manager/hostel/expense/item/template') }}" class="btn btn-info mb-3">Download Template</a>
-
-            <!-- File Upload Input -->
-            <div class="mb-3">
-                <label for="excel_file" class="form-label">Upload CSV File</label>
-                <input type="file" class="form-control" name="excel_file" id="excel_file" accept=".csv" required>
-            </div>
-
-            <!-- Submit Button for Bulk Upload -->
-            <button type="submit" class="btn btn-success">Upload & Save Items</button>
-        </form>
     </div>
 </div>
 
