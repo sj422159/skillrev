@@ -1,0 +1,444 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url(index_page_image.jpg);
+    background-size: cover;
+    background-position: center;
+}
+.navbar{
+    position: absolute;
+}
+
+#input_box input[type="password"],
+#input_box input[type="text"]{
+    width: 100%;
+}
+
+
+.login{
+    width: 420px;
+    background: rgba(255, 255, 255, .4);
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(40px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    color: rgb(45,45,45);
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.login h1{
+    font-size: 55px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.login h2{
+    font-size: 36.5px;
+    font-weight: 800;
+    text-align: center;
+}
+
+.login .input_box{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.input_box input{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    font-size: 20px;
+    color: #000;
+    padding: 20px 45px 20px 20px;
+}
+
+.input_box input::placeholder{
+    color: #000;
+}
+
+.input_box i{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.login .register{
+    font-size: 14px;
+    text-align: center;
+    margin: 20px 0 15px;
+    font-weight: 500;
+}
+
+.register p a{
+    color: rgb(45,45,45);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.register p a:hover{
+    color: orange;
+}
+
+.drop_down{
+    position: absolute;
+    width: 100%;
+    height: 45px;
+    background-color: #ffffff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 20px;
+    color: #333;
+    font-weight: 800;
+    padding: 0px 0px 0px 20px;
+
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 25px top 50%;
+    background-size: 0.65rem auto;
+}
+
+.drop_down .opt{
+    position: absolute;
+    top: 70px;
+    width: 100%;
+    height: 45px;
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    border-radius: 50px;
+    overflow: hidden;
+    padding: 12px 20px;
+}
+
+.drop_down .opt:hover{
+    font-weight: bold;
+    color: orange;
+}
+
+.login .btn{
+    width: 100%;
+    height: 45px;
+    background-color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 20px;
+    color: #333;
+    font-weight: 800;
+}
+
+.login .btn:hover{
+    font-size: 23px;
+    /* scale: 1.08; */
+    background-color: orange;
+    color: white;
+}
+
+/* Switch Light
+==========================*/
+.switch {
+    position: relative;
+    display: block;
+    vertical-align: top;
+    width: 100px;
+    height: 30px;
+    padding: 3px;
+    margin: 0 10px 10px 0;
+    background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
+    background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
+    border-radius: 18px;
+    box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+  }
+  .switch-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+  .switch-label {
+    position: relative;
+    display: block;
+    height: inherit;
+    font-size: 10px;
+    text-transform: uppercase;
+    background: #eceeef;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+  }
+
+  .switch-label:before, .switch-label:after {
+    position: absolute;
+    top: 50%;
+    margin-top: -.5em;
+    line-height: 1;
+    -webkit-transition: inherit;
+    -moz-transition: inherit;
+    -o-transition: inherit;
+    transition: inherit;
+  }
+  .switch-label:before {
+    content: attr(data-off);
+    right: 11px;
+    color: #aaaaaa;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+  }
+  .switch-label:after {
+    content: attr(data-on);
+    left: 11px;
+    color: #FFFFFF;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+  }
+  .switch-input:checked ~ .switch-label {
+       background: #E1B42B;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+  .switch-input:checked ~ .switch-label:before {
+    opacity: 0;
+  }
+  .switch-input:checked ~ .switch-label:after {
+    opacity: 1;
+  }
+  .switch-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
+    background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
+    border-radius: 100%;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+  }
+  .switch-handle:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -6px 0 0 -6px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
+    background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
+    border-radius: 6px;
+    box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+  }
+  .switch-input:checked ~ .switch-handle {
+    left: 74px;
+    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+  }
+   /* Transition
+        ========================== */
+        .switch-label, .switch-handle {
+            transition: All 0.3s ease;
+            -webkit-transition: All 0.3s ease;
+            -moz-transition: All 0.3s ease;
+            -o-transition: All 0.3s ease;
+          }
+
+.switch-light {
+	padding: 0;
+	background: #FFF;
+	background-image: none;
+}
+.switch-light .switch-label {
+	background: #FFF;
+	border: solid 2px #eceeef;
+	box-shadow: none;
+}
+.switch-light .switch-label:after {
+	color: #9370DB;
+}
+.switch-light .switch-label:before {
+	right: inherit;
+	left: 11px;
+}
+.switch-light .switch-handle {
+	top: 6px;
+	left: 72px;
+	background: #dadada;
+	width: 22px;
+	height: 22px;
+	box-shadow: none;
+}
+.switch-light .switch-handle:before {
+	background: #eceeef;
+}
+.switch-light .switch-input:checked ~ .switch-label {
+	background: #FFF;
+	border-color: #9370DB;
+}
+.switch-light .switch-input:checked ~ .switch-handle {
+	left: 72px;
+	box-shadow: none;
+	background: #9370DB
+}
+.switch-light .switch-input:checked ~ .switch-handle:before {
+	background: rgba(255,255,255,0.7);
+}
+
+/* media query */
+@media(max-width: 349px){
+  .logo{
+    font-size: 30px;
+  }
+}
+
+
+@media(min-width:375px) and (max-width: 430px) {
+  .login{
+    padding: 15px 10px;
+    height: 530px;
+    width: 340px;
+  }
+
+  body{
+    background-color: #0093E9;
+    background-image: linear-gradient(118deg, #0093E9 10%, #80D0C7 90%);
+
+  }
+
+  .logo{
+    font-size: 32px;
+  }
+  .logo_brand{
+    font-size: 33px;
+  }
+}
+
+@media(min-width: 431px) and (max-width: 767px){
+  .logo{
+    font-size: 40px;
+  }
+  body{
+    background-color: #0093E9;
+    background-image: linear-gradient(118deg, #0093E9 10%, #80D0C7 90%);
+
+  }
+}
+
+@media(min-width: 360px) and (max-width: 374px){
+  body{
+    background-color: #0093E9;
+    background-image: linear-gradient(118deg, #0093E9 10%, #80D0C7 90%);
+
+  }
+
+  .login{
+    padding: 0px 2px;
+    height: 530px;
+    width: 340px;
+  }
+
+  .logo{
+    font-size: 38px;
+  }
+}
+
+@media(min-width: 768px) and (max-width: 1023px)
+{
+  body{
+    background-color: #0093E9;
+    background-image: linear-gradient(118deg, #0093E9 10%, #80D0C7 90%);
+
+  }
+
+  .login{
+    height: 610px;
+    margin-top:auto;
+  }
+
+  .logo{
+    font-size: 65px;
+  }
+
+  .navbar{
+    padding-top: 3rem;
+  }
+}
+
+
+@media(min-width: 1024px) and (max-width: 1279px)
+{body{
+  background-color: #0093E9;
+  background-image: linear-gradient(118deg, #0093E9 10%, #80D0C7 90%);
+
+}
+
+.login{
+  height: 633px;
+  width: 523px;
+  margin-top: 100px;
+}
+
+.login h1{
+  font-size: 65px;
+  padding-top: 15px;
+}
+
+.login .btn{
+  font-size: 35px;
+  height: 65px;
+}
+
+.login .input_box{
+  height: 65px;
+}
+
+.login .drop_down{
+   height: 65px;
+}
+
+.switch{
+  height: 37px;
+}
+
+.logo{
+  font-size: 65px;
+}
+
+.navbar{
+  padding-top: 1rem;
+}
+
+}
+
+@media(min-width: 1280px){
+   .login{
+    margin-top: 50px;
+   }
+
+   .logo{
+    font-size: 65px;
+  }
+}
+
+@media(min-width: 1920px){
+  .logo{
+    font-size: 65px;
+  }
+}
