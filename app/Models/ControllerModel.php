@@ -13,16 +13,17 @@ class ControllerModel extends Model
 
     protected $fillable = [
         'name', 
+        'Controller_role_id', 
         'role', 
         'email', 
-        'password',
+        'password', 
         'number',
+        'aid', // Make sure 'aid' is fillable as well
     ];
 
-    // In your Controller model (e.g., Controller.php)
-public function expenses()
-{
-    return $this->hasMany(Expense::class);
-}
-
+    // Define the relationship with Expense
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }

@@ -92,18 +92,20 @@
                 <div class="modal-body">
                     <form id="createForm">
                         @csrf
+                        <input type="hidden" name="aid" value="{{ session()->get('ADMIN_ID') }}"> <!-- Hidden field for aid -->
                         <div class="form-group">
                             <label for="name">Name:</label>
                             <input type="text" class="form-control" name="name" id="name" required>
                         </div>
                         <div class="form-group">
                             <label for="role">Role:</label>
-                            <select class="form-control" name="role" id="role" required>
+                            <select class="form-control" name="role" id="role" required onchange="updateRoleId()">
                                 <option value="">Select a role</option>
                                 @foreach($roles as $role)
-                                    <option value="{{ $role->role_name }}">{{ $role->role_name }}</option>
+                                <option value="{{ $role->role_name }}" data-role-id="{{ $role->id }}">{{ $role->role_name }}</option>
                                 @endforeach
                             </select>
+                            <input type="hidden" name="role_id" id="role_id"> <!-- Hidden role_id field -->
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
@@ -120,118 +122,136 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Responsive modal -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Controller</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editForm">
-                        @csrf
-                        <input type="hidden" name="id" id="editId">
-                        <div class="form-group">
-                            <label for="editName">Name:</label>
-                            <input type="text" class="form-control" name="name" id="editName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editRole">Role:</label>
-                            <select class="form-control" name="role" id="editRole" required>
-                                <option value="">Select a role</option>
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->role_name }}">{{ $role->role_name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="editEmail">Email:</label>
-                            <input type="email" class="form-control" name="email" id="editEmail" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="editNumber">Mobile Number:</label>
-                            <input type="text" class="form-control" name="number" id="editNumber" required>
-                        </div>
-                        <button type="submit" class="btn btn-warning">Update</button>
-                    </form>
-                </div>
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Controller</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    @csrf
+                    <input type="hidden" name="id" id="editId">
+                    <input type="hidden" name="aid" value="{{ session()->get('ADMIN_ID') }}"> 
+                    <div class="form-group">
+                        <label for="editName">Name:</label>
+                        <input type="text" class="form-control" name="name" id="editName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editRole">Role:</label>
+                        <select class="form-control" name="role" id="editRole" required onchange="updateEditRoleId()">
+                            <option value="">Select a role</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->role_name }}" data-role-id="{{ $role->id }}">{{ $role->role_name }}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="role_id" id="editRoleId">
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email:</label>
+                        <input type="email" class="form-control" name="email" id="editEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editNumber">Mobile Number:</label>
+                        <input type="text" class="form-control" name="number" id="editNumber" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Update</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
+<script>
+    function updateRoleId() {
+        const selectedRole = document.getElementById("role").selectedOptions[0];
+        const roleId = selectedRole.getAttribute("data-role-id");
+        document.getElementById("role_id").value = roleId;
+    }
+
+    function updateEditRoleId() {
+        const selectedRole = document.getElementById("editRole").selectedOptions[0];
+        const roleId = selectedRole.getAttribute("data-role-id");
+        document.getElementById("editRoleId").value = roleId;
+    }
+</script>
     <script>
-    $(document).ready(function() {
-        // AJAX for creating a new controller
-        $('#createForm').on('submit', function(event) {
-            event.preventDefault();
 
-            $.ajax({
-                url: '{{ route('controller.store') }}',
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    $('#createModal').modal('hide');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    alert('Error: ' + xhr.responseText);
-                }
-            });
-        });
+        $(document).ready(function() {
+            // AJAX for creating a new controller
+            $('#createForm').on('submit', function(event) {
+                event.preventDefault();
 
-        // Fill edit modal with current data
-        $('.btn-edit').on('click', function() {
-            var id = $(this).data('id');
-            var name = $(this).data('name');
-            var role = $(this).data('role');
-            var email = $(this).data('email');
-            var number = $(this).data('number');
-
-            $('#editId').val(id);
-            $('#editName').val(name);
-            $('#editRole').val(role);
-            $('#editEmail').val(email);
-            $('#editNumber').val(number);
-        });
-
-        // AJAX for updating a controller
-        $('#editForm').on('submit', function(event) {
-            event.preventDefault();
-
-            $.ajax({
-                url: '{{ route('controller.update') }}', // Define this route in web.php
-                type: 'PUT', // Use PUT for updating
-                data: $(this).serialize(),
-                success: function(response) {
-                    $('#editModal').modal('hide');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    alert('Error: ' + xhr.responseText);
-                }
-            });
-        });
-
-        // AJAX for deleting a controller
-        $('.btn-delete').on('click', function() {
-            var id = $(this).data('id');
-            if (confirm('Are you sure you want to delete this controller?')) {
                 $.ajax({
-                    url: '{{ route('controller.destroy', '') }}/' + id,
-                    type: 'DELETE',
+                    url: '{{ route('controller.store') }}',
+                    type: 'POST',
+                    data: $(this).serialize(),
                     success: function(response) {
+                        $('#createModal').modal('hide');
                         location.reload();
                     },
                     error: function(xhr) {
                         alert('Error: ' + xhr.responseText);
                     }
                 });
-            }
+            });
+
+            // Fill edit modal with current data
+            $('.btn-edit').on('click', function() {
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                var role = $(this).data('role');
+                var email = $(this).data('email');
+                var number = $(this).data('number');
+
+                $('#editId').val(id);
+                $('#editName').val(name);
+                $('#editRole').val(role);
+                $('#editEmail').val(email);
+                $('#editNumber').val(number);
+            });
+
+            // AJAX for updating a controller
+            $('#editForm').on('submit', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: '{{ route('controller.update') }}',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#editModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Error: ' + xhr.responseText);
+                    }
+                });
+            });
+
+            // AJAX for deleting a controller
+            $('.btn-delete').on('click', function() {
+                var id = $(this).data('id');
+                
+                if (confirm("Are you sure you want to delete this controller?")) {
+                    $.ajax({
+                        url: '{{ route('controller.destroy', ':id') }}'.replace(':id', id),
+                        type: 'DELETE',
+                        data: { id: id, _token: '{{ csrf_token() }}' },
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function(xhr) {
+                            alert('Error: ' + xhr.responseText);
+                        }
+                    });
+                }
+            });
         });
-    });
     </script>
 </body>
 </html>
