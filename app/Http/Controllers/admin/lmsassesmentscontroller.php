@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\assesments;
+use App\Models\training;
 use App\Models\assesmentsections;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -13,139 +14,159 @@ use Redirect,Response;
 class lmsassesmentscontroller extends Controller
 {
 
-    public function  colist(Request $request){
-        $sesid=session()->get('ADMIN_ID');
-        $result['data']=DB::table('assesments')->where('status',1)->where('aid',$sesid)->get();
-        return view('admin.assesments',$result);
-    }
+  public function colist(Request $request) {
+    // Get the session value for either ADMIN_ID or Controller_ID based on the user role
+    $aid = session()->get('ADMIN_ID');  // For admin
+    $controller_id = session()->get('Controller_ID');  // For controller
 
-   public function createassesment(Request $request,$id=''){
-   	  $sesid=session()->get('ADMIN_ID');
-   	    if($id>0){
-            $arr=assesments::where(['id'=>$id])->get();
-            $result['id']=$arr['0']->id;
-            $result['assesmenttotaltime']=$arr['0']->time;
-            $result['atype']=$arr['0']->asstype;
-            $result['ttype']=$arr['0']->ttype;
-            $result['training']=$arr['0']->train;
-            $result['assesmentimage']=$arr['0']->img;
-            $result['sdesc']=$arr['0']->sdes;
-            $result['mid']=$arr['0']->mid;
-        
-          
+    // Fetch assessments based on the logged-in user's access (aid or controller_id)
+    $result['data'] = DB::table('assesments')
+        ->where('status', 1)
+        ->where(function($query) use ($aid, $controller_id) {
+            // Ensure that only the admin or controller can access their respective data
+            $query->where('aid', $aid)
+                  ->orWhere('Controller_ID', $controller_id);
+        })
+        ->get();
 
-         }else{
-           $result['id']='';
-           $result['assesmenttotaltime']='';
-           $result['atype']='';
-           $result['ttype']='';
-           $result['training']='';
-           $result['assesmentimage']='';
-           $result['sdesc']='';
-           $result['mid']='';
+    return view('admin.assesments', $result);  // Return the filtered data to the view
+}
 
-         }
+public function createassesment(Request $request, $id = '') {
+  $sesid = session()->get('ADMIN_ID');  // Get admin ID from session
+  $controller_id = session()->get('Controller_ID');  // Get controller ID from session
+ // Check if it's an admin or a controller
+ if ($sesid) {
+  $result['managers'] = DB::table('managers')->where('aid', $sesid)->get();  // For admin
+} elseif ($controller_id) {
+  $result['managers'] = DB::table('managers')->where('controller_id', $controller_id)->get();  // For controller
+} else {
+  $result['managers'] = [];  // Default case if no valid session is found
+}
+  if ($id > 0) {
+      $arr = assesments::where(['id' => $id])->get();
+      $result['id'] = $arr['0']->id;
+      $result['assesmenttotaltime'] = $arr['0']->time;
+      $result['atype'] = $arr['0']->asstype;
+      $result['ttype'] = $arr['0']->ttype;
+      $result['training'] = $arr['0']->train;
+      $result['assesmentimage'] = $arr['0']->img;
+      $result['sdesc'] = $arr['0']->sdes;
+      $result['mid'] = $arr['0']->mid;
+  } else {
+      $result['id'] = '';
+      $result['assesmenttotaltime'] = '';
+      $result['atype'] = '';
+      $result['ttype'] = '';
+      $result['training'] = '';
+      $result['assesmentimage'] = '';
+      $result['sdesc'] = '';
+      $result['mid'] = '';
+  }
 
-     $result['trainings']=DB::table('trainingtypes')->get();    
-     $result['asstype']=DB::table('asstypes')->get();
-     $result['managers']=DB::table('managers')->where('aid',$sesid)->get();
-     return view('admin.createassesment',$result);
-    }
+  // Retrieve necessary data for creating the assessment
+  $result['trainings'] = DB::table('trainingtypes')->get();
+  $result['asstype'] = DB::table('asstypes')->get();
+  
+  
+  return view('admin.createassesment', $result);
+}
+public function createmodule(Request $request) {
+  $sesid = session()->get('ADMIN_ID');  
+  $controller_id = session()->get('Controller_ID');  
 
-    public function gettrainings(){
-   	    $id = $_GET['id'];
-        $mid = $_GET['mid'];
-        $res = DB::table('trainings')->where('trainingtype',$id)->where('mid',$mid)->get();
-        return Response::json($res);
-    }
+  // Determine if it's a new assessment or updating an existing one
+  if ($request->post('id') > 0) {
+      $model = assesments::find($request->post('id'));
+  } else {
+      $model = new assesments();
+  }
 
-    public  function getdomain(request $request){
-        $cid = $request->post('cid');
-        $state = DB::table('domains')->where('category', $cid)->get();
-        $html='<option value="">Select</option>';
-        foreach($state as $list){
-        echo  $html='<option value="'.$list->id.'">'.$list->domain.'</option>';
-        }
-    } 
+  // Get training name from the database
+  $name = DB::table('trainings')->where('id', $request->post('training'))->first();
+  if ($name) {
+      $assname = $request->post('atype') . ' - ' . $name->trainingname;
+  } else {
+      return back()->withErrors(['training' => 'Training program not found.']);
+  }
 
-    public  function getskillset(request $request){
-        $sid = $request->post('sid');
-        $main=explode(',',$sid);
-        $city = DB::table('skillsets')->whereIn('domain', $main)->get();
-        $html='<option value="">Select</option>';
-        foreach($city as $list){
-        echo  $html='<option value="'.$list->id.'">'.$list->skillset.'</option>';
-        }
-    }
+  $result['assesmentname'] = $assname;
+  $result['assesmenttotaltime'] = $request->post('assesmenttotaltime');
+  $result['trainingtype'] = $request->post('ttype');
 
-    public  function getskillattribute(request $request){
-        $tid = $request->post('tid');
-        $main=explode(',',$tid);
-        $city = DB::table('skillattributes')->whereIn('skillset', $main)->get();
-        $html='<option value="">Select</option>';
-        foreach($city as $list){
-        echo  $html='<option value="'.$list->id.'">'.$list->skillattribute.'</option>';
-        }
-    }
+  if ($sesid) {
+      $model->aid = $sesid;  
+      $model->controller_id = 0;  
+  } else if ($controller_id) {
+      $model->controller_id = $controller_id;  
+      $model->aid = 0;  
+  }
 
-    public function createmodule(Request $request){
-      if($request->post('id')>0){
-        $model=assesments::find($request->post('id'));
-      }else{
-        $model=new assesments();
-      }
-      
-      $name=DB::table('trainings')->where('id',$request->post('training'))->get();
-      $assname=$request->post('atype').' - '.$name[0]->trainingname;
+  $model->assesmentname = $assname;
+  if ($request->hasfile('assesmentimage')) {
+      $image = $request->file('assesmentimage');
+      $ext = $image->extension();
+      $image_name = time() . '.' . $ext;
+      $image->move(public_path() . '/assesmentimages', $image_name);
+      $model->img = $image_name;
+  }
 
-      $result['assesmentname']=$assname;
-      $result['assesmenttotaltime']=$request->post('assesmenttotaltime');
-      $result['trainingtype']=$request->post('ttype');
-      $sesid=session()->get('ADMIN_ID');
+  $model->asstype = $request->post('atype');
+  $model->ttype = $request->post("ttype");
+  $model->train = $request->post('training');
+  $model->time = $request->post('assesmenttotaltime');
+  $model->sdes = $request->post('sdesc');
+  $model->mid = $request->post('mid');
+  $model->save();
 
-      $model->aid=$sesid;
-      $model->assesmentname=$assname;
-       if($request->hasfile('assesmentimage')){  
-            $image=$request->file('assesmentimage');
-            $ext=$image->extension();
-            $image_name=time().'.'.$ext;
-            $image->move(public_path().'/assesmentimages',$image_name);
-            $model->img=$image_name;
-         }
-         
-      $model->asstype=$request->post('atype');
-      $model->ttype=$request->post("ttype");
-      $model->train=$request->post('training');
-      $model->time=$request->post('assesmenttotaltime');
-      $model->sdes=$request->post('sdesc'); 
-      $model->mid=$request->post('mid'); 
-      $model->save();
+  // Get the saved assessment details
+  $result['data'] = DB::table('assesments')->where(['id' => $model->id])->first();
+  if (!$result['data']) {
+      return back()->withErrors(['assesment' => 'Assessment not found after saving.']);
+  }
 
-      $result['data']=DB::table('assesments')->where(['id'=>$model->id])->get();
+  // Fetch sections, categories, and other related data
+  $result['sections'] = DB::table('assesmentsections')
+      ->where(['ass_id' => $result['data']->id])
+      ->join('skillsets', 'assesmentsections.skillset', '=', 'skillsets.id')
+      ->join('domains', 'assesmentsections.domain', '=', 'domains.id')
+      ->select('skillsets.skillset', 'domains.domain', 'assesmentsections.id', 'assesmentsections.sectionname', 
+               'assesmentsections.skillset', 'assesmentsections.totalquestions', 'assesmentsections.sectionpass', 
+               'assesmentsections.sectionduration', 'assesmentsections.ordering')
+      ->get();
 
-       $result['sections']=DB::table('assesmentsections')->where(['ass_id'=>$result['data'][0]->id])
-       ->join('skillsets','assesmentsections.skillset','=','skillsets.id')
-       ->join('domains','assesmentsections.domain','=','domains.id')
-       ->select('skillsets.skillset','domains.domain','assesmentsections.id','assesmentsections.sectionname','assesmentsections.skillset','assesmentsections.totalquestions','assesmentsections.sectionpass','assesmentsections.sectionduration','assesmentsections.ordering')->get();
-        
-       $managerclassid=DB::table('managers')->where('id',$request->post('mid'))->get();
-       $result['categories']=DB::table('categories')->where('id',$managerclassid[0]->classid)->get();
+  $managerclassid = DB::table('managers')->where('id', $request->post('mid'))->first();
+  if ($managerclassid) {
+      $result['categories'] = DB::table('categories')->where('id', $managerclassid->classid)->get();
+  } else {
+      $result['categories'] = [];
+  }
 
-       $trainings=DB::table('trainings')->where('id',$request->post('training'))->get();
-       $result['domains']=DB::table('domains')->where('id',$trainings[0]->domain)->get();
+  $trainings = DB::table('trainings')->where('id', $request->post('training'))->first();
+  if ($trainings) {
+      $result['domains'] = DB::table('domains')->where('id', $trainings->domain)->get();
+  } else {
+      $result['domains'] = [];
+  }
 
-       if ($request->post("ttype")=="1") {
-          $result['skillsets']=DB::table('skillsets')->where('id',$trainings[0]->skillset)->get(); 
-          $result['skillattributes']=DB::table('skillattributes')->where('id',$trainings[0]->skillattribute)->get(); 
-       } else {
-          $skillsetid=explode("##",$trainings[0]->skillset);
-          $result['skillsets']=DB::table('skillsets')->whereIn('id',$skillsetid)->get(); 
-          $result['skillattributes']=[]; 
-       }
-       
-      return view('admin.assesmentsection',$result);
+  if ($request->post("ttype") == "1") {
+      $result['skillsets'] = DB::table('skillsets')->where('id', $trainings->skillset ?? null)->get();
+      $result['skillattributes'] = DB::table('skillattributes')->where('id', $trainings->skillattribute ?? null)->get();
+  } else {
+      $skillsetid = explode("##", $trainings->skillset ?? "");
+      $result['skillsets'] = DB::table('skillsets')->whereIn('id', $skillsetid)->get();
+      $result['skillattributes'] = [];
+  }
 
-   }
+  return view('admin.assesmentsection', $result);
+}
+public function gettrainings()
+{
+    // Fetch the necessary training data
+    $trainings = training::all(); // Replace with actual logic to fetch trainings
+    return response()->json($trainings);
+}
+
 
     public function delete(Request $request,$id=''){
         $model=assesments::find($id);

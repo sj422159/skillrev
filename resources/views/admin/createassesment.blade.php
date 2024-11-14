@@ -1,4 +1,4 @@
-@extends('admin/layout')
+@extends('controller/elayout')
 @section('title','Create Assesment')
 @section('Dashboard_select','active')
 @section('container')
@@ -52,7 +52,7 @@
                     </div>
                      <div class="col-12 col-sm-3 mt-4 mt-sm-0">
                         <label for="trains">Training Program</label>
-                        <select id="trains" name="training" type="text" data-val="{{$training}}" class="form-control" required="true">
+                        <select id="trains" name="training" type="text" data-val="{{$training}}" class="form-control" requied="true" >
                             <option value="">Select</option>
                         </select>
                     </div>

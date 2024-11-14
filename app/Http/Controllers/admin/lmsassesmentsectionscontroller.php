@@ -194,26 +194,43 @@ class lmsassesmentsectionscontroller extends Controller
 
    }
 
-   public function comodule(Request $request){
-     $count= count($request->post('sectionid'));
-     $sectionid=$request->post('sectionid');
-     $section = array_map('intval', $sectionid);
-     $order=$request->post('order');
-     $ordering = array_map('intval', $order);
-     //return $ordering;
-     for($i=0;$i<$count;$i++){
-      $model=assesmentsections::find($section[$i]);
-      $model->ordering=$ordering[$i];
-      $model->save();
-     }
-
-    $model=assesments::find($request->post('id'));
-    $model->status=1;
-    $model->save();
-
-
-    return redirect('admin/assesments');
+   public function comodule(Request $request)
+   {
+       // Validate if the required data exists in the request
+       $request->validate([
+           'sectionid' => 'required|array', // Ensure 'sectionid' is an array
+           'order' => 'required|array',     // Ensure 'order' is an array
+           'id' => 'required|exists:assesments,id',  // Validate that 'id' exists in the assesments table
+       ]);
+   
+       // Get the values from the request
+       $sectionid = $request->post('sectionid');
+       $order = $request->post('order');
+       
+       // Convert section IDs and orders to integers
+       $section = array_map('intval', $sectionid);
+       $ordering = array_map('intval', $order);
+       
+       // Loop through each section and update its ordering
+       foreach ($section as $index => $sectionId) {
+           $model = assesmentsections::find($sectionId);
+           if ($model) {  // Ensure the section exists
+               $model->ordering = $ordering[$index];
+               $model->save();
+           }
+       }
+   
+       // Update the assesment status after modifying the sections
+       $assesment = assesments::find($request->post('id'));
+       if ($assesment) {  // Ensure the assesment exists
+           $assesment->status = 1;
+           $assesment->save();
+       }
+   
+       // Redirect to the assesments page
+       return redirect('admin/assesments');
    }
+   
 
     public function delete(Request $request,$id){
        $model=assesmentsections::find($id);

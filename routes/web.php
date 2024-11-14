@@ -1683,7 +1683,7 @@ Route::post('admin/analytics/competition/fetch',[admincompetitionanalyticcontrol
 Route::get('admin/competition/bysupervisor/{id}',[admincompetitionanalyticcontroller::class,'getcompetition']);
 
 
-Route::get('admin/assesments',[lmsassesmentscontroller::class,'colist']);
+Route::get('admin/assesments',[lmsassesmentscontroller::class,'colist'])->name('admin.assesments');
 Route::get('admin/assesment/createassesment',[lmsassesmentscontroller::class,'createassesment']);
 Route::get('admin/assesment/edit/{id}',[lmsassesmentscontroller::class,'createassesment']);
 Route::get('admin/assesment/delete/{id}',[lmsassesmentscontroller::class,'delete']);
