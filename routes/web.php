@@ -1646,7 +1646,6 @@ Route::get('admin/skillattribute/getskillattribute/{id}',[AcademicController::cl
 
 Route::get('admin/assignments',[AcademicController::class,'reports']);
 Route::post('admin/assignments/trainingwise',[AcademicController::class,'fetchstu']);
-
 Route::get('admin/reports',[lmsstudentassignationscontroller::class,'reports']);
 Route::get('admin/classby/section/{id}',[lmsstudentassignationscontroller::class,'classby']);
 Route::post('admin/reports/sectionwise',[lmsstudentassignationscontroller::class,'fetchstu']);
@@ -1659,7 +1658,6 @@ Route::get('admin/attendance/view/months',[AcademicController::class,'months']);
 Route::any('admin/attendance/view/sections',[AcademicController::class,'getsections']);
 Route::any('admin/attendance/view/dates',[AcademicController::class,'getdates']);
 Route::post('admin/attendance/view/students/bydate',[AcademicController::class,'students']);
-
 
 Route::get('admin/competition/reports',[admincompetitionreportcontroller::class,'competition']);
 Route::post('admin/competition/reports/view',[admincompetitionreportcontroller::class,'competitionreports']);

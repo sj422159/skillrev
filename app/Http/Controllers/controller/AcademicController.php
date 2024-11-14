@@ -5,30 +5,41 @@ namespace App\Http\Controllers\controller;
 use App\Models\ControllerModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // For authentication
-use Illuminate\Support\Facades\Hash; // For password hashing
-use App\Models\User; // Assuming you have a User model for the academic controller
+use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Hash; 
+use App\Models\User; 
 use App\Models\Controllers;
+use App\Models\category;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 class AcademicController extends Controller
 {
     public function group(Request $request)
-            {
-                \Log::info("Entering group method");
-                
-                if (!session()->has('Controller_ID')) {
-                    \Log::info("Controller_ID not set in session");
-                    return redirect()->route('home')->with('error', 'Controller ID is not set in the session.');
-                }
-            
-                $aid = session()->get('Controller_ID');
-                \Log::info("Controller_ID session value: " . $aid);
-            
-                $result['group'] = DB::table('groups')->where('aid', $aid)->get();
-                return view('admin.group', $result);
-            }
+    {
+        \Log::info("Entering group method");
+    
+        // Check if either 'ADMIN_ID' or 'Controller_ID' is set in the session
+        if (session()->has('ADMIN_ID')) {
+            $aid = session()->get('ADMIN_ID');
+            \Log::info("Using ADMIN_ID session value: " . $aid);
+    
+            // Fetch groups created by the admin (matching `aid` with `ADMIN_ID`)
+            $result['group'] = DB::table('groups')->where('aid', $aid)->get();
+        } elseif (session()->has('Controller_ID')) {
+            $controllerId = session()->get('Controller_ID');
+            \Log::info("Using Controller_ID session value: " . $controllerId);
+    
+            // Fetch groups created by the controller (matching `controller_id` with `Controller_ID`)
+            $result['group'] = DB::table('groups')->where('controller_id', $controllerId)->get();
+        } else {
+            \Log::info("Neither ADMIN_ID nor Controller_ID is set in session");
+            return redirect()->route('home')->with('error', 'User ID is not set in the session.');
+        }
+    
+        return view('admin.group', $result);
+    }
+    
 
 
             public function category(Request $request){
@@ -57,95 +68,110 @@ class AcademicController extends Controller
                 return view('admin.category',$result);
             }
         
-            public function addcategory(Request $request,$id=""){   
-                if($id>0){
-                    $arr=category::where(['id'=>$id])->get();
-                    $result['id']=$arr['0']->id;
-                    $result['category']=$arr['0']->categories;
-                    $result['shortcateg']=$arr['0']->shortcateg;
-                    $result['max']=$arr['0']->cmaxperiod;
-                    $result['groupid']=$arr['0']->groupid;
-                    $result['standardid']=$arr['0']->standardid;
+            public function addcategory(Request $request, $id = "") {   
+                $aid = session()->get('ADMIN_ID', 0);
+                $controller_id = session()->get('Controller_ID', 0);
+            
+                if ($id > 0) {
+                    $arr = category::where(['id' => $id])->get();
+                    $result['id'] = $arr[0]->id;
+                    $result['category'] = $arr[0]->categories;
+                    $result['shortcateg'] = $arr[0]->shortcateg;
+                    $result['max'] = $arr[0]->cmaxperiod;
+                    $result['groupid'] = $arr[0]->groupid;
+                    $result['standardid'] = $arr[0]->standardid;
+                } else {
+                    $result['id'] = '';
+                    $result['category'] = '';
+                    $result['shortcateg'] = '';
+                    $result['groupid'] = '';
+                    $result['standardid'] = '';
+                    $result['max'] = 0;
                 }
-                else{
-                    $result['id']='';
-                    $result['category']='';
-                    $result['shortcateg']='';
-                    $result['groupid']='';
-                    $result['standardid']='';
-                    $result['max']=0;
-                }
-                $aid=session()->get('Controller_ID');
-                $result['groups']=DB::table('groups')->where('aid',$aid)->get();
-                $result['standards']=DB::table('standards')->get();
-                return view("admin.addcategory",$result);
-            }
-             
-            public function savecategory(Request $request){
-                $aid=session()->get('Controller_ID');
-              
-               
-                if($request->post('id')>0){
-                    $model=category::find($request->post('id'));
-                    $msg="Category updated";
-                     $data=DB::table('standards')->where('id',$request->post('standardid'))->get();
-                    $category="STANDARD ".$data[0]->name;
-                $model->aid=$aid;
-                $model->groupid=$request->post('groupid');
-                $model->standardid=$request->post('standardid');
-                $model->categories=$category;
-                $model->shortcateg=$request->post('shortcat');
-                $model->cmaxperiod=$request->post('max');
-                $model->save();
-                $request->session()->flash('message',$msg);
-                }
-                else{
-                    $d=DB::table('categories')->where('standardid',$request->post('standardid'))->where('aid',$aid)->get();
-                       if(count($d)==0){
-                    $model=new category();
-                    $msg="Category inserted";
-                     $data=DB::table('standards')->where('id',$request->post('standardid'))->get();
-                    $category="STANDARD ".$data[0]->name;
-                    $model->aid=$aid;
-                    $model->groupid=$request->post('groupid');
-                    $model->standardid=$request->post('standardid');
-                    $model->categories=$category;
-                    $model->shortcateg=$request->post('shortcat');
-                    $model->cmaxperiod=$request->post('max');
-                    $model->save();
-                    $request->session()->flash('message',$msg);
-                } else{
-                $message="Standard  Already Exists";
-                $request->session()->flash('danger',$message);
+                $result['groups'] = DB::table('groups')
+                    ->where(function ($query) use ($aid, $controller_id) {
+                        $query->where('aid', $aid)->orWhere('controller_id', $controller_id);
+                    })
+                    ->get();
                 
-               }
-               
-               }
-        
-                if($request->post('id')>0){
-                DB::table('domains')->where('category',$request->post('id'))
-                ->update(['groupid' => $request->post('groupid')]); 
-        
-                DB::table('skillsets')->where('category',$request->post('id'))
-                ->update(['groupid' => $request->post('groupid')]);
-        
-                DB::table('skillattributes')->where('category',$request->post('id'))
-                ->update(['groupid' => $request->post('groupid')]);
-        
-                DB::table('lmssections')->where('classid',$request->post('id'))
-                ->update(['groupid' => $request->post('groupid')]);
-                }
-        
-                return redirect('admin/category');
-        
-              
+                $result['standards'] = DB::table('standards')->get();
+                return view("admin.addcategory", $result);
             }
+            
+            public function savecategory(Request $request) {
+                $aid = session()->get('ADMIN_ID', 0);
+                $controller_id = session()->get('Controller_ID', 0);
+            
+                if ($request->post('id') > 0) {
+                    $model = category::find($request->post('id'));
+                    $msg = "Category updated";
+                    
+                    $data = DB::table('standards')->where('id', $request->post('standardid'))->get();
+                    $category = "STANDARD " . $data[0]->name;
+                    
+                    $model->aid = $aid > 0 ? $aid : 0;
+                    $model->controller_id = $controller_id > 0 ? $controller_id : 0;
+                    $model->groupid = $request->post('groupid');
+                    $model->standardid = $request->post('standardid');
+                    $model->categories = $category;
+                    $model->shortcateg = $request->post('shortcat');
+                    $model->cmaxperiod = $request->post('max');
+                    $model->save();
+                    $request->session()->flash('message', $msg);
+                } else {
+                    $existingCategory = DB::table('categories')
+                        ->where('standardid', $request->post('standardid'))
+                        ->where(function ($query) use ($aid, $controller_id) {
+                            $query->where('aid', $aid)->orWhere('controller_id', $controller_id);
+                        })
+                        ->get();
+                    
+                    if (count($existingCategory) == 0) {
+                        $model = new category();
+                        $msg = "Category inserted";
+                        
+                        $data = DB::table('standards')->where('id', $request->post('standardid'))->get();
+                        $category = "STANDARD " . $data[0]->name;
+                        
+                        $model->aid = $aid > 0 ? $aid : 0;
+                        $model->controller_id = $controller_id > 0 ? $controller_id : 0;
+                        $model->groupid = $request->post('groupid');
+                        $model->standardid = $request->post('standardid');
+                        $model->categories = $category;
+                        $model->shortcateg = $request->post('shortcat');
+                        $model->cmaxperiod = $request->post('max');
+                        $model->save();
+                        $request->session()->flash('message', $msg);
+                    } else {
+                        $message = "Standard Already Exists";
+                        $request->session()->flash('danger', $message);
+                        return redirect()->back();
+                    }
+                }
+            
+                if ($request->post('id') > 0) {
+                    DB::table('domains')->where('category', $request->post('id'))
+                        ->update(['groupid' => $request->post('groupid')]);
+            
+                    DB::table('skillsets')->where('category', $request->post('id'))
+                        ->update(['groupid' => $request->post('groupid')]);
+            
+                    DB::table('skillattributes')->where('category', $request->post('id'))
+                        ->update(['groupid' => $request->post('groupid')]);
+            
+                    DB::table('lmssections')->where('classid', $request->post('id'))
+                        ->update(['groupid' => $request->post('groupid')]);
+                }
+            
+                return redirect('controller/standard');
+            }
+            
         
             public function categorydelete(Request $request, $id){
                 $model=category::find($id);
                 $model->delete();
                 $request->session()->flash('message','Category Deleted');
-                return redirect('admin/category');
+                return redirect('controller/standard');
             }
         
     public function login()
@@ -279,61 +305,70 @@ public function save(Request $request)
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         return view("admin.adddomain",$result);
     }
-     
-    public function savedomain(Request $request){
-       // return $request->post();
-         $show=0;
-         if($request->post('show')=="on"){
-            $show=1;
-         }
-         $pre="";
-         if($request->post('stype')=="CURRICULAR"){
-           $pre="CU";
-         }else if($request->post('stype')=="MANDATORY"){
-            $pre="MAN";
-         }
-         else{
-            $pre="ECU";
-         }
-
-        if($request->post('id')>0){
-            $model=domain::find($request->post('id'));
-            $msg="Domain updated";
-            $name=DB::table('categories')->where('id',$request->post('category'))->get();
-            $domainname=$name[0]->categories.'_'.$name[0]->shortcateg.'_'.$request->post('dname');
-            $model->domain=$domainname;
-            $model->dname=$request->post('dname');
+    public function savedomain(Request $request)
+    {
+        \Log::info("Entering savedomain method");
+    
+        $show = ($request->post('show') == "on") ? 1 : 0;
+    
+        // Prefix setting based on stype
+        $pre = match ($request->post('stype')) {
+            "CURRICULAR" => "CU",
+            "MANDATORY" => "MAN",
+            default => "ECU",
+        };
+    
+        // Determine domain model and action
+        if ($request->post('id') > 0) {
+            $model = domain::find($request->post('id'));
+            $msg = "Domain updated";
+        } else {
+            $model = new domain();
+            $msg = "Domain inserted";
         }
-        else{
-            $model=new domain();
-            $msg="Domain inserted";
-            $name=DB::table('categories')->where('id',$request->post('category'))->get();
-            $domainname=$name[0]->categories.'_'.$name[0]->shortcateg.'_'.$request->post('domain');
-            $model->domain=$domainname;
-            $model->dname=$request->post('dname');
+    
+        // Fetch category name and construct domain name
+        $name = DB::table('categories')->where('id', $request->post('category'))->first();
+        $domainname = $name->categories . '_' . $name->shortcateg . '_' . $request->post('dname');
+        $model->domain = $domainname;
+        $model->dname = $request->post('dname');
+    
+        // Assign the correct ID and set the other to 0
+        if (session()->has('ADMIN_ID')) {
+            $model->aid = session()->get('ADMIN_ID');
+            $model->controller_id = 0;
+        } elseif (session()->has('Controller_ID')) {
+            $model->controller_id = session()->get('Controller_ID');
+            $model->aid = 0;
+        } else {
+            \Log::info("No ADMIN_ID or Controller_ID in session");
+            return redirect()->route('home')->with('error', 'User ID is not set in the session.');
         }
-        $model->aid=session()->get('Controller_ID');
-        $model->groupid=$request->post('groupid');
-
-        $g=DB::table('groups')->where('id',$request->post('groupid'))->get('gtype');
-        $model->stype=$g[0]->gtype;
-        $model->category=$request->post('category'); 
-        $model->subtype=$request->post('stype');
-        $model->showsub=$show;
+    
+        // Assign other model values
+        $model->groupid = $request->post('groupid');
+        $groupType = DB::table('groups')->where('id', $request->post('groupid'))->value('gtype');
+        $model->stype = $groupType;
+        $model->category = $request->post('category');
+        $model->subtype = $request->post('stype');
+        $model->showsub = $show;
         $model->save();
-        $request->session()->flash('message',$msg);
-
-        if($request->post('id')>0){
-        DB::table('skillsets')->where('domain',$request->post('id'))
-        ->update(['groupid' => $request->post('groupid'),'category' => $request->post('category')]);
-
-        DB::table('skillattributes')->where('domain',$request->post('id'))
-        ->update(['groupid' => $request->post('groupid'),'category' => $request->post('category')]);
+    
+        // Flash message for insertion or update
+        $request->session()->flash('message', $msg);
+    
+        // Update related tables if updating an existing domain
+        if ($request->post('id') > 0) {
+            DB::table('skillsets')->where('domain', $request->post('id'))
+                ->update(['groupid' => $request->post('groupid'), 'category' => $request->post('category')]);
+    
+            DB::table('skillattributes')->where('domain', $request->post('id'))
+                ->update(['groupid' => $request->post('groupid'), 'category' => $request->post('category')]);
         }
-
+    
         return redirect('admin/domain');
     }
-
+    
     public function delete(Request $request, $id){
         $model=domain::find($id);
         $model->delete();
@@ -601,20 +636,33 @@ public function save(Request $request)
                         ->get();
         return view('admin.assignments',$result);
     } 
-    public function months(){
-        $adminid=session()->get('ADMIN_ID');
-        $result['classes']= DB::table('categories')->where('aid',$adminid)->get();
-        $result['class']="";
-        $result['months'] = array("January","February","March","April","May","June","July","August","September","October","November","December"); 
-        $result['month']="";
-        $result['dates']="";
-        $result['year'] = date('Y');
-        $result['currentmonth'] = date('m');
-        $result['student']=[];
-        $result['attendance']=[];
-        $result['attendances']=[];
-        return view('admin.attendancemonths',$result);
+    public function months() {
+        // Get the admin ID from the session
+        $adminid = session()->get('ADMIN_ID');
+    
+        // Retrieve all classes associated with the admin
+        $result['classes'] = DB::table('categories')->where('aid', $adminid)->get();
+    
+        // Set default values for class, month, and year
+        $result['class'] = ""; // Default empty class selection
+        $result['month'] = ""; // Default empty month selection
+        $result['months'] = array(
+            "January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"
+        ); 
+        $result['dates'] = ""; // Will be calculated based on the month later
+        $result['year'] = date('Y'); // Get the current year
+        $result['currentmonth'] = date('m'); // Get the current month
+    
+        // Initialize student and attendance data as empty arrays
+        $result['student'] = [];
+        $result['attendance'] = [];
+        $result['attendances'] = [];
+    
+        // Return the view with the data
+        return view('admin.attendancemonths', $result);
     }
+    
 
     public  function getsections(request $request){
         $classid = $request->post('classid');
@@ -636,43 +684,52 @@ public function save(Request $request)
         }
     } 
  
-
-    public function students(request $request){
-        $adminid=session()->get('ADMIN_ID');
-        $result['classes']= DB::table('categories')->where('aid',$adminid)->get();
-        $result['class']=$request->post('class');
-        $result['months'] = array("January","February","March","April","May","June","July","August","September","October","November","December"); 
-        $result['month']=$request->post('month');
-        $result['dates']=$request->post('date');
+    public function students(Request $request){
+        // Determine if the logged-in user is an admin or a controller
+        $aid = session()->get('ADMIN_ID'); // Admin ID
+        $controller_id = session()->get('Controller_ID'); // Controller ID
+    
+        // Set the result array with required data
+        $result['classes'] = DB::table('categories')->where('aid', $aid)->orWhere('Controller_ID', $controller_id)->get(); // Fetching classes based on the logged-in user's ID
+        $result['class'] = $request->post('class');
+        $result['months'] = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"); 
+        $result['month'] = $request->post('month');
+        $result['dates'] = $request->post('date');
         $result['year'] = date('Y');
         $result['currentmonth'] = date('m');
-
-
-        $date=$request->post('date');
-        $classid=$request->post('class');
-        $section=$request->post('section');
-        $result['attendances'] = DB::table('attendances')
-                    ->where('date',$date)
-                    ->where('classid',$classid)
-                    ->where('sectionid',$section)
-                    ->get(['studentid','attendancetype','attendance']);
-         
-        $a=explode("##",$result['attendances'][0]->studentid);
-        $student = DB::table('students')->whereIn('id',$a)->get(['sname','slname']);
+    
+        // Retrieving attendance data
+        $date = $request->post('date');
+        $classid = $request->post('class');
+        $section = $request->post('section');
         
-        $b=explode("##",$result['attendances'][0]->attendance);
-        $result['student']=[];
-        $result['attendance']=[];
-        for($i=0;$i<count($student);$i++){
-            $result['student'][$i]=$student[$i]->sname." ".$student[$i]->slname;
-            if($result['attendances'][0]->attendancetype=="1"){
-                $result['attendance'][$i]=$b[$i];
-            }
-            else{
-                $result['attendance'][$i]=$b[0];
+        $result['attendances'] = DB::table('attendances')
+            ->where('date', $date)
+            ->where('classid', $classid)
+            ->where('sectionid', $section)
+            ->get(['studentid', 'attendancetype', 'attendance']);
+    
+        // Split student IDs and attendance statuses
+        $a = explode("##", $result['attendances'][0]->studentid);
+        $student = DB::table('students')->whereIn('id', $a)->get(['sname', 'slname']);
+    
+        // Split the attendance values
+        $b = explode("##", $result['attendances'][0]->attendance);
+        $result['student'] = [];
+        $result['attendance'] = [];
+    
+        // Prepare the result arrays for student names and attendance statuses
+        for ($i = 0; $i < count($student); $i++) {
+            $result['student'][$i] = $student[$i]->sname . " " . $student[$i]->slname;
+            if ($result['attendances'][0]->attendancetype == "1") {
+                $result['attendance'][$i] = $b[$i];
+            } else {
+                $result['attendance'][$i] = $b[0];
             }
         }
-        
-        return view('admin.attendancemonths',$result);
-    } 
+    
+        // Return the view with the results
+        return view('admin.attendancemonths', $result);
+    }
+    
 }

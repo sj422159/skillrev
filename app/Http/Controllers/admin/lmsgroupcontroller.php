@@ -98,57 +98,72 @@ class lmsgroupcontroller extends Controller
     }
      
     public function savegroup(Request $request){
-        $aid=session()->get('Controller_ID');
-        $group=DB::table('groups')->where('aid',$aid)->where('gtype',2)->get();
+   // Determine if the session has 'ADMIN_ID' or 'Controller_ID' and set accordingly
+if (session()->has('ADMIN_ID')) {
+    $aid = session()->get('ADMIN_ID');
+    $controller_id = 0;
+} else {
+    $aid = 0;
+    $controller_id = session()->get('Controller_ID', 0);
+}
 
-        if($request->post('id')>0){
-            if($request->post('gtype')==1){
-                $model=group::find($request->post('id'));
-                $model->aid=session()->get('Controller_ID');
-                $model->group=$request->post('group');
-                $model->gtype=$request->post('gtype');
-                $model->save();
-                $request->session()->flash('success','Group Updated');
-                return redirect('controller/groups');
-            }
-            elseif($request->post('gtype')==2 && count($group)==0){
-                    $model=group::find($request->post('id'));
-                    $model->aid=session()->get('Controller_ID');
-                    $model->group=$request->post('group');
-                    $model->gtype=$request->post('gtype');
-                    $model->save();
-                    $request->session()->flash('success','Group Updated');
-                    return redirect('controller/groups');
-            }
-            else{
-                $request->session()->flash('danger','Optional Limit Exceeded');
-                return redirect('controller/groups');
-            }   
-        }
-        else{
-            if($request->post('gtype')==1){
-                $model=new group();
-                $model->aid=session()->get('Controller_ID');
-                $model->group=$request->post('group');
-                $model->gtype=$request->post('gtype');
-                $model->save();
-                $request->session()->flash('success','Group Inserted');
-                return redirect('controller/groups');
-            }
-            elseif($request->post('gtype')==2 && count($group)==0){
-                $model=new group();
-                $model->aid=session()->get('Controller_ID');
-                $model->group=$request->post('group');
-                $model->gtype=$request->post('gtype');
-                $model->save();
-                $request->session()->flash('success','Group Inserted');
-                return redirect('controller/groups');
-            }
-            else{
-                $request->session()->flash('danger','Optional Limit Exceeded');
-                return redirect('controller/groups');
-            }   
-        }
+// Fetch groups based on 'aid' and 'gtype'
+$group = DB::table('groups')->where('aid', $aid)->where('gtype', 2)->get();
+
+if ($request->post('id') > 0) {
+    // Update an existing group
+    if ($request->post('gtype') == 1) {
+        $model = group::find($request->post('id'));
+        $model->aid = $aid;
+        $model->controller_id = $controller_id;
+        $model->group = $request->post('group');
+        $model->gtype = $request->post('gtype');
+        $model->save();
+
+        $request->session()->flash('success', 'Group Updated');
+        return redirect('controller/groups');
+    } elseif ($request->post('gtype') == 2 && count($group) == 0) {
+        $model = group::find($request->post('id'));
+        $model->aid = $aid;
+        $model->controller_id = $controller_id;
+        $model->group = $request->post('group');
+        $model->gtype = $request->post('gtype');
+        $model->save();
+
+        $request->session()->flash('success', 'Group Updated');
+        return redirect('controller/groups');
+    } else {
+        $request->session()->flash('danger', 'Optional Limit Exceeded');
+        return redirect('controller/groups');
+    }
+} else {
+    // Insert a new group
+    if ($request->post('gtype') == 1) {
+        $model = new group();
+        $model->aid = $aid;
+        $model->controller_id = $controller_id;
+        $model->group = $request->post('group');
+        $model->gtype = $request->post('gtype');
+        $model->save();
+
+        $request->session()->flash('success', 'Group Inserted');
+        return redirect('controller/groups');
+    } elseif ($request->post('gtype') == 2 && count($group) == 0) {
+        $model = new group();
+        $model->aid = $aid;
+        $model->controller_id = $controller_id;
+        $model->group = $request->post('group');
+        $model->gtype = $request->post('gtype');
+        $model->save();
+
+        $request->session()->flash('success', 'Group Inserted');
+        return redirect('controller/groups');
+    } else {
+        $request->session()->flash('danger', 'Optional Limit Exceeded');
+        return redirect('controller/groups');
+    }
+}
+
     } 
 
     public function department(Request $request){
