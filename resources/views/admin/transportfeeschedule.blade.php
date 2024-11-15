@@ -1,4 +1,4 @@
-@extends('admin/layout')
+@extends('controller/Alayout')
 @section('title','Regular Fees Schedule')
 @section('manager_select','active')
 @section('container')

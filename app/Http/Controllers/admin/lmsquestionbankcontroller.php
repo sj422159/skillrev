@@ -32,13 +32,11 @@ class lmsquestionbankcontroller extends Controller
         $result['data'] = [];
         
         if ($aid) {
-            // If the logged-in user is an admin, fetch all categories based on ADMIN_ID
             $result['categories'] = DB::table('categories')->where('aid', $aid)->get();
+            $result['domain'] = DB::table('domains')->where('aid', $aid)->get();
         } elseif ($controller_id) {
-            // If the logged-in user is a controller, fetch categories created by the controller
-            $result['categories'] = DB::table('categories')
-                ->where('aid', $controller_id)  // Only fetch categories created by the controller
-                ->get();
+            $result['categories'] = DB::table('categories')->where('Controller_ID', $controller_id)->get();
+            $result['domain'] = DB::table('domains')->where('Controller_ID', $controller_id) ->get();
         } else {
             // If neither is found, redirect or return an error
             return redirect()->route('home')->with('error', 'No valid session found.');

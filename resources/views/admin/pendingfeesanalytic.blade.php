@@ -1,4 +1,4 @@
-@extends('admin/layout')
+@extends('controller/Alayout')
 @section('title','Pending Fees Analytics')
 @section('reports','active')
 @section('container')

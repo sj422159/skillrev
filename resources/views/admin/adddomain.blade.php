@@ -28,10 +28,16 @@
                         </select>
                     </div>
                     <div class="col-12 col-sm-4 mt-2 mt-sm-0">
-                            <label for="branchname">Standard</label>
-                            <select name="category" class="form-control" required="true" data-val="{{$category}}" id="subbranch">
-                            </select>
+                        <label for="branchname">Standard</label>
+                        <select name="category" class="form-control" id="subbranches">
+                            <option value="">Select Standard</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->standardid }}</option>
+                            @endforeach
+                        </select>
                     </div>
+                    
+                    
                     <div class="col-12 col-sm-4 mt-2 mt-sm-0">
                         <label for="jobskill">Subject Type</label>
                         <select id="mainbranch" name="stype" type="text" class="form-control" aria-required="true" aria-invalid="false" required="true">

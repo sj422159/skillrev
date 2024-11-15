@@ -79,7 +79,7 @@ class AccountController extends Controller
         if (!$controller_id) {
             return redirect()->route('accontrol.login')->withErrors('Controller ID is not set. Please log in.');
         }
-        $expenseGroups = DB::table('expenses')->select('Group')->distinct()->get();
+        $expenseGroups = DB::table('expenses')->select('Group') ->where('Controller_ID', $controller_id)->distinct()->get();
         return view('controller.expcreatecat', compact('controller_id', 'expenseGroups'));
     }
     //expense store
@@ -151,14 +151,15 @@ public function destroycat($id)
 }
     public function accountexpgrp()
     {
-       
-    $expenses = DB::table('expenses')->select('id', 'Group')->get();
+        $controller_id = session()->get('Controller_ID');
+    $expenses = DB::table('expenses')->where('Controller_ID', $controller_id)->select('id', 'Group')->get();
     return view('controller.expgrp', compact('expenses'));
     }
     public function accountexpcat()
     {
+        $controller_id = session()->get('Controller_ID');
     $exps = DB::table('finalexpenses')->select('id', 'Group','Category')->get();
-    $expenseGroups = DB::table('expenses')->select('Group')->distinct()->get();
+    $expenseGroups = DB::table('expenses')->select('Group')->where('Controller_ID', $controller_id)->distinct()->get();
     return view('controller.expcat', compact('exps','expenseGroups'));
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User; 
 use App\Models\Controllers;
 use App\Models\category;
+use App\Models\domain;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -42,22 +43,36 @@ class AcademicController extends Controller
     
 
 
-            public function category(Request $request){
-                $aid=session()->get('Controller_ID');
-                $result['groups']=DB::table('groups')->where('aid',$aid)->get();
-                $result['groupid']='';
-                $result['category']=DB::table('categories')
-                                ->join('groups','groups.id','categories.groupid')
-                                ->where('categories.aid',$aid)
-                                ->select('groups.group','categories.*')
-                                ->get();
-                return view('admin.category',$result);
-            }
+    public function category(Request $request)
+    {
+        $aid = session()->get('ADMIN_ID', 0);
+        $controller_id = session()->get('Controller_ID', 0);
+    
+        // Explicitly specify 'groups.controller_id' in the first query
+        $result['groups'] = DB::table('groups')
+            ->where('aid', $aid)
+            ->orWhere('groups.controller_id', $controller_id) // specify 'groups.controller_id'
+            ->get();
+    
+        $result['groupid'] = '';
+    
+        // Explicitly specify 'categories.controller_id' in the second query
+        $result['category'] = DB::table('categories')
+            ->join('groups', 'groups.id', '=', 'categories.groupid')
+            ->where('categories.aid', $aid)
+            ->orWhere('categories.controller_id', $controller_id) // specify 'categories.controller_id'
+            ->select('groups.group', 'categories.*')
+            ->get();
+    
+        return view('admin.category', $result);
+    }
+    
         
             public function categorybygroup(Request $request){
                 $groupid=$request->post('groupid');
-                $aid=session()->get('Controller_ID');
-                $result['groups']=DB::table('groups')->where('aid',$aid)->get();
+                $aid = session()->get('ADMIN_ID', 0);
+                $controller_id = session()->get('Controller_ID', 0);
+                $result['groups']=DB::table('groups')->where('aid', $aid)->orWhere('controller_id', $controller_id)->get();
                 $result['groupid']=$groupid;
                 $result['category']=DB::table('categories')
                                 ->join('groups','groups.id','categories.groupid')
@@ -259,9 +274,11 @@ public function save(Request $request)
     }
     
     public function domain(Request $request){
-        $aid=session()->get('Controller_ID');
-        $result['groups']=DB::table('groups')->where('aid',$aid)->get();
-        $result['domain']=DB::table('domains')->where('aid',$aid)->get();
+        $aid=session()->get('ADMIN_ID');
+        $controller_id=session()->get('Controller_ID');
+
+        $result['groups']=DB::table('groups')->where('aid',$aid)->orWhere('controller_id', $controller_id)->get();
+        $result['domain']=DB::table('domains')->where('aid',$aid)->orWhere('controller_id', $controller_id)->get();
         $result['groupid']='';
         $result['categoryid']='';
         return view('admin.domain',$result);
@@ -270,41 +287,70 @@ public function save(Request $request)
     public function domainbycategory(Request $request){
         $category=$request->post('category');
         $groupid=$request->post('group');
-        $aid=session()->get('Controller_ID');
-        $result['groups']=DB::table('groups')->where('aid',$aid)->get();
+        $aid=session()->get('ADMIN_ID');
+        $controller_id=session()->get('Controller_ID');
+
+        $result['groups']=DB::table('groups')->where('aid',$aid)->orWhere('controller_id', $controller_id)->get();
         $result['groupid']=$groupid;
         $result['categoryid']=$category;
         $result['domain']=DB::table('domains')->where('groupid',$groupid)->where('category',$category)->get();
         return view('admin.domain',$result);
     }
 
-    public function adddomain(Request $request,$id=""){  
-        if($id>0){
-            $arr=domain::where(['id'=>$id])->get();
-            $result['id']=$arr['0']->id;
-            $result['groupid']=$arr['0']->groupid;
-            $result['category']=$arr['0']->category;
-            $result['domain']=$arr['0']->domain;
-            $result['stype']=$arr['0']->stype;
-            $result['subtype']=$arr['0']->subtype;
-            $result['show']=$arr['0']->showsub;
-            $result['dname']=$arr['0']->dname;
+    public function adddomain(Request $request, $id = "")
+    {
+        // Initialize the $result array with default values
+        $result = [
+            'id' => '',
+            'groupid' => '',
+            'category' => '',
+            'domain' => '',
+            'stype' => '',
+            'subtype' => '',
+            'show' => '',
+            'dname' => '',
+        ];
+    
+        // Check if $id is greater than 0, and fetch domain data
+        if ($id > 0) {
+            $arr = DB::table('domains')->where('id', $id)->first();
+            
+            if ($arr) {
+                // Populate $result with data from the domain record
+                $result = [
+                    'id' => $arr->id,
+                    'groupid' => $arr->groupid,
+                    'category' => $arr->category,
+                    'domain' => $arr->domain,
+                    'stype' => $arr->stype,
+                    'subtype' => $arr->subtype,
+                    'show' => $arr->showsub,
+                    'dname' => $arr->dname,
+                ];
+            }
         }
-        else{
-            $result['id']='';
-            $result['groupid']='';
-            $result['category']='';
-            $result['domain']='';
-            $result['stype']='';
-            $result['subtype']='';
-            $result['show']='';
-            $result['dname']='';
-        }
-        $aid=session()->get('Controller_ID');
-        $result['subtypes']=["CURRICULAR","EXTRACURICULLAR","MANDATORY"];
-        $result['groups']=DB::table('groups')->where('aid',$aid)->get();
-        return view("admin.adddomain",$result);
+    
+        // Fetch session data
+        $aid = session()->get('ADMIN_ID');
+        $controller_id = session()->get('Controller_ID');
+
+        // Fetch subtypes, groups, and categories based on session data
+        $result['subtypes'] = ["CURRICULAR", "EXTRACURICULLAR", "MANDATORY"];
+        $result['groups'] = DB::table('groups')
+            ->where('aid', $aid)
+            ->orWhere('controller_id', $controller_id)
+            ->get();
+    
+        $result['categories'] = DB::table('categories')
+            ->where('aid', $aid)
+            ->orWhere('controller_id', $controller_id)
+            ->get();
+    
+        // Return the view with the result data
+        return view('admin.adddomain', $result);
     }
+    
+    
     public function savedomain(Request $request)
     {
         \Log::info("Entering savedomain method");
