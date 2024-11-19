@@ -167,6 +167,40 @@
 </div>
 
 <script>
+function openEditModal(controller) {
+    // Populate the modal fields with the existing data
+    document.querySelector("#editId").value = controller.id;
+    document.querySelector("#editName").value = controller.name;
+    document.querySelector("#editEmail").value = controller.email;
+    document.querySelector("#editNumber").value = controller.number;
+
+    // Set the role dropdown and hidden role_id input
+    const editRoleDropdown = document.querySelector("#editRole");
+    editRoleDropdown.value = controller.role_name; // Match the role name to the dropdown value
+
+    const selectedRole = Array.from(editRoleDropdown.options).find(
+        option => option.value === controller.role_name
+    );
+
+    if (selectedRole) {
+        document.querySelector("#editRoleId").value = selectedRole.getAttribute("data-role-id");
+    } else {
+        document.querySelector("#editRoleId").value = ""; // Fallback to empty if no match found
+    }
+
+    // Show the modal
+    $('#editModal').modal('show');
+}
+document.querySelector("#editForm").addEventListener("submit", function (event) {
+    event.preventDefault(); 
+    const roleId = document.querySelector("#editRoleId").value;
+    console.log("Role ID being submitted:", roleId);
+    if (roleId) {
+        this.submit();
+    } 
+});
+
+
     function updateRoleId() {
         const selectedRole = document.getElementById("role").selectedOptions[0];
         const roleId = selectedRole.getAttribute("data-role-id");
@@ -202,22 +236,33 @@
 
             // Fill edit modal with current data
             $('.btn-edit').on('click', function() {
-                var id = $(this).data('id');
-                var name = $(this).data('name');
-                var role = $(this).data('role');
-                var email = $(this).data('email');
-                var number = $(this).data('number');
+    var id = $(this).data('id');
+    var name = $(this).data('name');
+    var role = $(this).data('role');
+    var role_id = $(this).data('role_id'); // Get the role ID from the data attribute
+    var email = $(this).data('email');
+    var number = $(this).data('number');
 
-                $('#editId').val(id);
-                $('#editName').val(name);
-                $('#editRole').val(role);
-                $('#editEmail').val(email);
-                $('#editNumber').val(number);
-            });
+    // Fill the form fields
+    $('#editId').val(id);
+    $('#editName').val(name);
+    $('#editRole').val(role); // Select the correct role in the dropdown
+    $('#editEmail').val(email);
+    $('#editNumber').val(number);
+
+    // Set the hidden role_id input
+    $('#editRoleId').val(role_id);
+});
+
 
             // AJAX for updating a controller
             $('#editForm').on('submit', function(event) {
                 event.preventDefault();
+                var role_id = $('#editRoleId').val();
+    if (!role_id) {
+        alert('Error: Role ID is missing.');
+        return;
+    }
 
                 $.ajax({
                     url: '{{ route('controller.update') }}',

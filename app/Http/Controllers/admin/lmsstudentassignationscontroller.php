@@ -61,7 +61,7 @@ class lmsstudentassignationscontroller extends Controller
     } elseif ($controller_id) {
       // Fetch sections for the class created by the logged-in controller
       $res = DB::table('lmssections')
-        ->where('lmssections.classid', $class_id)
+        
         ->where('lmssections.controller_id', $controller_id)
         ->get();
     } else {

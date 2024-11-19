@@ -14,7 +14,7 @@ use Redirect,Response;
 class lmsmanagementcontroller extends Controller{
 
     public function category(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         $result['groupid']='';
         $result['category']=DB::table('categories')
@@ -27,7 +27,7 @@ class lmsmanagementcontroller extends Controller{
 
     public function categorybygroup(Request $request){
         $groupid=$request->post('groupid');
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         $result['groupid']=$groupid;
         $result['category']=DB::table('categories')
@@ -57,14 +57,14 @@ class lmsmanagementcontroller extends Controller{
             $result['standardid']='';
             $result['max']=0;
         }
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         $result['standards']=DB::table('standards')->get();
         return view("admin.addcategory",$result);
     }
      
     public function savecategory(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
       
        
         if($request->post('id')>0){
@@ -133,7 +133,7 @@ class lmsmanagementcontroller extends Controller{
 
 
     public function skillset(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         $result['groupid']='';
         $result['categoryid']='';
@@ -143,7 +143,7 @@ class lmsmanagementcontroller extends Controller{
     }
 
     public function skillsetbydomain(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $groupid=$request->post('group');
         $category=$request->post('category');
         $domain=$request->post('domain');
@@ -171,7 +171,7 @@ class lmsmanagementcontroller extends Controller{
             $result['domain']='';
             $result['skillset']='';    
         }
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         return view("admin.addskillset",$result);
     }
@@ -215,7 +215,7 @@ class lmsmanagementcontroller extends Controller{
     }
 
     public function skillattribute(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         $result['groupid']='';
         $result['categoryid']='';
@@ -226,7 +226,7 @@ class lmsmanagementcontroller extends Controller{
     }
 
     public function skillattributebyskillset(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $groupid=$request->post('group');
         $category=$request->post('category');
         $domain=$request->post('domain');
@@ -258,7 +258,7 @@ class lmsmanagementcontroller extends Controller{
             $result['skillset']='';
             $result['skillattribute']='';    
         }
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['groups']=DB::table('groups')->where('aid',$aid)->get();
         return view("admin.addskillattribute",$result);
     }
@@ -316,7 +316,7 @@ class lmsmanagementcontroller extends Controller{
     }
 
     public function skillsetcategory($id){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $id = $_GET['myID'];
         $a=DB::table('groups')->where('id',$id)->get();
         if($a[0]->gtype==2){
@@ -351,7 +351,7 @@ class lmsmanagementcontroller extends Controller{
     }
 
     public  function skillsetgetdomains(request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $cid = $request->post('cid');
         $groupid = $request->post('groupid');
         $a=DB::table('groups')->where('id',$groupid)->get();

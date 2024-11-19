@@ -212,7 +212,7 @@
                         </li>
 
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link @yield('manage_select')">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
@@ -223,7 +223,7 @@
                             <ul class="nav nav-treeview" style="display: none;">
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{url('admin/content/skillattribute')}}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                         <p>
                                            Add
@@ -236,7 +236,7 @@
                        
                             </ul>
                         </li>
-
+ --}}
 
 
 

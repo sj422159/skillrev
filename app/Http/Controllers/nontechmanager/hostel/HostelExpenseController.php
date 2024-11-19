@@ -35,22 +35,28 @@ class HostelExpenseController extends Controller
 
 public function store(Request $request)
 {
-
+    // Validate the request data
     $request->validate([
         'group' => 'required',
         'category' => 'required',
         'subcategory' => 'required|string|max:255',
     ]);
 
+    // Get nontechmanager_id from the session
+    $nontechmanager_id = session()->get('nontechmanager_id');
+
+    // Create a new record in the HostelExpenseSubcategory model
     HostelExpenseSubcategory::create([
         'group' => $request->input('group'),
         'category' => $request->input('category'),
-        'subcategory' => $request->input('subcategory')
+        'subcategory' => $request->input('subcategory'),
+        'nontechm_id' => $nontechmanager_id, // Store nontechmanager_id in the appropriate column
     ]);
 
-    // Redirect with success message
+    // Redirect with a success message
     return redirect()->route('subcategory.index')->with('success', 'Subcategory created successfully!');
 }
+
 public function update(Request $request)
 {
     // Validate the input data

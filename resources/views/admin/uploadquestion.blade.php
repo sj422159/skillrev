@@ -49,8 +49,11 @@
 
                             <div class="col-12 col-sm-3 mt-4 mt-sm-0">
                                 <label>Chapter</label>
-                                <select class="form-control" required="true" name="skillattribute" id="skillattribute">
+                                <select class="form-control" required="true" name="skillattribute" id="skillattributes">
                                     <option selected="">Select</option>
+                                    @foreach($b as $list)
+                                    <option value="{{$list->id}}">{{$list->skillattribute}}</option>
+                                    @endforeach
                                 </select>
                             </div>
 

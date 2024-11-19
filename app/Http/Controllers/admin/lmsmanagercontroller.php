@@ -14,7 +14,7 @@ class lmsmanagercontroller extends Controller
 {
 
     public function manager(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['manager']=DB::table('managers')->where('aid',$aid)->get();
         return view('admin.manager',$result);
     }

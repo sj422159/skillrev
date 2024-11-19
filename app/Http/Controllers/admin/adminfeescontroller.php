@@ -82,28 +82,26 @@ class adminfeescontroller extends Controller
 
     public function savebusroute(Request $request)
     {
-        // Get session values for ADMIN_ID and Controller_ID
+
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
+        $controller_ADMIN_id = session()->get('Controller_ADMIN_ID');
 
-        // If the admin is logged in, store the aid and set Controller_ID as 0
         if ($aid) {
             $model = Busroute::find($request->post('id')) ?: new Busroute();
             $model->aid = $aid;
-            $model->Controller_ID = 0;  // Set Controller_ID to 0 for admin
+            $model->Controller_ID = 0;  
         }
-        // If the controller is logged in, store the Controller_ID and set aid as 0
+
         elseif ($controller_id) {
             $model = Busroute::find($request->post('id')) ?: new Busroute();
             $model->Controller_ID = $controller_id;
-            $model->aid = 0;  // Set aid to 0 for controller
-        }
-        // If neither admin nor controller is logged in, redirect with an error
-        else {
-            return redirect()->route('home')->with('error', 'You are not authorized to access this page.');
+            $model->aid = $controller_ADMIN_id;  // Set aid to 0 for controller
         }
 
-        // Save the bus route details
+        else {
+            return redirect()->route('/')->with('error', 'You are not authorized to access this page.');
+        }
         $model->busroute = $request->post('busroute');
         $model->status = 1;
         $model->save();
@@ -132,16 +130,15 @@ class adminfeescontroller extends Controller
 
     public function distance()
     {
-        // Get session values for ADMIN_ID and Controller_ID
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
 
-        // Initialize an empty result array
         $result = [];
 
         // If admin is logged in
         if ($aid) {
-            $result['busroutes'] = DB::table('busroutes')->where('aid', $aid)->where('status', 1)->get();
+            $result['busroutes'] = DB::table('busroutes')->where('aid', $aid)->orwhere('aid', $controller_admin_id)->where('status', 1)->get();
             $result['data'] = DB::table('distances')
                 ->join('busroutes', 'busroutes.id', '=', 'distances.busrouteid')
                 ->where('distances.aid', $aid)
@@ -169,66 +166,52 @@ class adminfeescontroller extends Controller
 
     public function upload(Request $request)
     {
-        // Validate the uploaded file
         $validator = validator::make($request->all(), [
             'excel' => 'required|max:5000|mimes:xlsx,xls,csv'
         ]);
 
         if ($validator->passes()) {
-            // Check if admin or controller is logged in
+
             $aid = session()->get('ADMIN_ID');
             $controller_id = session()->get('Controller_ID');
+            $controller_admin_id = session()->get('Controller_ADMIN_ID');
 
-            // Initialize aid and controller_id
-            $aid = $aid ? $aid : 0; // If ADMIN_ID is not present, set it to 0
-            $controller_id = $controller_id ? $controller_id : 0; // If Controller_ID is not present, set it to 0
-
-            // If neither admin nor controller is logged in, redirect
+            $aids = $aid ? $aid : $controller_admin_id; 
+            $controller_id = $controller_id ? $controller_id : 0; 
             if (!$aid && !$controller_id) {
                 return redirect()->route('home')->with('error', 'User not logged in');
             }
 
-            // Get busrouteid from the request
             $busrouteid = $request->post('busrouteid');
-
-            // Handle file import using Laravel Excel
             try {
-                // Load the uploaded file
                 $file = $request->file('excel');
                 $excelData = Excel::toArray([], $file);
-
-                // Loop through the rows and process them, starting from the second row (skip the first row)
                 $firstRowSkipped = false;
                 foreach ($excelData[0] as $index => $row) {
-                    // Skip the first row (header)
                     if (!$firstRowSkipped) {
                         $firstRowSkipped = true;
                         continue;
                     }
-
-                    // Process the data from the second row onwards
                     $model = new Distance();
-                    $model->aid = $aid;  // Admin ID or 0
-                    $model->Controller_ID = $controller_id;  // Controller ID or 0
-                    $model->busrouteid = $busrouteid;  // From the form request
-                    $model->location = $row[0];  // Location from Excel
-                    $model->distance = $row[1];  // Distance from Excel
-                    $model->disstatus = 1;  // Active status
-                    $model->save();  // Save the record
+                    $model->aid = $aids;  
+                    $model->Controller_ID = $controller_id; 
+                    $model->busrouteid = $busrouteid;  
+                    $model->location = $row[0]; 
+                    $model->distance = $row[1]; 
+                    $model->disstatus = 1; 
+                    $model->save();
                 }
 
                 $msg = "File Uploaded Successfully";
                 $request->session()->flash('success', $msg);
 
             } catch (\Exception $e) {
-                // Handle any errors during the file import
                 $msg = "File failed to upload: " . $e->getMessage();
                 $request->session()->flash('error', $msg);
             }
 
             return redirect('admin/fees/distance');
         } else {
-            // Validation failed, return the errors
             return redirect()->back()->with(['errors' => $validator->errors()->all()]);
         }
     }
@@ -238,35 +221,10 @@ class adminfeescontroller extends Controller
 
     public function adddistance(request $request, $id = "")
     {
-        // Check if the user is an admin or controller
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-
-        // Initialize $user_id to 0 if neither admin nor controller is logged in
-        $user_id = 0;
-
-        if ($aid) {
-            // Admin logged in, use ADMIN_ID
-            $user_id = $aid;
-        } elseif ($controller_id) {
-            // Controller logged in, use Controller_ID
-            $user_id = $controller_id;
-        } else {
-            // If neither admin nor controller is logged in, redirect
-            return redirect()->route('home')->with('error', 'User not logged in');
-        }
-
-        // If an ID is provided, fetch the existing record
         if ($id > 0) {
-            $arr = distance::where(['id' => $id])
-                ->where(function ($query) use ($user_id) {
-                    // Match either aid or Controller_ID based on logged-in user
-                    if ($user_id == $aid) {
-                        $query->where('aid', $user_id);
-                    } else {
-                        $query->where('Controller_ID', $user_id);
-                    }
-                })
+            $arr = distance::where(['id' => $id])->where('Controller_ID', $controller_id)->orwhere('aid', $aid)
                 ->get();
 
             if (count($arr) > 0) {
@@ -286,14 +244,7 @@ class adminfeescontroller extends Controller
         }
 
         // Fetch bus routes based on the logged-in user's ID (either admin or controller)
-        $result['busroutes'] = DB::table('busroutes')
-            ->where(function ($query) use ($user_id) {
-                if ($user_id == $aid) {
-                    $query->where('aid', $user_id);
-                } else {
-                    $query->where('Controller_ID', $user_id);
-                }
-            })
+        $result['busroutes'] = DB::table('busroutes')->where('aid', $aid)->orwhere('Controller_ID', $controller_id)
             ->where('status', 1)
             ->get();
 
@@ -345,25 +296,15 @@ class adminfeescontroller extends Controller
 
     public function category()
     {
-        // Get session values for ADMIN_ID and Controller_ID
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-
-        // If neither ADMIN_ID nor Controller_ID is set, return an error
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
         if (!$aid && !$controller_id) {
             return redirect('home')->with('error', 'User not authenticated.');
         }
-
-        // Fetch records based on the logged-in user (admin or controller)
-        if ($aid) {
-            // If admin is logged in, fetch records where aid matches
-            $result['data'] = DB::table('feecategories')->where('aid', $aid)->get();
-        } else if ($controller_id) {
-            // If controller is logged in, fetch records where Controller_ID matches
-            $result['data'] = DB::table('feecategories')->where('Controller_ID', $controller_id)->get();
-        }
-
-        // Return the view with the data
+            $result['data'] = DB::table('feecategories')->where('aid', $controller_admin_id)->get();
+            // $result['data'] = DB::table('feecategories')->where('Controller_ID', $controller_id)->get();
+        
         return view('admin.feescategory', $result);
     }
 
@@ -391,40 +332,32 @@ class adminfeescontroller extends Controller
 
     public function savecategory(request $request)
     {
-        // Retrieve the session values for ADMIN_ID and Controller_ID
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
 
-        // Set to 0 if not set in session
-        $aid = $aid ? $aid : 0;
+        $aids = $aid ? $aid :  $controller_admin_id;
         $controller_id = $controller_id ? $controller_id : 0;
-
-        // If neither Admin nor Controller is logged in, handle the situation (optional)
         if (!$aid && !$controller_id) {
             return redirect()->route('home')->with('error', 'User not logged in');
         }
 
-        // Find the existing record or create a new one
         if ($request->post('id') > 0) {
-            // Update existing category
+
             $model = feecategory::find($request->post('id'));
         } else {
-            // Create new category
+
             $model = new feecategory();
         }
 
-        // Assign data to the model
         $model->fcategory = $request->post('category');
-        $model->fcstatus = 1;  // Assuming it's always active when saving
-        $model->aid = $aid;  // Set Admin ID (or 0 if not available)
-        $model->Controller_ID = $controller_id;  // Set Controller ID (or 0 if not available)
+        $model->fcstatus = 1;  
+        $model->aid = $aids;  
+        $model->Controller_ID = $controller_id;
         $model->fctype = $request->post('type');
         $model->fcmandatoryornot = $request->post('mandatoryornot');
-
-        // Save the model data to the database
         $model->save();
 
-        // Redirect to the fees category page with a success message
         return redirect("admin/fees/category")->with('success', 'Category saved successfully');
     }
 
@@ -459,16 +392,13 @@ class adminfeescontroller extends Controller
 
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
 
-        $aid = $aid ? $aid : 0;
+        $aid = $aid ? $aid :$controller_admin_id ;
         $controller_id = $controller_id ? $controller_id : 0;
-
-        // If neither Admin nor Controller is logged in, handle the situation (optional)
         if (!$aid && !$controller_id) {
             return redirect()->route('home')->with('error', 'User not logged in');
         }
-
-        // Fetch data based on the logged-in user
         $result['otherdata'] = DB::table('feeschedules')
             ->join('feecategories', 'feeschedules.shcategory', 'feecategories.id')
             ->where(function ($query) use ($aid, $controller_id) {
@@ -500,20 +430,16 @@ class adminfeescontroller extends Controller
 
     public function addschedule(Request $request, $id = "")
     {
-        // Retrieve session values for ADMIN_ID and Controller_ID
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
 
-        // Set to 0 if not set in session
-        $aid = $aid ? $aid : 0;
+        $aid = $aid ? $aid : $controller_admin_id;
         $controller_id = $controller_id ? $controller_id : 0;
-
-        // If neither Admin nor Controller is logged in, handle the situation (optional)
         if (!$aid && !$controller_id) {
-            return redirect()->route('home')->with('error', 'User not logged in');
+            return redirect()->route('/')->with('error', 'User not logged in');
         }
 
-        // If an ID is provided, fetch the schedule data for editing
         if ($id > 0) {
             $arr = feeschedule::where(['id' => $id])
                 ->where(function ($query) use ($aid, $controller_id) {
@@ -525,7 +451,6 @@ class adminfeescontroller extends Controller
                 })
                 ->get();
 
-            // Assign values from the retrieved schedule data
             $result['id'] = $arr[0]->id;
             $result['shcategory'] = $arr[0]->shcategory;
             $result['shannual'] = $arr[0]->shannual;
@@ -535,7 +460,7 @@ class adminfeescontroller extends Controller
             $result['type'] = $arr[0]->shtype;
             $result['shtype'] = $arr[0]->shtypename;
         } else {
-            // Default empty values if no ID is provided
+ 
             $result['id'] = '';
             $result['shcategory'] = "";
             $result['shannual'] = "";
@@ -546,7 +471,7 @@ class adminfeescontroller extends Controller
             $result['shtype'] = "";
         }
 
-        // Fetch categories, classes, and distances based on the logged-in user
+
         $result['categories'] = DB::table('feecategories')
             ->where(function ($query) use ($aid, $controller_id) {
                 if ($aid) {
@@ -567,7 +492,7 @@ class adminfeescontroller extends Controller
                     $query->where('categories.Controller_ID', $controller_id);
                 }
             })
-            ->select('categories')  // Select only the 'categories' field
+             // Select only the 'categories' field
             ->get();
 
 
@@ -589,21 +514,19 @@ class adminfeescontroller extends Controller
         // Retrieve session values for ADMIN_ID and Controller_ID
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
         
-        // Set to 0 if not set in session
-        $aid = $aid ? $aid : 0;
+
+        $aid = $aid ? $aid : $controller_admin_id;
         $controller_id = $controller_id ? $controller_id : 0;
-    
-        // If neither Admin nor Controller is logged in, handle the situation (optional)
+
         if (!$aid && !$controller_id) {
-            return redirect()->route('home')->with('error', 'User not logged in');
+            return redirect()->route('/')->with('error', 'User not logged in');
         }
     
-        // Process the category selection
         $c = explode('**', $request->post('category'));
         $t = [];
-    
-        // Determine which type of schedule is being used
+
         if ($c[1] == 1) {
             $t = explode('**', $request->post('type1'));
         } else {
@@ -655,16 +578,14 @@ class adminfeescontroller extends Controller
         // Check if the logged-in user is Admin or Controller
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-        
-        // Initialize $aid and $controller_id to 0 if not present
-        $aid = $aid ? $aid : 0;
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
+
+        $aid = $aid ? $aid : $controller_admin_id;
         $controller_id = $controller_id ? $controller_id : 0;
-    
-        // Fetch bus routes based on admin or controller
+
         if ($aid) {
             $result['data'] = DB::table('busroutes')->where('aid', $aid)->get();
         } elseif ($controller_id) {
-            // You could add logic here to fetch based on Controller_ID if needed
             $result['data'] = DB::table('busroutes')->where('controller_id', $controller_id)->get();
         } else {
             return redirect()->route('home')->with('error', 'User not logged in');
@@ -676,30 +597,25 @@ class adminfeescontroller extends Controller
 
     public function addtransportschedule(Request $request, $moneystatus, $busrouteid)
     {
-        // Check if the user is logged in as admin or controller
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-    
-        // Determine which ID to use based on login type
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
+
         if ($aid) {
-            // If admin is logged in, use $aid
             $user_id = $aid;
             $user_column = 'aid';
         } elseif ($controller_id) {
-            // If controller is logged in, use $controller_id
-            $user_id = $controller_id;
-            $user_column = 'Controller_ID';
+            $user_id = $controller_admin_id;
+            $user_column = 'aid';
         } else {
-            // If neither is logged in, handle accordingly (e.g., redirect or show error)
-            return redirect()->route('home')->with('error', 'User not logged in');
+            return redirect()->route('/')->with('error', 'User not logged in');
         }
     
         if ($moneystatus == 1) {
-            // Fetch records for admin or controller based on who is logged in
             $result['distances'] = DB::table('distances')
                 ->join('feeschedules', 'feeschedules.shtype', '=', 'distances.id')
                 ->where('distances.busrouteid', $busrouteid)
-                ->where($user_column, $user_id)  // Check if the logged-in user is the creator
+                ->where('feeschedules.aid', $user_id)  // Check if the logged-in user is the creator
                 ->where('distances.disstatus', 1)
                 ->select('feeschedules.*', 'distances.location', 'distances.distance')
                 ->get();
@@ -739,30 +655,19 @@ class adminfeescontroller extends Controller
 
     public function savetransportschedule(Request $request)
     {
-        // Determine if the user is an admin or controller and set the appropriate ID
-        $aid = 0;
-        $controller_id = 0;
     
         if (session()->has('ADMIN_ID')) {
             $aid = session()->get('ADMIN_ID');
         } else if (session()->has('Controller_ID')) {
+            $aid = session()->get('Controller_ADMIN_ID');
             $controller_id = session()->get('Controller_ID');
         }
     
-        // Fetch the fee category based on the appropriate ID
-        $feecategory = DB::table('feecategories')
-            ->where(function ($query) use ($aid, $controller_id) {
-                if ($aid > 0) {
-                    $query->where('aid', $aid);
-                } else if ($controller_id > 0) {
-                    $query->where('Controller_ID', $controller_id);
-                }
-            })
+        $feecategory = DB::table('feecategories')->where('aid', $aid)->orwhere('Controller_ID', $controller_id)
             ->where('fctype', 2)
             ->get();
     
         if ($request->post('moneystatus') == 1) {
-            // Update existing records
             for ($i = 0; $i < count($request->post('shtype')); $i++) {
                 $model = feeschedule::find($request->post('shfeescheduleid')[$i]);
                 if ($model) {
@@ -815,12 +720,13 @@ class adminfeescontroller extends Controller
 
     public function discount()
     {
-        $aid = 0;
+       
         $controller_id = 0;
         if (session()->has('ADMIN_ID')) {
             $aid = session()->get('ADMIN_ID');
         } 
         if (session()->has('Controller_ID')) {
+             $aid = session()->get('Controller_ADMIN_ID');
             $controller_id = session()->get('Controller_ID');
         }
 
@@ -829,12 +735,7 @@ class adminfeescontroller extends Controller
             ->join('categories', 'feediscounts.discls', '=', 'categories.id')
             ->join('lmssections', 'feediscounts.dissec', '=', 'lmssections.id')
             ->join('feecategories', 'feediscounts.discat', '=', 'feecategories.id')
-            ->select('feecategories.fcategory', 'feediscounts.*', 'students.sname', 'students.image', 'categories.categories', 'lmssections.section');
-        if ($aid > 0) {
-            $query->where('feediscounts.aid', $aid);
-        } elseif ($controller_id > 0) {
-            $query->where('feediscounts.Controller_ID', $controller_id);
-        }
+            ->select('feecategories.fcategory', 'feediscounts.*', 'students.sname', 'students.image', 'categories.categories', 'lmssections.section')->where('feediscounts.aid', $aid)->orwhere('feediscounts.Controller_ID', $controller_id);
     
         // Execute the query and fetch the results
         $result['data'] = $query->get();
@@ -844,128 +745,57 @@ class adminfeescontroller extends Controller
     }
     
 
-    public function adddiscount(Request $request, $id = "")
-    {
-        // Determine whether the user is an admin or controller and set the appropriate ID
-        $aid = 0;
-        $controller_id = 0;
-    
-        if (session()->has('ADMIN_ID')) {
-            $aid = session()->get('ADMIN_ID');
-        } else if (session()->has('Controller_ID')) {
-            $controller_id = session()->get('Controller_ID');
-        }
-    
-        // Fetch the discount data if the ID is provided
-        if ($id > 0) {
-            $arr = feediscount::where(['id' => $id])
-                ->where(function ($query) use ($aid, $controller_id) {
-                    if ($aid > 0) {
-                        $query->where('aid', $aid);
-                    } else if ($controller_id > 0) {
-                        $query->where('Controller_ID', $controller_id);
-                    }
-                })
-                ->get();
-    
-            if ($arr->isNotEmpty()) {
-                $result['id'] = $arr[0]->id;
-                $result['discat'] = $arr[0]->discat;
-                $result['discls'] = $arr[0]->discls;
-                $result['dissec'] = $arr[0]->dissec;
-                $result['distype'] = $arr[0]->distype;
-                $result['stu'] = $arr[0]->stu_id;
-                $result['dis'] = $arr[0]->dis;
-                $result['fees'] = $arr[0]->fees;
-                $result['disprice'] = $arr[0]->disprice;
-                $result['distance'] = $arr[0]->distance;
-                $result['studentid'] = $arr[0]->stu_id;
-            } else {
-                // Return empty values if no discount record found
-                $result['id'] = "";
-                $result['discat'] = "";
-                $result['discls'] = "";
-                $result['dissec'] = "";
-                $result['distype'] = "";
-                $result['stu'] = "";
-                $result['dis'] = 0;
-                $result['fees'] = 0;
-                $result['disprice'] = 0;
-                $result['distance'] = "";
-                $result['studentid'] = "";
-            }
-        } else {
-            // Return empty fields for a new discount
-            $result['id'] = "";
-            $result['discat'] = "";
-            $result['discls'] = "";
-            $result['dissec'] = "";
-            $result['distype'] = "";
-            $result['stu'] = "";
-            $result['dis'] = 0;
-            $result['fees'] = 0;
-            $result['disprice'] = 0;
-            $result['distance'] = "";
-            $result['studentid'] = "";
-        }
-    
-        // Fetch categories and distances based on role
-        $result['categories'] = DB::table('feecategories')
-            ->where(function ($query) use ($aid, $controller_id) {
-                if ($aid > 0) {
-                    $query->where('aid', $aid);
-                } else if ($controller_id > 0) {
-                    $query->where('Controller_ID', $controller_id);
-                }
-            })
-            ->where('fcstatus', 1)
-            ->get();
-    
-        $result['class'] = DB::table('categories')
-            ->where(function ($query) use ($aid, $controller_id) {
-                if ($aid > 0) {
-                    $query->where('aid', $aid);
-                } else if ($controller_id > 0) {
-                    $query->where('Controller_ID', $controller_id);
-                }
-            })
-            ->get();
-    
-        $result['types'] = [
-            ["id" => "Annually", "type" => "shannual"],
-            ["id" => "Half-yearly", "type" => "shhalf"],
-            ["id" => "Quarterly", "type" => "shquater"],
-            ["id" => "Monthly", "type" => "shmonthly"]
-        ];
-    
-        $result['per'] = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
-    
-        // Fetch distances based on role
-        $result['distances'] = DB::table('distances')
-            ->where(function ($query) use ($aid, $controller_id) {
-                if ($aid > 0) {
-                    $query->where('aid', $aid);
-                } else if ($controller_id > 0) {
-                    $query->where('Controller_ID', $controller_id);
-                }
-            })
-            ->where('disstatus', 1)
-            ->get();
-    
-        return view('admin.addfeesdiscount', $result);
-    }
-    
+    public function adddiscount(request $request,$id=""){
+        $aid=session()->get('Controller_ADMIN_ID');
+        $controller_id=session()->get('Controller_ID');
+        if($id>0){
+           $arr=feediscount::where(['id'=>$id])->get();
+           $result['id']=$arr['0']->id;
+           $result['discat']=$arr['0']->discat;
+           $result['discls']=$arr['0']->discls;
+           $result['dissec']=$arr['0']->dissec;
+           $result['distype']=$arr['0']->distype;
+           $result['stu']=$arr['0']->stu_id;
+           $result['dis']=$arr['0']->dis;
+           $result['fees']=$arr['0']->fees;
+           $result['disprice']=$arr['0']->disprice; 
+           $result['distance']=$arr['0']->distance;
+           $result['studentid']=$arr['0']->stu_id;    
+       }
+       else{
+           $result['id']="";
+           $result['discat']="";
+           $result['discls']="";
+           $result['dissec']="";
+           $result['distype']="";
+           $result['stu']="";
+           $result['dis']=0;
+           $result['fees']=0;
+           $result['disprice']=0;
+           $result['distance']="";
+           $result['studentid']="";  
+       }
+       $result['categories']=DB::table('feecategories')->where('aid',$aid)->where('fcstatus',1)->get();
+       $result['class']=DB::table('categories')->where('aid',$aid)->get();
+        $result['types']=array( array("id"=>"Annually","type"=>"shannual"),array("id"=>"Half-yearly","type"=>"shhalf"),
+                                array("id"=>"Quarterly","type"=>"shquater"),  
+                                array("id"=>"Monthly","type"=>"shmonthly")); 
+       $result['per']=[10,20,30,40,50,60,70,80,90,100]; 
+       $result['students'] = DB::table('students')->where('aid', $aid)->get();
+           //return $result['types'][0]['id']; 
+        $result['distances']=DB::table('distances')->where('aid',$aid)->where('disstatus',1)->get();   
+       return view('admin.addfeesdiscount',$result);
+   }
     public function savediscount(Request $request)
     {
-        // Get the session values for admin and controller
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-        
-        // Determine which ID to use based on whether it's an admin or controller
+        $controller_ADMIN_id = session()->get('Controller_ADMIN_ID');
+
         if ($aid) {
             $model = feediscount::find($request->post('id'));
             if ($model) {
-                // Check if the current admin is trying to edit a record created by another admin
+
                 if ($model->aid != $aid) {
                     return redirect()->back()->with('error', 'You are not authorized to edit this record.');
                 }
@@ -973,23 +803,20 @@ class adminfeescontroller extends Controller
         } else if ($controller_id) {
             $model = feediscount::find($request->post('id'));
             if ($model) {
-                // Check if the current controller is trying to edit a record created by another controller
                 if ($model->Controller_ID != $controller_id) {
                     return redirect()->back()->with('error', 'You are not authorized to edit this record.');
                 }
             }
         } else {
-            return redirect()->route('home')->with('error', 'No user role is set.');
+            return redirect()->route('/')->with('error', 'No user role is set.');
         }
     
-        // Handle discount data
         if ($request->post('id') > 0) {
             $model = feediscount::find($request->post('id'));
         } else {
             $model = new feediscount();
         }
     
-        // Split category and discount type
         $c = explode('**', $request->post('category'));
         $disc = explode('**', $request->post('discat'));
         $distance = 0;
@@ -1002,13 +829,12 @@ class adminfeescontroller extends Controller
             $name = $a[1];
         }
     
-        // Set appropriate values for the discount record
         if ($aid) {
             $model->aid = $aid;
-            $model->Controller_ID = 0; // Ensure controller_id is 0 for admin
+            $model->Controller_ID = 0; 
         } else if ($controller_id) {
             $model->Controller_ID = $controller_id;
-            $model->aid = 0; // Ensure aid is 0 for controller
+            $model->aid = $controller_ADMIN_id; 
         }
     
         $model->stu_id = $request->post('students');
@@ -1021,8 +847,7 @@ class adminfeescontroller extends Controller
         $model->disprice = $request->post('tfees');
         $model->distance = $distance;
         $model->disname = $name;
-    
-        // Save the record
+
         $model->save();
         
         return redirect("admin/fees/discount");
@@ -1037,82 +862,67 @@ class adminfeescontroller extends Controller
 
     public function getfees()
     {
-        // Check if ADMIN_ID or Controller_ID exists in the session
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-    
-        // Initialize variables for category, type, and class
+        $controller_ADMIN_id = session()->get('Controller_ADMIN_ID');
+
         $cat = $_GET['cat'];
         $ty = explode("**", $_GET['type']);
         $type = $ty[0];
         $cls = $_GET['cls'];
         $dis = explode("**", $_GET['dis']);
-    
-        // Initialize result and data variables
+
         $result = [];
         $data = 0;
-    
-        // Check if the user is an admin or a controller and adjust the query accordingly
+
         if ($aid) {
-            // If admin, use aid in the query
+
             if (count($dis) < 2) {
                 $result = DB::table('feeschedules')->where('aid', $aid)->where('shcategory', $cat)->where('shtype', $cls)->get([$type]);
                 if (count($result) > 0) {
                     $data = $result[0]->$type;
                 }
             } else {
-                $result = DB::table('feeschedules')->where('aid', $aid)->where('shcategory', $cat)->where('shtype', $dis[0])->get([$type]);
+                $result = DB::table('feeschedules')->where('aid', $aid)->orWhere('Controller_ID', $controller_id)->where('shcategory', $cat)->where('shtype', $dis[0])->get([$type]);
                 if (count($result) > 0) {
                     $data = $result[0]->$type;
                 }
             }
         } elseif ($controller_id) {
-            // If controller, use Controller_ID in the query
             if (count($dis) < 2) {
-                $result = DB::table('feeschedules')->where('Controller_ID', $controller_id)->where('shcategory', $cat)->where('shtype', $cls)->get([$type]);
+                $result = DB::table('feeschedules')->where('aid', $aid)->orwhere('Controller_ID', $controller_id)->where('shcategory', $cat)->where('shtype', $cls)->get([$type]);
                 if (count($result) > 0) {
                     $data = $result[0]->$type;
                 }
             } else {
-                $result = DB::table('feeschedules')->where('Controller_ID', $controller_id)->where('shcategory', $cat)->where('shtype', $dis[0])->get([$type]);
+                $result = DB::table('feeschedules')->where('aid', $aid)->orwhere('Controller_ID', $controller_id)->where('shcategory', $cat)->where('shtype', $dis[0])->get([$type]);
                 if (count($result) > 0) {
                     $data = $result[0]->$type;
                 }
             }
         }
-    
-        // Return the data in JSON format
+
         return Response::json($data);
     }
     public function getstu()
     {
-        // Get the session values for ADMIN_ID and Controller_ID
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
         
-        // Get the class ID and section ID from the request
         $cls = $_GET['id'];
         $sec = $_GET['sec'];
-    
-        // Initialize the result array
+
         $result = [];
-    
-        // Check if the user is an admin or a controller
         if ($aid) {
-            // If the user is an admin, use the aid column in the query
-            $result = DB::table('students')->where('aid', $aid)->where('sclassid', $cls)->where('ssectionid', $sec)->get();
+
+            $result = DB::table('students')->where('aid', $aid)->orwhere('Controller_ID', $controller_id)->where('sclassid', $cls)->where('ssectionid', $sec)->get();
         } elseif ($controller_id) {
             // If the user is a controller, use the Controller_ID column in the query
-            $result = DB::table('students')->where('Controller_ID', $controller_id)->where('sclassid', $cls)->where('ssectionid', $sec)->get();
+            $result = DB::table('students')->where('aid', $aid)->orwhere('Controller_ID', $controller_id)->where('sclassid', $cls)->where('ssectionid', $sec)->get();
         }
-    
-        // Return the result in JSON format
+
         return Response::json($result);
     }
-    
-
-    //pending fees
-
 
     public function pendingfeesstudents()
     {
@@ -1141,7 +951,7 @@ class adminfeescontroller extends Controller
 
     public function pendingfeesinitialsave(request $request)
     {
-        //return $request->post();
+
         for ($i = 0; $i < count($request->post('studentid')); $i++) {
             $model = student::find($request->post('studentid')[$i]);
             $model->spendingfees = $request->post('amount')[$i];
@@ -1171,6 +981,7 @@ class adminfeescontroller extends Controller
 
 
         $aid = session()->get('ADMIN_ID');
+        $controller_id = session()->get('Controller_ID');
         for ($i = 0; $i < count($files); $i++) {
             if ((int) $request->post('paidamount')[$i] != "") {
                 $model = student::find($request->post('studentid')[$i]);
@@ -1203,7 +1014,8 @@ class adminfeescontroller extends Controller
     public function indexfeesstudents()
     {
         $aid = session()->get('ADMIN_ID');
-        $result['classes'] = DB::table('categories')->where('aid', $aid)->get();
+        $controller_id = session()->get('Controller_ID');
+        $result['classes'] = DB::table('categories')->where('aid', $aid)->orWhere('Controller_ID', $controller_id)->get();
         $result['students'] = [];
         $result['class'] = [];
         $result['section'] = [];
@@ -1214,9 +1026,10 @@ class adminfeescontroller extends Controller
     public function indexfeesstudentsbysection(request $request)
     {
         $aid = session()->get('ADMIN_ID');
+        $controller_id = session()->get('Controller_ID');
         $class = $request->post('class');
         $section = $request->post('section');
-        $result['classes'] = DB::table('categories')->where('aid', $aid)->get();
+        $result['classes'] = DB::table('categories')->where('aid', $aid)->orWhere('Controller_ID', $controller_id)->get();
         $result['students'] = DB::table('students')->where('sclassid', $class)->where('ssectionid', $section)->get();
         $result['paymentcount'] = 0;
         for ($i = 0; $i < count($result['students']); $i++) {
@@ -1311,7 +1124,8 @@ class adminfeescontroller extends Controller
     public function currentyearpendingfeesstudents()
     {
         $aid = session()->get('ADMIN_ID');
-        $result['classes'] = DB::table('categories')->where('aid', $aid)->get();
+        $controller_id = session()->get('Controller_ID');
+        $result['classes'] = DB::table('categories')->where('aid', $aid)->orWhere('Controller_ID', $controller_id)->get();
         $result['students'] = [];
         $result['class'] = [];
         $result['section'] = [];
@@ -1322,11 +1136,12 @@ class adminfeescontroller extends Controller
     public function currentyearpendingfeesstudentsbysection(request $request)
     {
         $aid = session()->get('ADMIN_ID');
+        $controller_id = session()->get('Controller_ID');
         $class = $request->post('class');
         $section = $request->post('section');
         $result['class'] = $class;
         $result['section'] = $section;
-        $result['classes'] = DB::table('categories')->where('aid', $aid)->get();
+        $result['classes'] = DB::table('categories')->where('aid', $aid)->orWhere('Controller_ID', $controller_id)->get();
         $result['month'] = date('F');
         $result['students'] = DB::table('students')
             ->join('feepayments', 'feepayments.sid', 'students.id')

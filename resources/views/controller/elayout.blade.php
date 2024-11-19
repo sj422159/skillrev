@@ -145,7 +145,7 @@
                         data-accordion="false">
 
                         <li class="nav-item menu-open">
-                            <a href="{{url('admin/dashboard')}}" class="nav-link" class="@yield('dashboard_select')">
+                            <a href="{{url('dashboard/examination')}}" class="nav-link" class="@yield('dashboard_select')">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard

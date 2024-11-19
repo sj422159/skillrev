@@ -194,7 +194,7 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{url('admin/transport/fees/schedule/busroutes')}}" class="nav-link"
                                         class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
@@ -202,16 +202,16 @@
                                             Transport Fee Schedule
                                         </p>
                                     </a>
-                                </li>
+                                </li> --}}
 
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a href="{{url('admin/fees/discount')}}" class="nav-link" class="@yield('list')">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Special Discount
                                         </p>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
 

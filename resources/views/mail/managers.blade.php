@@ -13,7 +13,7 @@
         <h3>Hi, {{$fname}} {{$lname}} Your Account Created Successfully Your Login Credentials Are Provided Below :</h3>
         <p>Email : {{$email}} <br>
            Password : {{$password}} <br>
-           Login Url : https://skillrevelationsms.com/vendor/caterer/login
+           Login Url : https://skillrevelationsms.com
         </p>
              
             

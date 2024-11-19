@@ -12,7 +12,8 @@ class lmscontentmanagementcontroller extends Controller
 {
     public function contentska(Request $request){
         $aid=session()->get('ADMIN_ID');
-        $result['category']=DB::table('categories')->where('aid',$aid)->get();
+        $controller_admin_id=session()->get('Controller_ADMIN_ID');
+        $result['category']=DB::table('categories')->where('aid',$aid)->orwhere('aid',$controller_admin_id)->get();
         $result['categoryid']='';
         $result['domainid']='';
         $result['skillsetid']='';
@@ -21,12 +22,14 @@ class lmscontentmanagementcontroller extends Controller
     }
 
     public function contentskabyskillset(Request $request){
-        $aid=session()->get('ADMIN_ID');
+       
+      $aid=session()->get('ADMIN_ID');
+      $controller_admin_id=session()->get('Controller_ADMIN_ID');
         $domain=$request->post('domain');
         $skillset=$request->post('skillset');
         $result['domainid']=$domain;
         $result['skillsetid']=$skillset;
-        $result['category']=DB::table('categories')->where('aid',$aid)->get();
+        $result['category']=DB::table('categories')->where('aid',$aid)->orwhere('aid',$controller_admin_id)->get();
         $result['categoryid']=$request->post('category');
         $result['data']=DB::table('contentskillattributes')
                         ->join('skillattributes','skillattributes.id','contentskillattributes.skillattribute')
@@ -70,7 +73,8 @@ class lmscontentmanagementcontroller extends Controller
             $result['content4']='';   
         }
         $aid=session()->get('ADMIN_ID');
-        $result['categories']=DB::table('categories')->where('aid',$aid)->get();
+        $controller_admin_id=session()->get('Controller_ADMIN_ID');
+        $result['categories']=DB::table('categories')->where('aid',$aid)->orwhere('aid',$controller_admin_id)->get();
         $result['contenttypes1']=DB::table('contenttypes')->where('id',1)->get();
         $result['contenttypes2']=DB::table('contenttypes')->where('id',2)->get();
         $result['contenttypes3']=DB::table('contenttypes')->where('id',3)->get();
@@ -88,6 +92,8 @@ class lmscontentmanagementcontroller extends Controller
             $msg="Content Inserted";
         }
         $model->aid=session()->get('ADMIN_ID');
+        $model->Controller_ADMIN_ID=session()->get('Controller_ADMIN_ID');
+        $model->Controller_ID=session()->get('Controller_ID');
         $model->category=$request->post('category');
         $model->domain=$request->post('domain');
         $model->skillset=$request->post('skillset');

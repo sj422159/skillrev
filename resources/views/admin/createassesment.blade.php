@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <form action="{{url('admin/assesment/createmodule')}}" method="post" enctype="multipart/form-data">
+            <form action="{{url('admin/assesment/savemodule')}}" method="post" enctype="multipart/form-data">
                 @csrf
             
             <div class="card-body">

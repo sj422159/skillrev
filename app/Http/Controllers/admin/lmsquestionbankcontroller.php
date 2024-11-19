@@ -32,129 +32,141 @@ class lmsquestionbankcontroller extends Controller
         $result['data'] = [];
         
         if ($aid) {
-            $result['categories'] = DB::table('categories')->where('aid', $aid)->get();
-            $result['domain'] = DB::table('domains')->where('aid', $aid)->get();
+            $result['categories'] = DB::table('categories')->where('aid', $aid)->orwhere('controller_id', $controller_id)->get();
+            $result['domain'] = DB::table('domains')->where('aid', $aid)->orwhere('controller_id', $controller_id)->get();
         } elseif ($controller_id) {
-            $result['categories'] = DB::table('categories')->where('Controller_ID', $controller_id)->get();
-            $result['domain'] = DB::table('domains')->where('Controller_ID', $controller_id) ->get();
+            $result['categories'] = DB::table('categories')->where('aid', $aid)->orwhere('controller_id', $controller_id)->get();
+            $result['domain'] = DB::table('domains')->where('aid', $aid)->orwhere('controller_id', $controller_id) ->get();
         } else {
             // If neither is found, redirect or return an error
             return redirect()->route('home')->with('error', 'No valid session found.');
         }
-        
+        $result['skillsets'] = DB::table('skillsets')->where('domain', $request->domain_id)->get();
+        $result['skillattributes'] = DB::table('skillsets')->where('skillset', $request->skillset_id)->get();
+    $result['questions'] = DB::table('questionbanks')
+    ->when($aid, function ($query) use ($aid) {
+        return $query->where('aid', $aid);
+    })
+    ->when($controller_id, function ($query) use ($controller_id) {
+        return $query->orWhere('controller_id', $controller_id);
+    })
+    ->get();
         return view('admin.questions', $result);
     }
     
 
-    public function questionsbysa(Request $request){
+    public function questionsbysa(Request $request) {
         // Check if ADMIN_ID or Controller_ID is set
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
         
         // Get POST data
+        $category = $request->post('category');
         $domain = $request->post('domain');
         $skillset = $request->post('skillset');
         $skillattribute = $request->post('skillattribute');
         
         // Prepare result data
+        $result['categoryid'] = $category;
         $result['domainid'] = $domain;
         $result['skillsetid'] = $skillset;
         $result['skillattributeid'] = $skillattribute;
-        $result['categoryid'] = $request->post('category');
         
         // Initialize categories and data
         $result['categories'] = [];
-        $result['data'] = [];
+        $result['domain'] = [];
+        $result['skillsets'] = [];
+        $result['skillattributes'] = [];
+        $result['questions'] = [];
         
+        // Fetch categories and domains for admin or controller
         if ($aid) {
-            // If admin is logged in, fetch all categories created by the admin
             $result['categories'] = DB::table('categories')->where('aid', $aid)->get();
+            $result['domain'] = DB::table('domains')->where('aid', $aid)->get();
         } elseif ($controller_id) {
-            // If controller is logged in, fetch only categories created by the controller
-            $result['categories'] = DB::table('categories')
-                ->where('aid', $controller_id)
-                ->get();
+            $result['categories'] = DB::table('categories')->where('controller_id', $controller_id)->get();
+            $result['domain'] = DB::table('domains')->where('controller_id', $controller_id)->get();
         } else {
             // Redirect if no valid session found
-            return redirect()->route('home')->with('error', 'No valid session found.');
+            return redirect()->route('/')->with('error', 'No valid session found.');
         }
         
-        // Fetch question data
-        if ($aid) {
-            // If admin is logged in, fetch all question banks based on skill attribute
-            $result['data'] = DB::table('questionbanks')
-                ->join('skillattributes', 'questionbanks.skillattribute', '=', 'skillattributes.id')
-                ->where(['questionbanks.skillattribute' => $skillattribute])
-                ->select('questionbanks.id', 'skillattributes.skillattribute', 'questionbanks.qtext', 'questionbanks.qtype', 'questionbanks.qstatus')
-                ->get();
-        } elseif ($controller_id) {
-            // If controller is logged in, fetch only question banks created by the controller
-            $result['data'] = DB::table('questionbanks')
-                ->join('skillattributes', 'questionbanks.skillattribute', '=', 'skillattributes.id')
-                ->where(['questionbanks.skillattribute' => $skillattribute])
-                ->where('questionbanks.aid', $controller_id)  // Only fetch questions created by the controller
-                ->select('questionbanks.id', 'skillattributes.skillattribute', 'questionbanks.qtext', 'questionbanks.qtype', 'questionbanks.qstatus')
-                ->get();
-        }
-        
-        // Return the view with the result data
+        // Fetch skillsets based on domain and skillsets based on selected skillset
+        $result['skillsets'] = DB::table('skillsets')->where('domain', $domain)->get();
+        $result['skillattributes'] = DB::table('skillsets')->where('skillset', $skillset)->get();
+    
+        // Fetch questions from the questionbanks table based on selected filters
+        $result['questions'] = DB::table('questionbanks')
+            ->when($aid, function ($query) use ($aid) {
+                return $query->where('aid', $aid);
+            })
+            ->when($controller_id, function ($query) use ($controller_id) {
+                return $query->where('controller_id', $controller_id);
+            })
+            ->when($category, function ($query) use ($category) {
+                return $query->where('category', $category);
+            })
+            ->when($domain, function ($query) use ($domain) {
+                return $query->where('domain', $domain);
+            })
+            ->when($skillset, function ($query) use ($skillset) {
+                return $query->where('skillset', $skillset);
+            })
+            ->when($skillattribute, function ($query) use ($skillattribute) {
+                return $query->where('skillattribute', $skillattribute);
+            })
+            ->get();
+            
         return view('admin.questions', $result);
     }
     
     
+    
+    
 
     public function add(){
-        // Check if ADMIN_ID or Controller_ID is set
+
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-        
-        // Initialize result data
+
         $result['category'] = [];
-        
-        // Check for session and fetch categories accordingly
+
         if ($aid) {
-            // If admin is logged in, fetch all categories created by the admin
             $result['category'] = DB::table('categories')->where('aid', $aid)->get();
         } elseif ($controller_id) {
-            // If controller is logged in, fetch only categories created by the controller
-            $result['category'] = DB::table('categories')
-                ->where('Controller_ID', $controller_id)
-                ->get();
+            $result['category'] = DB::table('categories')->where('Controller_ID', $controller_id)->get();
         } else {
             // Redirect if no valid session found
             return redirect()->route('home')->with('error', 'No valid session found.');
         }
-    
+        $result['b'] = DB::table('skillattributes')->orwhere('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
         // Return the view with the result data
         return view('admin.uploadquestion', $result);
     }
     
 
-    public function upload(Request $request){   
-        // Validate the uploaded file
+    public function upload(Request $request)
+    {   
         $validator = validator::make($request->all(), [
             'excel' => 'required|max:5000|mimes:xlsx,xls,csv'
         ]);
-        
-        // Check if the validation passes
-        if($validator->passes()){
-            // Get the skill attribute and session data
+    
+        if ($validator->passes()) {
             $skill_attr = $request->post('skillattribute');
             $aid = session()->get('ADMIN_ID');
-            $controller_id = session()->get('Controller_ID');
+            $Controller_id = session()->get('Controller_ID', 0);  // Get Controller_ID, default to 0 if not set
+            $Controller_admin_id = session()->get('Controller_ADMIN_ID', 0);  // Get Controller_ADMIN_ID, default to 0 if not set
             
-            // Check if the session contains ADMIN_ID or Controller_ID
+            // Ensure Controller_ID is passed correctly to the importer
             if ($aid) {
-                // If Admin is logged in, use the ADMIN_ID
-                $importer = new questionsImport($skill_attr, $aid);
-            } elseif ($controller_id) {
-                // If Controller is logged in, use the Controller_ID and set aid as 0
-                $importer = new questionsImport($skill_attr, 0); // For Controller, aid will be 0
+                $importer = new questionsImport($skill_attr, $aid, 0, 0);  // For admin, no Controller_ID
+            } elseif ($Controller_id) {
+                $importer = new questionsImport($skill_attr, 0, $Controller_id, $Controller_admin_id);  // For controller, use Controller_ID and Controller_ADMIN_ID
             } else {
                 // If neither is logged in, redirect with an error
                 return redirect()->route('home')->with('error', 'No valid session found.');
             }
-    
+        
             // Import the Excel file
             Excel::import($importer, request()->file('excel')->store('temp'));
             
@@ -169,6 +181,8 @@ class lmsquestionbankcontroller extends Controller
         }
     }
     
+    
+
 
     public function editQuestion(Request $request,$id){
         $result['questiontype']=DB::table('questiontypes')->get();
@@ -263,35 +277,28 @@ class lmsquestionbankcontroller extends Controller
     }
 
     public function questionbankgetcategories(Request $request) {
-        // Get session data for ADMIN_ID and Controller_ID
         $aid = session()->get('ADMIN_ID');
         $controller_id = session()->get('Controller_ID');
-        
-        // Get the cid from the request
         $cid = $request->post('cid');
-        
-        // Check if the user is an admin or controller
+
         if ($aid) {
             $group = DB::table('groups')->where('id', $cid)->first();
             if ($group->gtype == 2) {
-                $state = DB::table('categories')->where('aid', $aid)->get();
+                $state = DB::table('categories')->where('aid', $aid)->orwhere('controller_id')->get();
             } else {
                 $state = DB::table('categories')->where('groupid', $cid)->get();
             }
         } elseif ($controller_id) {
             $group = DB::table('groups')->where('id', $cid)->first();
             if ($group->gtype == 2) {
-                $state = DB::table('categories')->where('Controller_ID', $controller_id)->get();
+                $state = DB::table('categories')->where('aid', $aid)->orwhere('Controller_ID', $controller_id)->get();
             } else {
-                // Fetch categories where groupid matches the cid and the controller's ID
                 $state = DB::table('categories')->where('groupid', $cid)->where('Controller_ID', $controller_id)->get();
             }
         } else {
-            // If no valid session is found, return an error
             return response()->json(['error' => 'No valid session found.']);
         }
         
-        // Generate the HTML for the dropdown options
         $html = '<option value="">Select</option>';
         foreach ($state as $list) {
             $html .= '<option value="' . $list->id . '">' . $list->categories . '</option>';
@@ -353,7 +360,9 @@ class lmsquestionbankcontroller extends Controller
 
     public  function questionbankgetskillattributes(request $request){
         $gid = $request->post('gid');
-        $b = DB::table('skillattributes')->where('skillset', $gid)->get();
+        $aid = session()->get('ADMIN_ID');
+        $controller_id = session()->get('Controller_ID');
+        $b = DB::table('skillattributes')->orwhere('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
         echo  $html='<option value="">Select</option>';
         foreach($b as $list){
         echo  $html='<option value="'.$list->id.'">'.$list->skillattribute.'</option>';

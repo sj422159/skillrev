@@ -86,8 +86,15 @@
                     
                     <div class="col-12 col-sm-4">
                         <label for="jobrole">Students</label>
-                        <select class="form-control" id="students" data-val="{{$studentid}}" required name="students" onchange="fee(this)">
-                            <option value="">Select</option>       
+                        <select class="form-control" id="students" required name="students" onchange="fee(this)">
+                            <option value="">Select</option>   
+                            @foreach($students as $list)
+                            @if($students==$list->id)
+                            <option selected value="{{$list->id}}">{{$list->sname}} </option>
+                            @else
+                            <option value="{{$list->id}}">{{$list->sname}} </option>
+                            @endif
+                           @endforeach    
                         </select>
                     </div>
                    

@@ -3,170 +3,164 @@
 @section('Dashboard_select','active')
 @section('container')
 
-
-<form action="{{url('admin/skillset/bydomain')}}" method="post">
+<form action="{{url('admin/skillset/bydomain')}}" method="post" id="dynamicForm">
     @csrf
     <div class="form-row">
+        <!-- Group Dropdown -->
         <div class="col-12 col-sm-3 mt-4 mt-sm-0">
             <label>Group</label>
-            <select class="form-control" aria-required="true" aria-invalid="false" name="group" id="group">
+            <select class="form-control" name="group" id="group">
                 <option value="">Select</option>
-                @foreach($groups as $list)
-                     @if($groupid==$list->id)
-                    <option selected value="{{$list->id}}">{{$list->group}}</option>
-                   @else
-                    <option value="{{$list->id}}">{{$list->group}}</option>
-                   @endif
-                @endforeach  
+                @foreach($groups as $group)
+                    <option value="{{ $group->id }}" {{ $groupid == $group->id ? 'selected' : '' }}>
+                        {{ $group->group}}
+                    </option>
+                @endforeach
             </select>
         </div>
+
+        <!-- Category Dropdown -->
         <div class="col-12 col-sm-3 mt-4 mt-sm-0">
             <label>Standard</label>
-            <select class="form-control" aria-required="true" aria-invalid="false" name="category" id="category" data-val="{{$categoryid}}">
+            <select class="form-control" name="category" id="category" data-val="{{ $categoryid }}">
                 <option value="">Select</option>
             </select>
         </div>
+
+        <!-- Domain Dropdown -->
         <div class="col-12 col-sm-3 mt-4 mt-sm-0">
             <label>Subject</label>
-            <select class="form-control" id="domain" aria-required="true"aria-invalid="false"name="domain" data-val="{{$domainid}}" onchange="yesnoChecked(this)">
+            <select class="form-control" id="domain" name="domain" data-val="{{ old('domain') }}">
                 <option value="">Select</option>
             </select>
         </div>
+
+        <!-- Create Button -->
         <div class="col-12 col-sm-3 mt-4 mt-sm-0">
             <label></label><br>
-             <a href="{{url('admin/skillset/addskillset')}}">
-             <button type="button" class="btn btn-primary" style="margin-top:8px;">Create</button>  </a>
-        </div>
-        <div class="col-md-6" style="display:flex !important; align-items: flex-end !important;">
-            <button type="submit" class="btn btn-sm btn-success" id="getskillattributes" hidden="true">Get Domain Related
-            </button>
+            <a href="{{url('admin/skillset/addskillset')}}">
+                <button type="button" class="btn btn-primary" style="margin-top:8px;">Create</button>
+            </a>
         </div>
     </div>
 </form>
 
 
+<!-- Table for Skillsets -->
 <div class="row">
     <div class="col-md-12">
-        <div class="card-body table-responsive p-0">
-            <table class="table table-borderless table-data3">
-                <thead>
-                    <br>
-                    <tr>
-                        <th>Module</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($skillset as $list)
-                    <tr>
-                        <td>{{$list->skillset}}</td>
-                        <td>
-                            <a href="{{url('admin/skillset/addskillset')}}/{{$list->id}}"><button type="button" class="btn btn-success">Edit</button>
-                            </a>
-                            <a href="{{url('admin/skillset')}}/{{$list->id}}"><button type="button" class="btn btn-danger">Delete</button>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="card shadow-sm">
+            <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Module</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($skillset as $list)
+                        <tr>
+                            <td>{{ $list->skillset }}</td>
+                            <td>
+                                {{-- <a href="{{ url('admin/skillset/updateskillset/' . $list->id) }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>  --}}
+                                <a href="{{ url('admin/skillset/' . $list->id) }}" class="btn btn-sm btn-danger" 
+                                   onclick="return confirm('Are you sure you want to delete this skillset?');">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-
-<script>
-  function yesnoChecked(that) {
-    if (that.value != "") {
-        document.getElementById('getskillattributes').click();    
-     } 
-  }
-</script>
-
-
+<!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+jQuery(document).ready(function () {
+    // Populate Categories when Group is selected
+    jQuery('#group').change(function () {
+        let groupId = jQuery(this).val();
+        jQuery.ajax({
+            url: '{{ url("admin/questionbank/getcategory") }}',
+            type: 'GET',
+            data: {
+                cid: groupId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function (result) {
+                jQuery('#category').html(result);
+            },
+            error: function (err) {
+                console.error('Error fetching categories:', err);
+            }
+        });
+    });
 
-jQuery(document).ready(function(){
-          jQuery('#group').change(function (){
-             let cid=jQuery(this).val();
-             jQuery.ajax({
-              url:'{{url("admin/questionbank/getcategory")}}',
-              type:'get',
-              data:'cid='+cid+
-              '&_token={{csrf_token()}}',
-              success:function(result){
-                jQuery('#category').html(result)
-              }
-             });
-           }); 
-           jQuery('#category').change(function (){
-             let cid=jQuery(this).val();
-             let groupid=document.getElementById("group").value;
-             jQuery.ajax({
-              url:'{{url("admin/getdomains")}}',
-              type:'get',
-              data:{cid:cid,groupid:groupid},
-              success:function(result){
-                jQuery('#domain').html(result)
-              }
-             });
-           });
+    // Populate Domains when Category is selected
+    jQuery('#category').change(function () {
+        let categoryId = jQuery(this).val();
+        let groupId = jQuery('#group').val();
+        jQuery.ajax({
+            url: '{{ url("admin/getdomains") }}',
+            type: 'GET',
+            data: {
+                cid: categoryId,
+                groupid: groupId
+            },
+            success: function (result) {
+                jQuery('#domain').html(result);
+            },
+            error: function (err) {
+                console.error('Error fetching domains:', err);
+            }
+        });
+    });
+
+    // Automatically submit form when Domain (Subject) is selected
+    jQuery('#domain').change(function () {
+        let selectedDomain = jQuery(this).val();
+        if (selectedDomain) {
+            // Trigger form submission
+            jQuery('#dynamicForm').submit();
+        }
+    });
 });
 
+jQuery(document).ready(function() {
+    jQuery('#group, #category, #domain').change(function() {
+        let group = jQuery('#group').val();
+        let category = jQuery('#category').val();
+        let domain = jQuery('#domain').val();
 
-        $(document).ready(function(){
-            var state = $('#group').val();
-            var subbranch=$('#category').attr('data-val');
-           $('#category').html('');
-            $.ajax({
-              url:'{{url("admin/skillset/getcategory/{id}")}}',
-              type:'GET',
-              data:{myID:state},
-              dataType: "json",
-              success:function(data)
-              {
-                
-                $.each(data, function(key,jobskills)
-                 {   
-                   if(subbranch==jobskills.id){
-                       $('#category').prop('disabled', false).append('<option value="'+jobskills.id+' " selected>'+jobskills.categories+'</option>');
-                   }else{
-                        $('#category').prop('disabled', false).append('<option value="'+jobskills.id+'">'+jobskills.categories+'</option>');
-                   }
-                });
-               subskillset();
-              }
-          });
-          });
-
-         function subskillset(){
-                   var state = $('#category').val();
-                   var groupid = $('#group').val();
-                   var subskillset=$('#domain').attr('data-val');   
-           $('#domain').html('');
-            $.ajax({
-              url:'{{url("admin/skillset/domain/{id}/{groupid}")}}',
-              type:'GET',
-              data:{id:state,groupid:groupid},
-              dataType: "json",
-              success:function(data)
-              {
-                
-                 $.each(data, function(key,jobroles)
-                 {   
-                   if(subskillset==jobroles.id){
-                       $('#domain').prop('disabled', false).append('<option value="'+jobroles.id+'" selected >'+jobroles.domain+'</option>');
-                   }else{
-                        $('#domain').prop('disabled', false).append('<option value="'+jobroles.id+'">'+jobroles.domain+'</option>');
-                   }
-                });
-              }
-          });
-          };
+        // Send an AJAX request to filter the data
+        jQuery.ajax({
+            url: '{{ url("admin/skillset/bydomain") }}',
+            type: 'GET',
+            data: {
+                group: group,
+                category: category,
+                domain: domain,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // Update the skillsets table dynamically
+                jQuery('tbody').html(response);
+            },
+            error: function(err) {
+                console.error('Error filtering data:', err);
+            }
+        });
+    });
+});
 
 </script>
-
 
 @endsection

@@ -1,4 +1,4 @@
-@extends('admin/layout')
+@extends('controller/Alayout')
 @section('title','Add Transport Fees Schedule')
 @section('Dashboard_select','active')
 @section('container')
@@ -6,7 +6,7 @@
     <div class="col-12">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title" style="color:#fff !important;">Transport Fees Schedule</h3>
+                <h3 class="card-title" style="color:#fff !important;">Transport Fees Schedules</h3>
             </div>
             <form action="{{url('admin/transport/fees/schedule/busroutes/save')}}" method="post" enctype="multipart/form-data">
                 @csrf

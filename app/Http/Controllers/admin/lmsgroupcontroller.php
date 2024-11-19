@@ -16,8 +16,9 @@ class lmsgroupcontroller extends Controller
 {
 
      public function rooms(Request $request){
-        $aid=session()->get('Controller_ID');
-        $result['room']=DB::table('rooms')->where('aid',$aid)->get();
+        $aid=session()->get('ADMIN_ID');
+        $controller_id=session()->get('Controller_ID');
+        $result['room']=DB::table('rooms')->where('aid',$aid)->orWhere('Controller_ID',$controller_id)->get();
         return view('admin.rooms',$result);
     }
 
@@ -40,7 +41,7 @@ class lmsgroupcontroller extends Controller
 
 
      public function saverooms(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $allocation=0;
          if($request->post('allocation')=="on"){
             $allocation=1;
@@ -49,14 +50,16 @@ class lmsgroupcontroller extends Controller
         if($request->post('id')>0){
            
                 $model=room::find($request->post('id'));
-                $model->aid=session()->get('Controller_ID');
+                $model->aid=session()->get('Controller_ADMIN_ID');
+                $model->controller_id=session()->get('Controller_ID');
                 $model->roomname=$request->post('room');
                 $model->allocation=$allocation;
                 $model->save();
                 $request->session()->flash('success','Room Updated');
             }else{
                 $model=new room();
-                $model->aid=session()->get('Controller_ID');
+                $model->aid=session()->get('Controller_ADMIN_ID');
+                $model->controller_id=session()->get('Controller_ID');
                 $model->roomname=$request->post('room');
                  $model->allocation=$allocation;
                 $model->save();
@@ -73,7 +76,7 @@ class lmsgroupcontroller extends Controller
                     return redirect()->route('home')->with('error', 'Controller ID is not set in the session.');
                 }
             
-                $aid = session()->get('Controller_ID');
+               $aid=session()->get('ADMIN_ID');
                 \Log::info("Controller_ID session value: " . $aid);
             
                 $result['group'] = DB::table('groups')->where('aid', $aid)->get();
@@ -103,7 +106,7 @@ if (session()->has('ADMIN_ID')) {
     $aid = session()->get('ADMIN_ID');
     $controller_id = 0;
 } else {
-    $aid = 0;
+    $aid = session()->get('Controller_ADMIN_ID');
     $controller_id = session()->get('Controller_ID', 0);
 }
 
@@ -167,7 +170,7 @@ if ($request->post('id') > 0) {
     } 
 
     public function department(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['department']=DB::table('departments')
                             ->join('nontechcategories','departments.category','nontechcategories.id')
                             ->where('departments.aid',$aid)
@@ -177,7 +180,7 @@ if ($request->post('id') > 0) {
     }
     
     public function adddepartment(Request $request,$id=""){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['nontechcategories']=DB::table('nontechcategories')->get();     
         if($id>0){
             $arr=department::where(['id'=>$id])->get();
@@ -194,7 +197,7 @@ if ($request->post('id') > 0) {
     }
      
     public function savedepartment(Request $request){ 
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         if($request->post('id')>0){ 
             $model=department::find($request->post('id'));
             $request->session()->flash('success','Department Updated');
@@ -216,7 +219,7 @@ if ($request->post('id') > 0) {
 
 
      public function infragroup(Request $request){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['department']=DB::table('infragroups')
                             ->join('infracategories','infragroups.category','infracategories.id')
                             ->where('infragroups.aid',$aid)
@@ -226,7 +229,7 @@ if ($request->post('id') > 0) {
     }
     
     public function addinfragroup(Request $request,$id=""){
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         $result['nontechcategories']=DB::table('infracategories')->get();  
         $result['infragroups']=DB::table('infragroups')->where('aid',$aid)->get();  
         $result['checkid']=[];
@@ -248,7 +251,7 @@ if ($request->post('id') > 0) {
     }
      
     public function saveinfragroup(Request $request){ 
-        $aid=session()->get('Controller_ID');
+        $aid=session()->get('ADMIN_ID');
         if($request->post('id')>0){ 
             $model=infragroup::find($request->post('id'));
             $request->session()->flash('success','Infragroup Updated');

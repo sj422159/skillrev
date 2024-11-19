@@ -14,6 +14,7 @@ class HostelExpenseSubcategory extends Model
     protected $fillable = [
         'group',
         'category',
-        'subcategory'
+        'subcategory',
+        'nontechm_id'
     ];
 }

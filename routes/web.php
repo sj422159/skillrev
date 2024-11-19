@@ -1564,13 +1564,11 @@ Route::get('employee/marketingofficer/logout',function(){
  return redirect('/');
 });
 
-
 Route::get('/controller', [ControllerName::class, 'create'])->name('controller.create');
 Route::post('/controller', [ControllerName::class, 'store'])->name('controller.store');
-Route::put('/controller', [ControllerName::class, 'update'])->name('controller.update');
+Route::post('/controller/update', [ControllerName::class, 'update'])->name('controller.update');
 Route::delete('/controller/{id}', [ControllerName::class, 'destroy'])->name('controller.destroy');
 
-// Route::get('Accontrol/login', [AcademicController::class, 'login'])->name('accontrol.login.view');
 Route::post('Accontrol/login/save', [AcademicController::class, 'save'])->name('accontrol.login.save');
 Route::get('Accontrol/forgotpassword', [AcademicController::class, 'forgotpassword']);
 Route::post('Accontrol/forgotpassword/check', [AcademicController::class, 'forgotpasswordcheck']);
@@ -1626,6 +1624,7 @@ Route::get('admin/skillset',[AcademicController::class, 'skillset']);
 Route::post('admin/skillset/bydomain',[AcademicController::class, 'skillsetbydomain']);
 Route::get('admin/skillset/addskillset',[AcademicController::class, 'addskillset']);
 Route::get('admin/skillset/addskillset/{id}',[AcademicController::class, 'addskillset']);
+Route::get('admin/skillset/updateskillset/{id}', [AcademicController::class, 'editSkillset'])->name('skillset.edit');
 Route::post('admin/skillset/saveskillset',[AcademicController::class,'saveskillset']);
 Route::get('admin/skillset/{id}',[AcademicController::class,'skillsetdelete']);
 Route::get('admin/skillset/getcategory/{id}',[AcademicController::class,'skillsetcategory']);
@@ -1642,7 +1641,15 @@ Route::post('admin/skillattribute/saveskillattribute',[AcademicController::class
 Route::get('admin/skillattribute/{id}',[AcademicController::class,'skillattributedelete']);
 Route::get('admin/skillattribute/domain/{id}',[AcademicController::class,'getdomain']);
 Route::get('admin/skillattribute/skillset/{id}',[AcademicController::class,'getskillset']);
-Route::get('admin/skillattribute/getskillattribute/{id}',[AcademicController::class,'getskillattribute']);
+Route::get('admin/getskillattribute',[AcademicController::class,'getskillattribute']);
+
+Route::get('admin/getSubBranch/{category_id}', [ContentController::class, 'getSubBranch'])->name('getSubBranch');
+
+// AJAX route to get skillsets based on subbranch selection
+Route::get('admin/getSkillset/{domain_id}', [ContentController::class, 'getSkillset'])->name('getSkillset');
+
+// AJAX route to get skill attributes based on skillset selection
+Route::get('admin/getSkillattribute/{skillset_id}', [ContentController::class, 'getSkillattribute'])->name('getSkillattribute');
 
 Route::get('admin/assignments',[AcademicController::class,'reports']);
 Route::post('admin/assignments/trainingwise',[AcademicController::class,'fetchstu']);
@@ -1677,13 +1684,11 @@ Route::get('admin/analytics/attendance',[adminattendanceanalyticcontroller::clas
 Route::post('admin/analytics/attendance/fetch',[adminattendanceanalyticcontroller::class,'fetch']);
 Route::get('admin/analytic/attendance/fetch/datewise',[adminattendanceanalyticcontroller::class,'datewise']);
 
-
 Route::get('admin/analytics/competition',[admincompetitionanalyticcontroller::class,'index']);
 Route::post('admin/analytics/competition/fetch',[admincompetitionanalyticcontroller::class,'fetch']);
 Route::get('admin/competition/bysupervisor/{id}',[admincompetitionanalyticcontroller::class,'getcompetition']);
 
-
-Route::get('admin/assesments',[lmsassesmentscontroller::class,'colist'])->name('admin.assesments');
+Route::get('admin/assesments',[lmsassesmentscontroller::class,'colist'])->name('admin.assessment');
 Route::get('admin/assesment/createassesment',[lmsassesmentscontroller::class,'createassesment']);
 Route::get('admin/assesment/edit/{id}',[lmsassesmentscontroller::class,'createassesment']);
 Route::get('admin/assesment/delete/{id}',[lmsassesmentscontroller::class,'delete']);
@@ -1691,12 +1696,18 @@ Route::get('admin/trainings/trains/{id}',[lmsassesmentscontroller::class,'gettra
 Route::post('admin/skillattribute/domain/',[lmsassesmentscontroller::class,'getdomain']);
 Route::post('admin/skillattribute/skillset/',[lmsassesmentscontroller::class,'getskillset']);
 Route::post('admin/skillattribute/getskillattribute/',[lmsassesmentscontroller::class,'getskillattribute']);
-Route::post('admin/assesment/createmodule',[lmsassesmentscontroller::class,'createmodule']);
-Route::get('admin/assesment/createmodule',[lmsassesmentscontroller::class,'createmodule'])->name('cocreate');
-Route::post('admin/createsection',[lmsassesmentsectionscontroller::class,'index']);
+
+
+Route::post('admin/assesment/createmodule',[lmsassesmentscontroller::class,'createmodule'])->name('admin.createmodule');
+Route::get('admin/assesment/createmodule/{id}',[lmsassesmentscontroller::class,'createmodules'])->name('admin.createmodules');
+Route::post('admin/assesment/savemodule',[lmsassesmentscontroller::class,'savemodule'])->name('cocreate');
+
+
+Route::get('admin/createsection',[lmsassesmentsectionscontroller::class,'index']);
+Route::post('admin/createsection', [lmsassesmentsectionscontroller::class, 'storesection']);
 Route::get('admin/createsection/{id}',[lmsassesmentsectionscontroller::class,'index']);
-Route::post('admin/assesments',[lmsassesmentsectionscontroller::class,'comodule']);
-Route::post('admin/assesment/sectioncreation',[lmsassesmentsectionscontroller::class,'createsession']);
+Route::post('admin/saveassesments',[lmsassesmentscontroller::class,'saveAssessment']);
+Route::get('admin/assesment/sectioncreation',[lmsassesmentsectionscontroller::class,'createsession']);
 Route::get('admin/assesment/section/delete/{id}',[lmsassesmentsectionscontroller::class,'delete']);
 
 Route::get('admin/questions',[lmsquestionbankcontroller::class,'questions']);

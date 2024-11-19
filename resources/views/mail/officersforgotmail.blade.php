@@ -13,7 +13,7 @@
         <h3>Hi {{$name}} Your Login Credentials Are Provided Below :</h3>
         <p>Email : {{$email}} <br>
            Password : {{$password}} <br>
-           Login Url : https://skillrevelationsms.com/employee
+           Login Url : https://skillrevelationsms.com
         </p>
              
             

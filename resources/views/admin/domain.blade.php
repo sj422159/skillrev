@@ -103,9 +103,9 @@ $(document).ready(function(){
               success:function(data){ 
                 $.each(data, function(key,jobskills){   
                     if(category==jobskills.id){
-                       $('#category').prop('disabled', false).append('<option value="'+jobskills.id+' " selected>'+jobskills.categories+'</option>');
+                       $('#category').prop('disabled', false).append('<option value="'+jobskills.id+' " >'+jobskills.categories+'</option>');
                     }else{
-                        $('#category').prop('disabled', false).append('<option value="'+jobskills.id+'">'+jobskills.categories+'</option>');
+                        // $('#category').prop('disabled', false).append('<option value="'+jobskills.id+'">'+jobskills.categories+'</option>');
                     }
                 });
               }

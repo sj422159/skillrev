@@ -11,13 +11,18 @@ class ControllerName extends Controller
 {
     public function index()
     {
-        $controllers = ControllerModel::all(); // Or use any query to get the controllers
-        $roles = Role::all(); // Or wherever you are getting roles from
+        $aid = session()->get('ADMIN_ID'); 
+        $controllers = ControllerModel::where('aid', $aid)->get();
+        $roles = Role::where('aid', $aid)->get();
+    
+        // Pass the data to the view
         return view('controller.addcontroller', compact('controllers', 'roles'));
     }
+    
     public function create()
     {
-        $controllers = ControllerModel::all(); // Fetch controllers using the model
+        $aid = session()->get('ADMIN_ID'); 
+        $controllers = ControllerModel::where('aid', $aid)->get();// Fetch controllers using the model
         $roles = DB::table('controller_role')->get();
 
         return view('controller.addcontroller', [
@@ -30,11 +35,11 @@ class ControllerName extends Controller
 {
     $controller = new ControllerModel;
     $controller->name = $request->name;
-    $controller->role = $request->role;
+   $controller->role = $request->role; 
     $controller->email = $request->email;
     $controller->number = $request->number;
     $controller->aid = $request->aid;  // Storing aid from session or form
-    $controller->role_id = $request->role_id;  // Store role_id
+    $controller->Controller_role_id = $request->role_id;  // Store role_id
     $controller->save();
 
     return response()->json(['success' => true]);
@@ -46,27 +51,22 @@ public function update(Request $request)
     $request->validate([
         'id' => 'required|exists:controller,id',
         'name' => 'required',
-        'role_id' => 'required|exists:roles,id', // Ensure role_id is valid
+        'role_id' => 'required|exists:roles,id', 
         'email' => 'required|email',
         'number' => 'required',
     ]);
 
-    // Get the aid from the session
     $aid = session()->get('ADMIN_ID'); 
 
-    if (!$aid) {
-        return response()->json(['error' => 'Administrator ID (aid) is not set in session'], 400);
-    }
-
-    // Find the controller and update the record
     $controller = ControllerModel::find($request->id);
     if ($controller) {
         $controller->update([
             'name' => $request->name,
             'role_id' => $request->role_id,
+            'role' => $request->role,
             'email' => $request->email,
             'number' => $request->number,
-            'aid' => $aid, // Update the aid in the record
+            'aid' => $aid, 
         ]);
         return response()->json(['success' => true]);
     }

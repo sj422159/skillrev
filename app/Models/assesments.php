@@ -7,5 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class assesments extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'ass_id', 'sectionname', 'sectionduration', 'sectionpass', 'domain', 'skillset',
+        'skillattrs', 'noofquestions', 'category', 'totalquestions', 'level', 'time',
+        'controller_id', 'aid'
+    ];
 }

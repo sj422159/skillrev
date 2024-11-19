@@ -20,10 +20,11 @@ class ControllerModel extends Model
         'number',
         'aid', // Make sure 'aid' is fillable as well
     ];
-
+    
     // Define the relationship with Expense
     public function expenses()
     {
         return $this->hasMany(Expense::class);
     }
+    
 }
