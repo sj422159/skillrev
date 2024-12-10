@@ -31,7 +31,7 @@
                    
 
 
-                    <?php $date= date('Y-m-d', strtotime('-15 year')); ?>
+                    <?php $date= date('Y-m-d', strtotime('+5 year')); ?>
                     <div class="col-12 col-sm-3 mt-4 mt-sm-0">
                       <label for="GenderId" class="form-control-label"> Dob :</label>
                       <input type="date" class="multisteps-form__input form-control m-input date-picker" placeholder="Date Of Birth" value="{{$dob}}" max={{$date}} required="true" data-val-required="please Select Dob" name="dob" id="DateOfBirthValue">

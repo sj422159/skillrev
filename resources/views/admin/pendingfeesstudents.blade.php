@@ -1,4 +1,4 @@
-@extends('controller/Alayout') 
+@extends('admin/layout') 
 @section('title','Pending Fees Students') 
 @section('Dashboard_select','active extra') 
 @section('container')
@@ -167,14 +167,14 @@
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#example1').DataTable({
-            dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-        });
-        $('#example2').DataTable({
-            dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-        });
+        // $('#example1').DataTable({
+        //     dom: 'Bfrtip',
+        //     buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+        // });
+        // $('#example2').DataTable({
+        //     dom: 'Bfrtip',
+        //     buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+        // });
     });
 </script>
 <script>

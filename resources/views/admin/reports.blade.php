@@ -1,4 +1,4 @@
-@extends('controller/layout')
+@extends('admin/layout')
 @section('title','Reports')
 @section('reports','active')
 @section('container')

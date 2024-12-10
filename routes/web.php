@@ -7,11 +7,10 @@ use App\Http\Controllers\admin\lmsrolecontroller;
 use App\Http\Controllers\admin\lmsbatchcontroller;
 use App\Http\Controllers\admin\lmsgroupcontroller;
 use App\Http\Controllers\admin\adminfeescontroller;
-use App\Http\Controllers\admin\adminlifecontroller;  
+use App\Http\Controllers\admin\adminlifecontroller;
 use App\Http\Controllers\admin\lmshostelcontroller;
 use App\Http\Controllers\admin\lmsperiodcontroller;
 use App\Http\Controllers\admin\ControllerName;
-
 
 use App\Http\Controllers\caterer\caterercontroller;
 use App\Http\Controllers\faculty\facultycontroller;
@@ -166,16 +165,22 @@ use App\Http\Controllers\nontechmanager\infrastructure\infrastructureothercontro
 use App\Http\Controllers\nontechmanager\infrastructure\infrastructureschoolcontroller;
 use App\Http\Controllers\nontechmanager\infrastructure\infrastructurecafeteriacontroller;
 
+
 use App\Http\Controllers\controller\AcademicController;
 use App\Http\Controllers\controller\ExaminationController;
-use App\Http\Controllers\controller\AccountController;
-use App\Models\Academic;
+use App\Http\Controllers\controller\account\AccountController;
 
-
-use App\Http\Controllers\nontechmanager\hostel\HostelExpenseController;
-
-
-
+use App\Http\Controllers\controller\academic\AcademicGroupController;
+use App\Http\Controllers\controller\academic\AcademicStandardController;
+use App\Http\Controllers\controller\academic\AcademicSubjectController;
+use App\Http\Controllers\controller\academic\AcademicModuleController;
+use App\Http\Controllers\controller\academic\AcademicChapterController;
+use App\Http\Controllers\controller\academic\AcademicContent;
+use App\Http\Controllers\controller\academic\AcademicReport;
+use App\Http\Controllers\controller\exam\Examassesment;
+use App\Http\Controllers\faculty\FacultyContentController;
+use App\Http\Controllers\controller\account\Feescontroller;
+use App\Http\Controllers\controller\account\Feesanalyticcontroller;
 
 
 Route::get('corporateadmin/login',[corporateadminauthcontroller::class ,'login']);
@@ -245,7 +250,7 @@ Route::get('corporateadmin/school/mail/{id}',[corporateadminschoolcontroller::cl
 Route::get('corporateadmin/school/data/{id}',[corporateadminschoolcontroller::class,'schooldata']);
 
 Route::get('corporateadmin/admin/export/{adminid}',[corporateadminschoolcontroller::class,'adminexport']);
-Route::get('corporatecontroller/groupmanager/export/{adminid}',[corporateadminschoolcontroller::class,'groupmanagerexport']);
+Route::get('corporateadmin/groupmanager/export/{adminid}',[corporateadminschoolcontroller::class,'groupmanagerexport']);
 Route::get('corporateadmin/manager/export/{adminid}',[corporateadminschoolcontroller::class,'managerexport']);
 Route::get('corporateadmin/nontechgroupmanager/export/{adminid}',[corporateadminschoolcontroller::class,'nontechgroupmanagerexport']);
 Route::get('corporateadmin/nontechmanager/export/{adminid}',[corporateadminschoolcontroller::class,'nontechmanagerexport']);
@@ -284,7 +289,7 @@ return redirect('/');
 
 Route::get('/login',function(){
     return view('views_latest.new_login');
-});
+})->name('login');
 Route::get('/register',function(){
     return view('views_latest.new_registration');
 });
@@ -351,7 +356,220 @@ Route::get('admin/studentdetails/export/{classid}/{sectionid}',[lmsuploaddetails
 Route::get('admin/student/status/{status}/{id}',[lmsuploaddetailscontroller::class,'status']);
 Route::get('admin/student/delete/{id}',[lmsuploaddetailscontroller::class,'delete']);
 
+Route::get('admin/category',[lmsmanagementcontroller::class, 'category']);
+Route::post('admin/category/bygroup',[lmsmanagementcontroller::class, 'categorybygroup']);
+Route::get('admin/category/addcategory',[lmsmanagementcontroller::class, 'addcategory']);
+Route::get('admin/category/addcategory/{id}',[lmsmanagementcontroller::class, 'addcategory']);
+Route::post('admin/category/savecategory',[lmsmanagementcontroller::class,'savecategory']);
+Route::get('admin/category/{id}',[lmsmanagementcontroller::class,'categorydelete']);
 
+Route::get('admin/domain',[lmsmanagementcontroller::class, 'domain']);
+Route::post('admin/domain/bycategory',[lmsmanagementcontroller::class, 'domainbycategory']);
+Route::get('admin/domain/adddomain',[lmsmanagementcontroller::class, 'adddomain']);
+Route::get('admin/domain/adddomain/{id}',[lmsmanagementcontroller::class, 'adddomain']);
+Route::post('admin/domain/savedomain',[lmsmanagementcontroller::class,'savedomain']);
+Route::get('admin/domain/{id}',[lmsmanagementcontroller::class,'delete']);
+
+Route::get('admin/skillset',[lmsmanagementcontroller::class, 'skillset']);
+Route::post('admin/skillset/bydomain',[lmsmanagementcontroller::class, 'skillsetbydomain']);
+Route::get('admin/skillset/addskillset',[lmsmanagementcontroller::class, 'addskillset']);
+Route::get('admin/skillset/addskillset/{id}',[lmsmanagementcontroller::class, 'addskillset']);
+Route::post('admin/skillset/saveskillset',[lmsmanagementcontroller::class,'saveskillset']);
+Route::get('admin/skillset/{id}',[lmsmanagementcontroller::class,'skillsetdelete']);
+Route::get('admin/skillset/getcategory/{id}',[lmsmanagementcontroller::class,'skillsetcategory']);
+Route::get('admin/getdomains',[lmsmanagementcontroller::class,'skillsetgetdomains']);
+Route::get('admin/skillset/getdomain/{id}',[lmsmanagementcontroller::class,'skillsetdomain']);
+Route::get('admin/skillset/domain/{id}/{groupid}',[lmsmanagementcontroller::class,'getdomains']);
+Route::get('admin/skillset/getskillset/{id}',[lmsmanagementcontroller::class,'getskillsets']);
+
+Route::get('admin/skillattribute',[lmsmanagementcontroller::class, 'skillattribute']);
+Route::post('admin/skillattribute/byskillset',[lmsmanagementcontroller::class, 'skillattributebyskillset']);
+Route::get('admin/skillattribute/addskillattribute',[lmsmanagementcontroller::class, 'addskillattribute']);
+Route::get('admin/skillattribute/addskillattribute/{id}',[lmsmanagementcontroller::class, 'addskillattribute']);
+Route::post('admin/skillattribute/saveskillattribute',[lmsmanagementcontroller::class,'saveskillattribute']);
+Route::get('admin/skillattribute/{id}',[lmsmanagementcontroller::class,'skillattributedelete']);
+Route::get('admin/skillattribute/domain/{id}',[lmsmanagementcontroller::class,'getdomain']);
+Route::get('admin/skillattribute/skillset/{id}',[lmsmanagementcontroller::class,'getskillset']);
+Route::get('admin/skillattribute/getskillattribute/{id}',[lmsmanagementcontroller::class,'getskillattribute']);
+
+Route::get('admin/assesments',[lmsassesmentscontroller::class,'colist']);
+Route::get('admin/assesment/createassesment',[lmsassesmentscontroller::class,'createassesment']);
+Route::get('admin/assesment/edit/{id}',[lmsassesmentscontroller::class,'createassesment']);
+Route::get('admin/assesment/delete/{id}',[lmsassesmentscontroller::class,'delete']);
+Route::get('admin/trainings/trains/{id}',[lmsassesmentscontroller::class,'gettrainings']);
+Route::post('admin/skillattribute/domain/',[lmsassesmentscontroller::class,'getdomain']);
+Route::post('admin/skillattribute/skillset/',[lmsassesmentscontroller::class,'getskillset']);
+Route::post('admin/skillattribute/getskillattribute/',[lmsassesmentscontroller::class,'getskillattribute']);
+Route::post('admin/assesment/createmodule',[lmsassesmentscontroller::class,'createmodule']);
+Route::get('admin/assesment/createmodule',[lmsassesmentscontroller::class,'createmodule'])->name('cocreate');
+Route::post('admin/createsection',[lmsassesmentsectionscontroller::class,'index']);
+Route::get('admin/createsection/{id}',[lmsassesmentsectionscontroller::class,'index']);
+Route::post('admin/assesments',[lmsassesmentsectionscontroller::class,'comodule']);
+Route::post('admin/assesment/sectioncreation',[lmsassesmentsectionscontroller::class,'createsession']);
+Route::get('admin/assesment/section/delete/{id}',[lmsassesmentsectionscontroller::class,'delete']);
+
+Route::get('admin/questions',[lmsquestionbankcontroller::class,'questions']);
+Route::post('admin/questions/bysa',[lmsquestionbankcontroller::class,'questionsbysa']);
+Route::get('admin/questions/add',[lmsquestionbankcontroller::class,'add']);
+Route::post('admin/questions/upload',[lmsquestionbankcontroller::class,'upload']);
+Route::get('admin/question/edit/{id}',[lmsquestionbankcontroller::class,'editQuestion']);
+Route::get('admin/question/view/{id}',[lmsquestionbankcontroller::class,'examview']);
+Route::post('admin/question/update',[lmsquestionbankcontroller::class,'updateQuestion']);
+Route::get('admin/question/delete/{id}',[lmsquestionbankcontroller::class,'deleteQuestion']);
+Route::any('admin/questionbank/getcategory',[lmsquestionbankcontroller::class,'questionbankgetcategories']);
+Route::any('admin/questionbank/getdomain',[lmsquestionbankcontroller::class,'questionbankgetdomains']);
+Route::post('admin/questionbank/getskillset',[lmsquestionbankcontroller::class,'questionbankgetskillsets']);
+Route::any('admin/questionbank/getskillattribute',[lmsquestionbankcontroller::class,'questionbankgetskillattributes']);
+Route::get('admin/questions/mismatch',[lmsquestionbankcontroller::class,'mismatch']);
+Route::get('admin/questions/improper',[lmsquestionbankcontroller::class,'improper']);
+
+Route::get('admin/group',[lmsgroupcontroller::class, 'group']);
+Route::get('admin/group/addgroup',[lmsgroupcontroller::class, 'addgroup']);
+Route::get('admin/group/addgroup/{id}',[lmsgroupcontroller::class, 'addgroup']);
+Route::post('admin/group/savegroup',[lmsgroupcontroller::class,'savegroup']);
+
+Route::get('admin/section',[lmssectioncontroller::class,'section']);
+Route::post('admin/section/byclass',[lmssectioncontroller::class, 'sectionsbyclass']);
+Route::get('admin/section/addsection',[lmssectioncontroller::class, 'addsection']);
+Route::get('admin/section/addsection/{id}',[lmssectioncontroller::class, 'addsection']);
+Route::post('admin/section/savesection',[lmssectioncontroller::class,'savesection']);
+Route::get('admin/section/delete/{id}',[lmssectioncontroller::class,'sectiondelete']);
+Route::any('admin/section/group/getclass',[lmssectioncontroller::class,'getclass']);
+Route::get('admin/section/getclass/{id}',[lmssectioncontroller::class,'getclasses']);
+
+Route::get('admin/department',[lmsgroupcontroller::class, 'department']);
+Route::get('admin/department/adddepartment',[lmsgroupcontroller::class, 'adddepartment']);
+Route::get('admin/department/adddepartment/{id}',[lmsgroupcontroller::class, 'adddepartment']);
+Route::post('admin/department/savedepartment',[lmsgroupcontroller::class,'savedepartment']);
+
+
+Route::get('admin/infrastructure/group',[lmsgroupcontroller::class, 'infragroup']);
+Route::get('admin/infrastructure/group/addinfragroup',[lmsgroupcontroller::class, 'addinfragroup']);
+Route::get('admin/infrastructure/group/addinfragroup/{id}',[lmsgroupcontroller::class, 'addinfragroup']);
+Route::post('admin/infrastructure/group/saveinfragroup',[lmsgroupcontroller::class,'saveinfragroup']);
+
+Route::get('admin/rooms',[lmsgroupcontroller::class, 'rooms']);
+Route::get('admin/rooms/addrooms',[lmsgroupcontroller::class, 'addrooms']);
+Route::get('admin/rooms/addrooms/{id}',[lmsgroupcontroller::class, 'addrooms']);
+Route::post('admin/rooms/saverooms',[lmsgroupcontroller::class,'saverooms']);
+Route::get('admin/rooms/{id}',[lmsgroupcontroller::class,'roomsdelete']);
+
+
+Route::get('admin/supervisor',[lmssupervisorcontroller::class, 'supervisor']);
+Route::get('admin/supervisor/addsupervisor',[lmssupervisorcontroller::class, 'addsupervisor']);
+Route::get('admin/supervisor/addsupervisor/{id}',[lmssupervisorcontroller::class, 'addsupervisor']);
+Route::post('admin/supervisor/savesupervisor',[lmssupervisorcontroller::class,'savesupervisor']);
+Route::get('admin/supervisor/status/{status}/{id}',[lmssupervisorcontroller::class,'supervisorstatus']);
+Route::get('admin/supervisor/delete/{id}',[lmssupervisorcontroller::class,'supervisordelete']);
+
+Route::get('admin/manager',[lmsmanagercontroller::class, 'manager']);
+Route::get('admin/manager/addmanager',[lmsmanagercontroller::class, 'addmanager']);
+Route::get('admin/manager/addmanager/{id}',[lmsmanagercontroller::class, 'addmanager']);
+Route::post('admin/manager/savemanager',[lmsmanagercontroller::class,'savemanager']);
+Route::get('admin/manager/status/{status}/{id}',[lmsmanagercontroller::class,'managerstatus']);
+Route::get('admin/manager/delete/{id}',[lmsmanagercontroller::class,'managerdelete']);
+Route::get('admin/manager/getclass/bygroupid/ofsupervisor/{id}',[lmsmanagercontroller::class,'managergetclass']);
+
+Route::get('admin/role',[lmsrolecontroller::class, 'role']);
+Route::get('admin/role/addrole',[lmsrolecontroller::class, 'addrole']);
+Route::get('admin/role/addrole/{id}',[lmsrolecontroller::class, 'addrole']);
+Route::post('admin/role/saverole',[lmsrolecontroller::class,'saverole']);
+
+Route::get('admin/faculty',[lmsfacultycontroller::class, 'faculty']);
+Route::get('admin/faculty/addfaculty',[lmsfacultycontroller::class, 'addfaculty']);
+Route::get('admin/faculty/addfaculty/{id}',[lmsfacultycontroller::class, 'addfaculty']);
+Route::post('admin/faculty/savefaculty',[lmsfacultycontroller::class,'savefaculty']);
+Route::get('admin/faculty/status/{status}/{id}',[lmsfacultycontroller::class,'facultystatus']);
+Route::get('admin/faculty/delete/{id}',[lmsfacultycontroller::class,'facultydelete']);
+Route::get('admin/class/{id}', [lmsfacultycontroller::class,'getsection']);
+Route::get('admin/faculty/getmodule/{id}',[lmsfacultycontroller::class,'getmodules']);
+Route::get('admin/faculty/getsubject/{id}',[lmsfacultycontroller::class,'getsubjects']);
+Route::get('admin/faculty/getsubject/from/supervisor/{id}',[lmsfacultycontroller::class,'getsubjectsfromsupervisor']);
+Route::get('admin/faculty/getsubject/from/multiple/classes/supervisor/{id}',[lmsfacultycontroller::class,'getmultiplesubjectsfromsupervisor']);
+
+Route::get('admin/faculty/getsubject/from/supervisor/faculty/{id}',[lmsfacultycontroller::class,'getsubjectsfaculty']);
+Route::get('admin/faculty/supervisor/group/optionalornot/{id}',[lmsfacultycontroller::class,'optionalornot']);
+
+
+
+Route::get('admin/holiday',[lmsholidaycontroller::class,'holiday']);
+Route::post('admin/holiday/upload',[lmsholidaycontroller::class,'upload']);
+Route::get('admin/holiday/edit/{id}',[lmsholidaycontroller::class,'editholiday']);
+Route::post('admin/holiday/update',[lmsholidaycontroller::class,'updateholiday']);
+Route::get('admin/holiday/delete/{id}',[lmsholidaycontroller::class,'deleteholiday']);
+
+
+Route::get('admin/hostel',[lmshostelcontroller::class,'hostel']);
+Route::get('admin/hostel/add',[lmshostelcontroller::class,'addhostel']);
+Route::get('admin/hostel/add/{id}',[lmshostelcontroller::class,'addhostel']);
+Route::post('admin/hostel/save',[lmshostelcontroller::class,'savehostel']);
+Route::get('admin/hostel/delete/{id}',[lmshostelcontroller::class,'deletehostel']);
+
+
+Route::get('admin/cafeteria',[lmshostelcontroller::class,'cafeteria']);
+Route::get('admin/cafeteria/add',[lmshostelcontroller::class,'addcafeteria']);
+Route::get('admin/cafeteria/add/{id}',[lmshostelcontroller::class,'addcafeteria']);
+Route::post('admin/cafeteria/save',[lmshostelcontroller::class,'savecafeteria']);
+Route::get('admin/cafeteria/delete/{id}',[lmshostelcontroller::class,'deletecafeteria']);
+
+
+
+
+Route::get('admin/content/skillattribute',[lmscontentmanagementcontroller::class, 'contentska']);
+Route::post('admin/content/skillattribute/byskillset',[lmscontentmanagementcontroller::class, 'contentskabyskillset']);
+Route::get('admin/content/skillattribute/addskillattribute',[lmscontentmanagementcontroller::class, 'addcontentska']);
+Route::get('admin/content/skillattribute/addskillattribute/{id}',[lmscontentmanagementcontroller::class, 'addcontentska']);
+Route::post('admin/content/skillattribute/saveskillattribute',[lmscontentmanagementcontroller::class,'savecontentska']);
+Route::get('admin/content/skillattribute/{id}',[lmscontentmanagementcontroller::class,'contentskadelete']);
+
+Route::get('admin/assigned/{id}',[adminlifecontroller::class,'assindex']);
+Route::get('admin/assigned/students/{id}',[adminlifecontroller::class,'assstudents']);
+
+
+Route::get('admin/attended/{id}',[adminlifecontroller::class,'attindex']);
+Route::get('admin/attended/students/{id}',[adminlifecontroller::class,'attstudents']);
+Route::get('admin/attended/students/assignments/view/{id}',[adminlifecontroller::class,'assignments']);
+
+Route::get('admin/completed/{id}',[adminlifecontroller::class,'comindex']);
+Route::get('admin/completed/students/{id}',[adminlifecontroller::class,'comstudents']);
+Route::get('admin/completed/students/approved/{id}',[adminlifecontroller::class,'comapstudents']);
+Route::get('admin/completed/students/pass/{id}/{cid}',[adminlifecontroller::class,'postpass']);
+
+Route::get('admin/assignments',[lmsassignmentscontroller::class,'reports']);
+Route::post('admin/assignments/trainingwise',[lmsassignmentscontroller::class,'fetchstu']);
+
+Route::get('admin/reports',[lmsstudentassignationscontroller::class,'reports']);
+Route::get('admin/classby/section/{id}',[lmsstudentassignationscontroller::class,'classby']);
+Route::post('admin/reports/sectionwise',[lmsstudentassignationscontroller::class,'fetchstu']);
+Route::get('admin/assignmentreport/{id}',[lmsstudentassignationscontroller::class,'assignmentreport']);
+Route::get('admin/examreport/{bid}/{id}',[lmsstudentassignationscontroller::class,'sectionreports']);
+Route::post('admin/exam/detailedreport',[lmsstudentassignationscontroller::class,'detailedreport']);
+Route::get('admin/exam/swot/{id}',[lmsstudentassignationscontroller::class,'swot']);
+
+Route::get('admin/periods/portal',[lmsperiodcontroller::class, 'portal']);
+Route::get('admin/periods/portal/addportal',[lmsperiodcontroller::class, 'addportal']);
+Route::get('admin/periods/portal/addportal/{id}',[lmsperiodcontroller::class, 'addportal']);
+Route::post('admin/periods/portal/saveportal',[lmsperiodcontroller::class,'saveportal']);
+
+Route::get('admin/periods/class',[lmsperiodcontroller::class, 'class']);
+Route::get('admin/periods/class/addclass',[lmsperiodcontroller::class, 'addclass']);
+Route::get('admin/schedule/class/getmaxperiod/',[lmsperiodcontroller::class,'getmax']);
+Route::get('admin/periods/class/addclass/{id}',[lmsperiodcontroller::class, 'addclass']);
+Route::post('admin/periods/class/saveclass',[lmsperiodcontroller::class,'saveclass']);
+Route::get('admin/own/list/{id}/{day}',[schedulelistcontroller::class,'groupmanagerlist']);
+Route::get('admin/manager/list/{id}/{day}',[schedulelistcontroller::class,'managerlist']);
+Route::get('admin/faculty/list/{id}/{day}',[schedulelistcontroller::class,'facultylist']);
+
+Route::get('admin/periods/subject',[lmsperiodcontroller::class, 'subject']);
+Route::get('admin/periods/subject/addsubject',[lmsperiodcontroller::class, 'addsubject']);
+Route::get('admin/periods/subject/addsubject/{id}',[lmsperiodcontroller::class, 'addsubject']);
+Route::post('admin/periods/subject/savesubject',[lmsperiodcontroller::class,'savesubject']);
+Route::get('admin/periods/subject/getsubject/{id}',[lmsperiodcontroller::class,'getsubject']);
+
+Route::get('admin/analytics',[adminanalyticcontroller::class,'index']);
+Route::post('admin/analytics/fetch',[adminanalyticcontroller::class,'fetch']);
+Route::get('admin/analytic/data/pre/',[adminanalyticcontroller::class,'predata']);
+Route::get('admin/analytic/data/post/',[adminanalyticcontroller::class,'postdata']);
 
 Route::get('admin/approve/leave',[adminleavecontroller::class, 'approveleave']);
 Route::get('admin/approve/leave/status/{status}/{id}',[adminleavecontroller::class,'approveleavestatus']);
@@ -360,6 +578,82 @@ Route::post('admin/fetch/class/schedule/data',[schedulelistcontroller::class,'ge
 
 Route::get('admin/profile',[lmsauthenticatecontroller::class,'profile']);
 Route::post('admin/profile/processing',[lmsauthenticatecontroller::class,'update']);
+
+Route::get('admin/attendance/view/months',[adminattendancecontroller::class,'months']);
+Route::any('admin/attendance/view/sections',[adminattendancecontroller::class,'getsections']);
+Route::any('admin/attendance/view/dates',[adminattendancecontroller::class,'getdates']);
+Route::post('admin/attendance/view/students/bydate',[adminattendancecontroller::class,'students']);
+
+Route::get('admin/fees/busroute',[adminfeescontroller::class,'busroute']);
+Route::get('admin/fees/addbusroute',[adminfeescontroller::class,'addbusroute']);
+Route::get('admin/fees/addbusroute/{id}',[adminfeescontroller::class,'addbusroute']);
+Route::post('admin/fees/savebusroute',[adminfeescontroller::class,'savebusroute']);
+Route::get('admin/fees/busroute/status/{status}/{id}',[adminfeescontroller::class,'busroutestatus']);
+Route::get('admin/fees/busroute/delete/{id}',[adminfeescontroller::class,'deletebusroute']);
+
+Route::get('admin/fees/distance',[adminfeescontroller::class,'distance']);
+Route::post('admin/fees/distance/upload',[adminfeescontroller::class,'upload']);
+Route::get('admin/fees/adddistance',[adminfeescontroller::class,'adddistance']);
+Route::get('admin/fees/adddistance/{id}',[adminfeescontroller::class,'adddistance']);
+Route::get('admin/fees/distance/status/{status}/{id}',[adminfeescontroller::class,'disstatus']);
+Route::get('admin/fees/distance/delete/{id}',[adminfeescontroller::class,'deletedistance']);
+Route::post('admin/fees/savedistance',[adminfeescontroller::class,'savedistance']);
+
+Route::get('admin/fees/category',[adminfeescontroller::class,'category']);
+Route::get('admin/fees/addcategory',[adminfeescontroller::class,'addcategory']);
+Route::get('admin/fees/addcategory/{id}',[adminfeescontroller::class,'addcategory']);
+Route::get('admin/fees/category/status/{status}/{id}',[adminfeescontroller::class,'catstatus']);
+Route::get('admin/fees/category/delete/{id}',[adminfeescontroller::class,'deletecategory']);
+Route::post('admin/fees/savecategory',[adminfeescontroller::class,'savecategory']);
+
+Route::get('admin/fees/schedule',[adminfeescontroller::class,'schedule']);
+Route::get('admin/fees/addschedule',[adminfeescontroller::class,'addschedule']);
+Route::get('admin/fees/addschedule/{id}',[adminfeescontroller::class,'addschedule']);
+Route::get('admin/fees/schedule/delete/{id}',[adminfeescontroller::class,'deleteschedule']);
+Route::post('admin/fees/saveschedule',[adminfeescontroller::class,'saveschedule']);
+
+Route::get('admin/transport/fees/schedule/busroutes',[adminfeescontroller::class,'transportschedule']);
+Route::get('admin/transport/fees/schedule/busroutes/location/{moneystatus}/{busrouteid}',[adminfeescontroller::class,'addtransportschedule']);
+Route::post('admin/transport/fees/schedule/busroutes/save',[adminfeescontroller::class,'savetransportschedule']);
+
+Route::get('admin/fees/discount',[adminfeescontroller::class,'discount']);
+Route::get('admin/fees/adddiscount',[adminfeescontroller::class,'adddiscount']);
+Route::get('admin/fees/adddiscount/{id}',[adminfeescontroller::class,'adddiscount']);
+Route::get('admin/fees/discount/delete/{id}',[adminfeescontroller::class,'deletediscount']);
+Route::post('admin/fees/savediscount',[adminfeescontroller::class,'savediscount']);
+Route::get('admin/fees/discount/getfees',[adminfeescontroller::class,'getfees']);
+Route::get('admin/fees/getstudents',[adminfeescontroller::class,'getstu']);
+
+Route::get('admin/fees/pending',[adminfeescontroller::class,'pendingfeesstudents']);
+Route::post('admin/fees/pending/students/bysection',[adminfeescontroller::class,'pendingfeesstudentsbysection']);
+Route::post('admin/fees/pending/students/pendingfees/initial/save',[adminfeescontroller::class,'pendingfeesinitialsave']);
+Route::post('admin/fees/pending/students/pendingfees/save',[adminfeescontroller::class,'pendingfeessave']);
+Route::get('admin/fees/pending/students/export/{class}/{section}',[adminfeescontroller::class,'pendingfeesexport']);
+Route::get('admin/fees/index/students',[adminfeescontroller::class,'indexfeesstudents']);
+Route::post('admin/fees/index/students/bysection',[adminfeescontroller::class,'indexfeesstudentsbysection']);
+Route::get('admin/fees/index/students/export/{id}',[adminfeescontroller::class,'feesexport']);
+Route::get('admin/fees/index/students/view/structure/{id}',[adminfeescontroller::class,'feesstructure']);
+Route::post('admin/fees/students/save',[adminfeescontroller::class,'feessave']);
+Route::post('admin/fees/index/fees/transfer',[adminfeescontroller::class,'feestransfer']);
+Route::get('admin/fees/pending/currentyear',[adminfeescontroller::class,'currentyearpendingfeesstudents']);
+Route::post('admin/fees/pending/currentyear/students/bysection',[adminfeescontroller::class,'currentyearpendingfeesstudentsbysection']);
+Route::post('admin/fees/pending/currentyear/students/export',[adminfeescontroller::class,'currentyearpendingfeesexport']);
+
+Route::get('admin/analytics/attendance',[adminattendanceanalyticcontroller::class,'index']);
+Route::post('admin/analytics/attendance/fetch',[adminattendanceanalyticcontroller::class,'fetch']);
+Route::get('admin/analytic/attendance/fetch/datewise',[adminattendanceanalyticcontroller::class,'datewise']);
+
+Route::get('admin/analytic/assignment',[adminassignmentanalyticcontroller::class,'index']);
+Route::get('admin/trainings/get',[adminassignmentanalyticcontroller::class,'gettrainings']);
+Route::post('admin/analytics/assignment/fetch',[adminassignmentanalyticcontroller::class,'fetch']);
+Route::get('admin/analytic/assignment/notcompleted',[adminassignmentanalyticcontroller::class,'notcompleted']);
+Route::get('admin/analytic/assignment/completed',[adminassignmentanalyticcontroller::class,'completed']);
+
+Route::get('admin/analytics/pendingfees',[admintotalfeesanalyticcontroller::class,'index']);
+Route::post('admin/analytics/pendingfees/fetch',[admintotalfeesanalyticcontroller::class,'fetch']);
+Route::get('admin/analytics/currentfees',[admintotalfeesanalyticcontroller::class,'currentindex']);
+Route::post('admin/analytics/currentfees/fetch',[admintotalfeesanalyticcontroller::class,'currentfetch']);
+Route::get('admin/analytic/currentfees/monthwise',[admintotalfeesanalyticcontroller::class,'getmonth']);
 
 Route::get('admin/nontech/supervisor',[adminnontechcontroller::class,'nontechsupervisor']);
 Route::get('admin/nontech/supervisor/addsupervisor',[adminnontechcontroller::class,'addnontechsupervisor']);
@@ -385,6 +679,14 @@ Route::get('admin/nontech/staff/delete/{id}',[adminnontechcontroller::class,'non
 Route::get('admin/nontech/class/{id}', [adminnontechcontroller::class,'getsection']);
 
 
+Route::delete('/controller/{id}', [ControllerName::class, 'destroy'])->name('controller.destroy');
+
+Route::get('admin/competition/reports',[admincompetitionreportcontroller::class,'competition']);
+Route::post('admin/competition/reports/view',[admincompetitionreportcontroller::class,'competitionreports']);
+
+Route::get('admin/analytics/competition',[admincompetitionanalyticcontroller::class,'index']);
+Route::post('admin/analytics/competition/fetch',[admincompetitionanalyticcontroller::class,'fetch']);
+Route::get('admin/competition/bysupervisor/{id}',[admincompetitionanalyticcontroller::class,'getcompetition']);
 });
 
 Route::get('admin/logout',function(){
@@ -1074,6 +1376,14 @@ return redirect('/');
 });
 
 
+Route::get('dashboard/examination', [ExaminationController::class, 'edashboard'])->name('dashboard.examination');
+Route::get('Controller/Account/dashboard', [AccountController::class, 'accountDashboard'])->name('dashboard.account');
+Route::get('dashboard/account', [AccountController::class, 'accountDashboard'])->name('dashboard.account');
+Route::post('Accontrol/login/save', [AcademicController::class, 'save'])->name('accontrol.login.save');
+Route::get('Accontrol/forgotpassword', [AcademicController::class, 'forgotpassword']);
+Route::post('Accontrol/forgotpassword/check', [AcademicController::class, 'forgotpasswordcheck']);
+Route::get('dashboard/academic', [AcademicController::class, 'academicDashboard'])->name('dashboard.academic');
+Route::get('Controller/Academ/dashboard', [AcademicController::class, 'academicDashboard'])->name('dashboard.academic');
 
 
 Route::get('nontech/groupmanager/login',[nontechgroupmanagercontroller::class ,'login']);
@@ -1182,11 +1492,12 @@ return redirect('/');
 });
 
 
+
+
 Route::get('nontech/manager/login',[nontechmanagercontroller::class ,'login']);
 Route::post('nontech/manager/login/save',[nontechmanagercontroller::class ,'logincheck']);
 Route::get('nontech/manager/forgotpassword',[nontechmanagercontroller::class ,'forgotpassword']);
 Route::post('nontech/manager/forgotpassword/check',[nontechmanagercontroller::class ,'forgotpasswordcheck']);
-
 
 Route::group(['middleware'=>'nontechmanager_auth'],function(){
 
@@ -1255,27 +1566,8 @@ Route::get('nontech/manager/hostel/food/reports',[hostelreportscontroller::class
 Route::post('nontech/manager/hostel/food/report/byfilter',[hostelreportscontroller::class,'foodreportsbyfilter']);
 
 
-Route::get('/nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'subcategory'])->name('expense.subcategory');
-Route::get('/nontech/manager/hostel/expense/items', [HostelExpenseController::class, 'subitem'])->name('expense.subitems');
-Route::get('nontech/manager/hostel/expense/subcategory/create', [HostelExpenseController::class, 'createSubcategory'])->name('subcategory.create');
-
-Route::get('nontech/manager/hostel/expense', [HostelExpenseController::class, 'index']);
-Route::put('nontech/manager/hostel/expense/subcategory/update', [HostelExpenseController::class, 'update'])->name('subcategory.update');
-
-Route::delete('nontech/manager/hostel/expense/subcategory/delete/{id}', [HostelExpenseController::class, 'destroy'])->name('subcategory.delete');
-Route::get('nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'index'])->name('subcategory.index');
-Route::post('nontech/manager/hostel/expense/subcategory/store', [HostelExpenseController::class, 'store'])->name('subcategory.store');
 
 
-Route::prefix('nontech/manager/hostel/expense')->group(function () {
-    Route::get('items', [HostelExpenseController::class, 'indexExpenseItems'])->name('expense.items');
-    Route::put('/item/update', [HostelExpenseController::class, 'updateItem'])->name('expense.item.update');
-    Route::delete('/item/delete/{id}', [HostelExpenseController::class, 'deleteItem'])->name('expense.item.delete');
-});
-Route::get('nontech/manager/hostel/expense/item/template', [HostelExpenseController::class, 'downloadTemplate']);
-Route::get('nontech/manager/hostel/expense/item/create', [HostelExpenseController::class, 'createExpenseItem'])->name('expense.items.create');
-Route::post('nontech/manager/hostel/expense/item/store', [HostelExpenseController::class, 'storeExpenseItem'])->name('expense.items.store');
-Route::post('nontech/manager/hostel/expense/item/upload', [HostelExpenseController::class, 'uploadExpenseItems']);
 //Infrastructure
 
 Route::get('nontech/manager/infrastructure/items',[infrastructureroomcontroller::class, 'items']);
@@ -1483,8 +1775,12 @@ return redirect('/');
 });
 
 
+
+
+
+
 Route::get('employee/marketingmanager/login',[mmauthcontroller::class ,'login']);
-Route::post('employee/mardashboard.academicketingmanager/login/save',[mmauthcontroller::class,'logincheck']);
+Route::post('employee/marketingmanager/login/save',[mmauthcontroller::class,'logincheck']);
 Route::get('employee/marketingmanager/forgotpassword',[mmauthcontroller::class ,'forgotpassword']);
 Route::post('employee/marketingmanager/forgotpassword/check',[mmauthcontroller::class ,'forgotpasswordcheck']);
 
@@ -1550,9 +1846,9 @@ Route::get('employee/marketingofficer/coldcall/mmreject/{id}',[mocoldcallcontrol
 Route::get('employee/marketingofficer/profile',[moauthcontroller::class,'profile']);
 Route::post('employee/marketingofficer/profile/save',[moauthcontroller::class,'update']);
 
-
-
 });
+
+
 Route::get('employee/marketingofficer/logout',function(){
  session()->forget('MARKETINGOFFICER_LOGIN');
  session()->forget('MARKETINGOFFICER_ID');
@@ -1564,30 +1860,166 @@ Route::get('employee/marketingofficer/logout',function(){
  return redirect('/');
 });
 
-Route::get('/controller', [ControllerName::class, 'create'])->name('controller.create');
-Route::post('/controller', [ControllerName::class, 'store'])->name('controller.store');
-Route::post('/controller/update', [ControllerName::class, 'update'])->name('controller.update');
-Route::delete('/controller/{id}', [ControllerName::class, 'destroy'])->name('controller.destroy');
 
-Route::post('Accontrol/login/save', [AcademicController::class, 'save'])->name('accontrol.login.save');
-Route::get('Accontrol/forgotpassword', [AcademicController::class, 'forgotpassword']);
-Route::post('Accontrol/forgotpassword/check', [AcademicController::class, 'forgotpasswordcheck']);
-Route::get('dashboard/academic', [AcademicController::class, 'academicDashboard'])->name('dashboard.academic');
-Route::get('Controller/Academ/dashboard', [AcademicController::class, 'academicDashboard'])->name('dashboard.academic');
+Route::get('/controller', [ControllerName::class, 'index'])->name('controller.index');
+Route::get('admin/addcontroller', [ControllerName::class, 'create'])->name('controller.create');
+Route::post('admin/savecontroller', [ControllerName::class, 'store'])->name('controller.store');
+//new added
+Route::post('admin/updatecontroller', [ControllerName::class, 'update'])->name('controller.update');
+//new chngs
+Route::get('academic_controller/adddetails',[AcademicController::class,'adddetails']);
+Route::post('academic_controller/adddetails/processing',[AcademicController::class,'savedetails']);
+Route::get('academic_controller/groups',[AcademicGroupController::class, 'group']);
+Route::get('academic_controller/group/addgroup',[AcademicGroupController::class, 'addgroup']);
+Route::get('academic_controller/group/addgroup/{id}',[AcademicGroupController::class, 'addgroup']);
+Route::post('academic_controller/group/savegroup',[AcademicGroupController::class,'savegroup']);
 
 
-Route::get('Econtrol/login',[ExaminationController::class ,'login']);
-Route::post('Econtrol/login/save', [ExaminationController::class, 'login'])->name('accontrol.login');
-Route::get('Econtrol/forgotpassword',[ExaminationController::class ,'forgotpassword']);
-Route::post('Econtrol/forgotpassword/check',[ExaminationController::class ,'forgotpasswordcheck']);
-Route::get('dashboard/examination', [ExaminationController::class, 'edashboard'])->name('dashboard.examination');
+Route::get('academic_controller/standard',[AcademicStandardController::class, 'category']);
+Route::post('academic_controller/category/bygroup',[AcademicStandardController::class, 'categorybygroup']);
+Route::get('academic_controller/category/addcategory',[AcademicStandardController::class, 'addcategory']);
+Route::get('academic_controller/category/addcategory/{id}',[AcademicStandardController::class, 'addcategory']);
+Route::post('academic_controller/category/savecategory',[AcademicStandardController::class,'savecategory']);
+Route::get('academic_controller/category/{id}',[AcademicStandardController::class,'categorydelete']);
 
-Route::post('Accountcontrol/login',[AccountController::class ,'login']);
-Route::get('Accountcontrol/login/save', [AccountController::class, 'login'])->name('accontrol.login');
-Route::get('Accountcontrol/forgotpassword',[AccountController::class ,'forgotpassword']);
-Route::post('Accountcontrol/forgotpassword/check',[AccountController::class ,'forgotpasswordcheck']);
-Route::get('dashboard/account', [AccountController::class, 'accountDashboard'])->name('dashboard.account');
-Route::get('Controller/Account/dashboard', [AccountController::class, 'accountDashboard'])->name('dashboard.account');
+
+Route::get('academic_controller/domain',[AcademicSubjectController::class, 'domain'])->name('controller.academ.domain');
+Route::post('academic_controller/domain/bycategory',[AcademicSubjectController::class, 'domainbycategory']);
+Route::get('academic_controller/domain/adddomain',[AcademicSubjectController::class, 'adddomain']);
+Route::get('academic_controller/domain/adddomain/{id}',[AcademicSubjectController::class, 'adddomain']);
+Route::post('academic_controller/domain/savedomain',[AcademicSubjectController::class,'savedomain']);
+Route::get('academic_controller/domain/{id}',[AcademicSubjectController::class,'delete']);
+Route::any('academic_controller/questionbank/getcategory',[AcademicSubjectController::class,'questionbankgetcategories']);
+Route::get('academic_controller/skillset/getcategory/{id}',[AcademicSubjectController::class,'skillsetcategory']);
+
+
+Route::get('academic_controller/skillset',[AcademicModuleController::class, 'skillset']);
+Route::post('academic_controller/skillset/bydomain',[AcademicModuleController::class, 'skillsetbydomain']);
+Route::get('academic_controller/skillset/addskillset',[AcademicModuleController::class, 'addskillset']);
+Route::get('academic_controller/skillset/addskillset/{id}',[AcademicModuleController::class, 'addskillset']);
+Route::post('academic_controller/skillset/saveskillset',[AcademicModuleController::class,'saveskillset']);
+Route::get('academic_controller/skillset/{id}',[AcademicModuleController::class,'skillsetdelete']);
+
+Route::get('academic_controller/getdomains',[AcademicModuleController::class,'skillsetgetdomains']);
+Route::get('academic_controller/skillset/getdomain/{id}',[AcademicModuleController::class,'skillsetdomain']);
+Route::get('academic_controller/skillset/domain/{id}/{groupid}',[AcademicModuleController::class,'getdomains']);
+Route::get('academic_controller/skillset/getskillset/{id}',[AcademicModuleController::class,'getskillsets']);
+
+Route::get('academic_controller/skillattribute',[AcademicChapterController::class, 'skillattribute']);
+Route::post('academic_controller/skillattribute/byskillset',[AcademicChapterController::class, 'skillattributebyskillset']);
+Route::get('academic_controller/skillattribute/addskillattribute',[AcademicChapterController::class, 'addskillattribute']);
+Route::get('academic_controller/skillattribute/addskillattribute/{id}',[AcademicChapterController::class, 'addskillattribute']);
+Route::post('academic_controller/skillattribute/saveskillattribute',[AcademicChapterController::class,'saveskillattribute']);
+Route::get('academic_controller/skillattribute/{id}',[AcademicChapterController::class,'skillattributedelete']);
+Route::get('academic_controller/skillattribute/domain/{id}',[AcademicChapterController::class,'getdomain']);
+Route::get('academic_controller/skillattribute/skillset/{id}',[AcademicChapterController::class,'getskillset']);
+Route::get('academic_controller/skillattribute/getskillattribute/{id}',[AcademicChapterController::class,'getskillattribute']);
+Route::post('academic_controller/questionbank/getskillset',[AcademicChapterController::class,'questionbankgetskillsets']);
+
+
+Route::get('academic_controller/content/skillattribute',[AcademicContent::class, 'contentska']);
+Route::post('academic_controller/content/skillattribute/byskillset',[AcademicContent::class, 'contentskabyskillset']);
+Route::get('academic_controller/content/skillattribute/addskillattribute',[AcademicContent::class, 'addcontentska']);
+Route::get('academic_controller/content/skillattribute/addskillattribute/{id}',[AcademicContent::class, 'addcontentska']);
+Route::post('academic_controller/content/skillattribute/saveskillattribute',[AcademicContent::class,'savecontentska']);
+Route::get('academic_controller/content/skillattribute/{id}',[AcademicContent::class,'contentskadelete']);
+Route::any('academic_controller/questionbank/getdomain',[AcademicContent::class,'questionbankgetdomains']);
+
+Route::get('academic_controller/reports',[AcademicReport::class,'reports']);
+Route::post('academic_controller/reports/sectionwise',[AcademicReport::class,'fetchstu']);
+
+Route::get('exam_controller/assesments',[Examassesment::class,'colist']);
+Route::get('exam_controller/assesment/createassesment',[Examassesment::class,'createassesment']);
+Route::get('exam_controller/assesment/edit/{id}',[Examassesment::class,'createassesment']);
+Route::get('exam_controller/assesment/delete/{id}',[Examassesment::class,'delete']);
+Route::get('exam_controller/trainings/trains/{id}',[Examassesment::class,'gettrainings']);
+Route::post('exam_controller/skillattribute/domain/',[Examassesment::class,'getdomain']);
+Route::post('exam_controller/skillattribute/skillset/',[Examassesment::class,'getskillset']);
+Route::post('exam_controller/skillattribute/getskillattribute/',[Examassesment::class,'getskillattribute']);
+Route::post('exam_controller/assesment/createmodule',[Examassesment::class,'createmodule']);
+Route::get('exam_controller/assesment/createmodule',[Examassesment::class,'createmodule'])->name('cocreate');
+Route::post('exam_controller/createsection',[Examassesment::class,'index']);
+Route::get('exam_controller/createsection/{id}',[Examassesment::class,'index']);
+Route::post('exam_controller/assesments',[Examassesment::class,'comodule']);
+Route::post('exam_controller/assesment/sectioncreation',[Examassesment::class,'createsession']);
+Route::get('exam_controller/assesment/section/delete/{id}',[Examassesment::class,'delete']);
+
+
+
+Route::get('Faculty/content/skillattribute',[FacultyContentController::class, 'contentska']);
+Route::post('Faculty/content/skillattribute/byskillset',[FacultyContentController::class, 'contentskabyskillset']);
+Route::get('Faculty/content/skillattribute/domain',[FacultyContentController::class,'getdomain']);
+Route::get('Faculty/content/skillattribute/skillset',[FacultyContentController::class,'getskillset']);
+
+
+Route::get('account/fees/distance',[Feescontroller::class,'distance']);
+Route::post('account/fees/distance/upload',[Feescontroller::class,'upload']);
+Route::get('account/fees/adddistance',[Feescontroller::class,'adddistance']);
+Route::get('account/fees/adddistance/{id}',[Feescontroller::class,'adddistance']);
+Route::get('account/fees/distance/status/{status}/{id}',[Feescontroller::class,'disstatus']);
+Route::get('account/fees/distance/delete/{id}',[Feescontroller::class,'deletedistance']);
+Route::post('account/fees/savedistance',[Feescontroller::class,'savedistance']);
+
+
+Route::get('account/fees/category',[Feescontroller::class,'category']);
+Route::get('account/fees/addcategory',[Feescontroller::class,'addcategory']);
+Route::get('account/fees/addcategory/{id}',[Feescontroller::class,'addcategory']);
+Route::get('account/fees/category/status/{status}/{id}',[Feescontroller::class,'catstatus']);
+Route::get('account/fees/category/delete/{id}',[Feescontroller::class,'deletecategory']);
+Route::post('account/fees/savecategory',[Feescontroller::class,'savecategory']);
+
+Route::get('account/fees/schedule',[Feescontroller::class,'schedule']);
+Route::get('account/fees/addschedule',[Feescontroller::class,'addschedule']);
+Route::get('account/fees/addschedule/{id}',[Feescontroller::class,'addschedule']);
+Route::get('account/fees/schedule/delete/{id}',[Feescontroller::class,'deleteschedule']);
+Route::post('account/fees/saveschedule',[Feescontroller::class,'saveschedule']);
+
+
+Route::get('account/transport/fees/schedule/busroutes',[Feescontroller::class,'transportschedule']);
+Route::get('account/transport/fees/schedule/busroutes/location/{moneystatus}/{busrouteid}',[Feescontroller::class,'addtransportschedule']);
+Route::post('account/transport/fees/schedule/busroutes/save',[Feescontroller::class,'savetransportschedule']);
+
+
+Route::get('account/fees/discount',[Feescontroller::class,'discount']);
+Route::get('account/fees/adddiscount',[Feescontroller::class,'adddiscount']);
+Route::get('account/fees/adddiscount/{id}',[Feescontroller::class,'adddiscount']);
+Route::get('account/fees/discount/delete/{id}',[Feescontroller::class,'deletediscount']);
+Route::post('account/fees/savediscount',[Feescontroller::class,'savediscount']);
+Route::get('account/fees/discount/getfees',[Feescontroller::class,'getfees']);
+Route::get('account/fees/getstudents',[Feescontroller::class,'getstu']);
+Route::get('account/classby/section/{id}',[Feescontroller::class,'classby']);
+
+
+
+Route::get('account/fees/pending',[Feescontroller::class,'pendingfeesstudents']);
+Route::post('account/fees/pending/students/bysection',[Feescontroller::class,'pendingfeesstudentsbysection']);
+Route::post('account/fees/pending/students/pendingfees/initial/save',[Feescontroller::class,'pendingfeesinitialsave']);
+Route::post('account/fees/pending/students/pendingfees/save',[Feescontroller::class,'pendingfeessave']);
+Route::get('account/fees/pending/students/export/{class}/{section}',[Feescontroller::class,'pendingfeesexport']);
+Route::get('account/fees/index/students',[Feescontroller::class,'indexfeesstudents']);
+Route::post('account/fees/index/students/bysection',[Feescontroller::class,'indexfeesstudentsbysection']);
+Route::get('account/fees/index/students/export/{id}',[Feescontroller::class,'feesexport']);
+Route::get('account/fees/index/students/view/structure/{id}',[Feescontroller::class,'feesstructure']);
+Route::post('account/fees/students/save',[Feescontroller::class,'feessave']);
+Route::post('account/fees/index/fees/transfer',[Feescontroller::class,'feestransfer']);
+Route::get('account/fees/pending/currentyear',[Feescontroller::class,'currentyearpendingfeesstudents']);
+Route::post('account/fees/pending/currentyear/students/bysection',[Feescontroller::class,'currentyearpendingfeesstudentsbysection']);
+Route::post('account/fees/pending/currentyear/students/export',[Feescontroller::class,'currentyearpendingfeesexport']);
+Route::any('account/attendance/view/sections',[Feescontroller::class,'getsections']);
+
+Route::get('account/fees/pending/currentyear',[Feescontroller::class,'currentyearpendingfeesstudents']);
+Route::post('account/fees/pending/currentyear/students/bysection',[Feescontroller::class,'currentyearpendingfeesstudentsbysection']);
+Route::post('account/fees/pending/currentyear/students/export',[Feescontroller::class,'currentyearpendingfeesexport']);
+
+
+Route::get('account/analytics/pendingfees',[Feesanalyticcontroller::class,'index']);
+Route::post('account/analytics/pendingfees/fetch',[Feesanalyticcontroller::class,'fetch']);
+Route::get('account/analytics/currentfees',[Feesanalyticcontroller::class,'currentindex']);
+Route::post('account/analytics/currentfees/fetch',[Feesanalyticcontroller::class,'currentfetch']);
+Route::get('account/analytic/currentfees/monthwise',[Feesanalyticcontroller::class,'getmonth']);
+
+
+
 
 Route::get('controller/expgrp', [AccountController::class, 'accountexpgrp']);
 Route::get('controller/expcat', [AccountController::class, 'accountexpcat']);
@@ -1601,317 +2033,14 @@ Route::delete('expenses/{id}', [AccountController::class, 'destroy'])->name('exp
 Route::delete('expcat/{id}', [AccountController::class, 'destroycat'])->name('expcat.destroy');
 Route::resource('expenses', AccountController::class)->only(['create', 'store', 'destroy']);
 
-Route::get('controller/groups', [AcademicController::class, 'group'])->name('controller.groups');
-Route::get('controller/groups/addgroup', [lmsgroupcontroller::class, 'addgroup'])->name('controller.group.add');
-Route::get('controller/groups/addgroup/{id}', [lmsgroupcontroller::class, 'addgroup'])->name('controller.group.edit');
-Route::post('controller/groups/savegroup', [lmsgroupcontroller::class, 'savegroup'])->name('controller.group.save');
-
-Route::get('controller/standard',[AcademicController::class, 'category']);
-Route::post('admin/category/bygroup',[AcademicController::class, 'categorybygroup']);
-Route::get('admin/category/addcategory',[AcademicController::class, 'addcategory']);
-Route::get('admin/category/addcategory/{id}',[AcademicController::class, 'addcategory']);
-Route::post('admin/category/savecategory',[AcademicController::class,'savecategory']);
-Route::get('admin/category/{id}',[AcademicController::class,'categorydelete']);
-
-Route::get('admin/domain',[AcademicController::class, 'domain']);
-Route::post('admin/domain/bycategory',[AcademicController::class, 'domainbycategory']);
-Route::get('admin/domain/adddomain',[AcademicController::class, 'adddomain']);
-Route::get('admin/domain/adddomain/{id}',[AcademicController::class, 'adddomain']);
-Route::post('admin/domain/savedomain',[AcademicController::class,'savedomain']);
-Route::get('admin/domain/{id}',[AcademicController::class,'delete']);
-
-Route::get('admin/skillset',[AcademicController::class, 'skillset']);
-Route::post('admin/skillset/bydomain',[AcademicController::class, 'skillsetbydomain']);
-Route::get('admin/skillset/addskillset',[AcademicController::class, 'addskillset']);
-Route::get('admin/skillset/addskillset/{id}',[AcademicController::class, 'addskillset']);
-Route::get('admin/skillset/updateskillset/{id}', [AcademicController::class, 'editSkillset'])->name('skillset.edit');
-Route::post('admin/skillset/saveskillset',[AcademicController::class,'saveskillset']);
-Route::get('admin/skillset/{id}',[AcademicController::class,'skillsetdelete']);
-Route::get('admin/skillset/getcategory/{id}',[AcademicController::class,'skillsetcategory']);
-Route::get('admin/getdomains',[AcademicController::class,'skillsetgetdomains']);
-Route::get('admin/skillset/getdomain/{id}',[AcademicController::class,'skillsetdomain']);
-Route::get('admin/skillset/domain/{id}/{groupid}',[AcademicController::class,'getdomains']);
-Route::get('admin/skillset/getskillset/{id}',[AcademicController::class,'getskillsets']);
-
-Route::get('admin/skillattribute',[AcademicController::class, 'skillattribute']);
-Route::post('admin/skillattribute/byskillset',[AcademicController::class, 'skillattributebyskillset']);
-Route::get('admin/skillattribute/addskillattribute',[AcademicController::class, 'addskillattribute']);
-Route::get('admin/skillattribute/addskillattribute/{id}',[AcademicController::class, 'addskillattribute']);
-Route::post('admin/skillattribute/saveskillattribute',[AcademicController::class,'saveskillattribute']);
-Route::get('admin/skillattribute/{id}',[AcademicController::class,'skillattributedelete']);
-Route::get('admin/skillattribute/domain/{id}',[AcademicController::class,'getdomain']);
-Route::get('admin/skillattribute/skillset/{id}',[AcademicController::class,'getskillset']);
-Route::get('admin/getskillattribute',[AcademicController::class,'getskillattribute']);
-
-Route::get('admin/getSubBranch/{category_id}', [ContentController::class, 'getSubBranch'])->name('getSubBranch');
-
-// AJAX route to get skillsets based on subbranch selection
-Route::get('admin/getSkillset/{domain_id}', [ContentController::class, 'getSkillset'])->name('getSkillset');
-
-// AJAX route to get skill attributes based on skillset selection
-Route::get('admin/getSkillattribute/{skillset_id}', [ContentController::class, 'getSkillattribute'])->name('getSkillattribute');
-
-Route::get('admin/assignments',[AcademicController::class,'reports']);
-Route::post('admin/assignments/trainingwise',[AcademicController::class,'fetchstu']);
-Route::get('admin/reports',[lmsstudentassignationscontroller::class,'reports']);
-Route::get('admin/classby/section/{id}',[lmsstudentassignationscontroller::class,'classby']);
-Route::post('admin/reports/sectionwise',[lmsstudentassignationscontroller::class,'fetchstu']);
-Route::get('admin/assignmentreport/{id}',[lmsstudentassignationscontroller::class,'assignmentreport']);
-Route::get('admin/examreport/{bid}/{id}',[lmsstudentassignationscontroller::class,'sectionreports']);
-Route::post('admin/exam/detailedreport',[lmsstudentassignationscontroller::class,'detailedreport']);
-Route::get('admin/exam/swot/{id}',[lmsstudentassignationscontroller::class,'swot']);
-
-Route::get('admin/attendance/view/months',[AcademicController::class,'months']);
-Route::any('admin/attendance/view/sections',[AcademicController::class,'getsections']);
-Route::any('admin/attendance/view/dates',[AcademicController::class,'getdates']);
-Route::post('admin/attendance/view/students/bydate',[AcademicController::class,'students']);
-
-Route::get('admin/competition/reports',[admincompetitionreportcontroller::class,'competition']);
-Route::post('admin/competition/reports/view',[admincompetitionreportcontroller::class,'competitionreports']);
-
-Route::get('admin/analytics',[adminanalyticcontroller::class,'index']);
-Route::post('admin/analytics/fetch',[adminanalyticcontroller::class,'fetch']);
-Route::get('admin/analytic/data/pre/',[adminanalyticcontroller::class,'predata']);
-Route::get('admin/analytic/data/post/',[adminanalyticcontroller::class,'postdata']);
-
-Route::get('admin/analytic/assignment',[adminassignmentanalyticcontroller::class,'index']);
-Route::get('admin/trainings/get',[adminassignmentanalyticcontroller::class,'gettrainings']);
-Route::post('admin/analytics/assignment/fetch',[adminassignmentanalyticcontroller::class,'fetch']);
-Route::get('admin/analytic/assignment/notcompleted',[adminassignmentanalyticcontroller::class,'notcompleted']);
-Route::get('admin/analytic/assignment/completed',[adminassignmentanalyticcontroller::class,'completed']);
-
-Route::get('admin/analytics/attendance',[adminattendanceanalyticcontroller::class,'index']);
-Route::post('admin/analytics/attendance/fetch',[adminattendanceanalyticcontroller::class,'fetch']);
-Route::get('admin/analytic/attendance/fetch/datewise',[adminattendanceanalyticcontroller::class,'datewise']);
-
-Route::get('admin/analytics/competition',[admincompetitionanalyticcontroller::class,'index']);
-Route::post('admin/analytics/competition/fetch',[admincompetitionanalyticcontroller::class,'fetch']);
-Route::get('admin/competition/bysupervisor/{id}',[admincompetitionanalyticcontroller::class,'getcompetition']);
-
-Route::get('admin/assesments',[lmsassesmentscontroller::class,'colist'])->name('admin.assessment');
-Route::get('admin/assesment/createassesment',[lmsassesmentscontroller::class,'createassesment']);
-Route::get('admin/assesment/edit/{id}',[lmsassesmentscontroller::class,'createassesment']);
-Route::get('admin/assesment/delete/{id}',[lmsassesmentscontroller::class,'delete']);
-Route::get('admin/trainings/trains/{id}',[lmsassesmentscontroller::class,'gettrainings']);
-Route::post('admin/skillattribute/domain/',[lmsassesmentscontroller::class,'getdomain']);
-Route::post('admin/skillattribute/skillset/',[lmsassesmentscontroller::class,'getskillset']);
-Route::post('admin/skillattribute/getskillattribute/',[lmsassesmentscontroller::class,'getskillattribute']);
 
 
-Route::post('admin/assesment/createmodule',[lmsassesmentscontroller::class,'createmodule'])->name('admin.createmodule');
-Route::get('admin/assesment/createmodule/{id}',[lmsassesmentscontroller::class,'createmodules'])->name('admin.createmodules');
-Route::post('admin/assesment/savemodule',[lmsassesmentscontroller::class,'savemodule'])->name('cocreate');
-
-
-Route::get('admin/createsection',[lmsassesmentsectionscontroller::class,'index']);
-Route::post('admin/createsection', [lmsassesmentsectionscontroller::class, 'storesection']);
-Route::get('admin/createsection/{id}',[lmsassesmentsectionscontroller::class,'index']);
-Route::post('admin/saveassesments',[lmsassesmentscontroller::class,'saveAssessment']);
-Route::get('admin/assesment/sectioncreation',[lmsassesmentsectionscontroller::class,'createsession']);
-Route::get('admin/assesment/section/delete/{id}',[lmsassesmentsectionscontroller::class,'delete']);
-
-Route::get('admin/questions',[lmsquestionbankcontroller::class,'questions']);
-Route::post('admin/questions/bysa',[lmsquestionbankcontroller::class,'questionsbysa']);
-Route::get('admin/questions/add',[lmsquestionbankcontroller::class,'add']);
-Route::post('admin/questions/upload',[lmsquestionbankcontroller::class,'upload']);
-Route::get('admin/question/edit/{id}',[lmsquestionbankcontroller::class,'editQuestion']);
-Route::get('admin/question/view/{id}',[lmsquestionbankcontroller::class,'examview']);
-Route::post('admin/question/update',[lmsquestionbankcontroller::class,'updateQuestion']);
-Route::get('admin/question/delete/{id}',[lmsquestionbankcontroller::class,'deleteQuestion']);
-Route::any('admin/questionbank/getcategory',[lmsquestionbankcontroller::class,'questionbankgetcategories']);
-Route::any('admin/questionbank/getdomain',[lmsquestionbankcontroller::class,'questionbankgetdomains']);
-Route::post('admin/questionbank/getskillset',[lmsquestionbankcontroller::class,'questionbankgetskillsets']);
-Route::any('admin/questionbank/getskillattribute',[lmsquestionbankcontroller::class,'questionbankgetskillattributes']);
-Route::get('admin/questions/mismatch',[lmsquestionbankcontroller::class,'mismatch']);
-Route::get('admin/questions/improper',[lmsquestionbankcontroller::class,'improper']);
-
-Route::get('admin/section',[lmssectioncontroller::class,'section']);
-Route::post('admin/section/byclass',[lmssectioncontroller::class, 'sectionsbyclass']);
-Route::get('admin/section/addsection',[lmssectioncontroller::class, 'addsection']);
-Route::get('admin/section/addsection/{id}',[lmssectioncontroller::class, 'addsection']);
-Route::post('admin/section/savesection',[lmssectioncontroller::class,'savesection']);
-Route::get('admin/section/delete/{id}',[lmssectioncontroller::class,'sectiondelete']);
-Route::any('admin/section/group/getclass',[lmssectioncontroller::class,'getclass']);
-Route::get('admin/section/getclass/{id}',[lmssectioncontroller::class,'getclasses']);
-
-Route::get('admin/department',[lmsgroupcontroller::class, 'department']);
-Route::get('admin/department/adddepartment',[lmsgroupcontroller::class, 'adddepartment']);
-Route::get('admin/department/adddepartment/{id}',[lmsgroupcontroller::class, 'adddepartment']);
-Route::post('admin/department/savedepartment',[lmsgroupcontroller::class,'savedepartment']);
-
-
-Route::get('admin/infrastructure/group',[lmsgroupcontroller::class, 'infragroup']);
-Route::get('admin/infrastructure/group/addinfragroup',[lmsgroupcontroller::class, 'addinfragroup']);
-Route::get('admin/infrastructure/group/addinfragroup/{id}',[lmsgroupcontroller::class, 'addinfragroup']);
-Route::post('admin/infrastructure/group/saveinfragroup',[lmsgroupcontroller::class,'saveinfragroup']);
-
-Route::get('admin/rooms',[lmsgroupcontroller::class, 'rooms']);
-Route::get('admin/rooms/addrooms',[lmsgroupcontroller::class, 'addrooms']);
-Route::get('admin/rooms/addrooms/{id}',[lmsgroupcontroller::class, 'addrooms']);
-Route::post('admin/rooms/saverooms',[lmsgroupcontroller::class,'saverooms']);
-Route::get('admin/rooms/{id}',[lmsgroupcontroller::class,'roomsdelete']);
-
-
-Route::get('admin/supervisor',[lmssupervisorcontroller::class, 'supervisor']);
-Route::get('admin/supervisor/addsupervisor',[lmssupervisorcontroller::class, 'addsupervisor']);
-Route::get('admin/supervisor/addsupervisor/{id}',[lmssupervisorcontroller::class, 'addsupervisor']);
-Route::post('admin/supervisor/savesupervisor',[lmssupervisorcontroller::class,'savesupervisor']);
-Route::get('admin/supervisor/status/{status}/{id}',[lmssupervisorcontroller::class,'supervisorstatus']);
-Route::get('admin/supervisor/delete/{id}',[lmssupervisorcontroller::class,'supervisordelete']);
-
-Route::get('admin/manager',[lmsmanagercontroller::class, 'manager']);
-Route::get('admin/manager/addmanager',[lmsmanagercontroller::class, 'addmanager']);
-Route::get('admin/manager/addmanager/{id}',[lmsmanagercontroller::class, 'addmanager']);
-Route::post('admin/manager/savemanager',[lmsmanagercontroller::class,'savemanager']);
-Route::get('admin/manager/status/{status}/{id}',[lmsmanagercontroller::class,'managerstatus']);
-Route::get('admin/manager/delete/{id}',[lmsmanagercontroller::class,'managerdelete']);
-Route::get('admin/manager/getclass/bygroupid/ofsupervisor/{id}',[lmsmanagercontroller::class,'managergetclass']);
-
-Route::get('admin/role',[lmsrolecontroller::class, 'role']);
-Route::get('admin/role/addrole',[lmsrolecontroller::class, 'addrole']);
-Route::get('admin/role/addrole/{id}',[lmsrolecontroller::class, 'addrole']);
-Route::post('admin/role/saverole',[lmsrolecontroller::class,'saverole']);
-
-Route::get('admin/faculty',[lmsfacultycontroller::class, 'faculty']);
-Route::get('admin/faculty/addfaculty',[lmsfacultycontroller::class, 'addfaculty']);
-Route::get('admin/faculty/addfaculty/{id}',[lmsfacultycontroller::class, 'addfaculty']);
-Route::post('admin/faculty/savefaculty',[lmsfacultycontroller::class,'savefaculty']);
-Route::get('admin/faculty/status/{status}/{id}',[lmsfacultycontroller::class,'facultystatus']);
-Route::get('admin/faculty/delete/{id}',[lmsfacultycontroller::class,'facultydelete']);
-Route::get('admin/class/{id}', [lmsfacultycontroller::class,'getsection']);
-Route::get('admin/faculty/getmodule/{id}',[lmsfacultycontroller::class,'getmodules']);
-Route::get('admin/faculty/getsubject/{id}',[lmsfacultycontroller::class,'getsubjects']);
-Route::get('admin/faculty/getsubject/from/supervisor/{id}',[lmsfacultycontroller::class,'getsubjectsfromsupervisor']);
-Route::get('admin/faculty/getsubject/from/multiple/classes/supervisor/{id}',[lmsfacultycontroller::class,'getmultiplesubjectsfromsupervisor']);
-
-Route::get('admin/faculty/getsubject/from/supervisor/faculty/{id}',[lmsfacultycontroller::class,'getsubjectsfaculty']);
-Route::get('admin/faculty/supervisor/group/optionalornot/{id}',[lmsfacultycontroller::class,'optionalornot']);
-
-
-
-Route::get('admin/holiday',[lmsholidaycontroller::class,'holiday']);
-Route::post('admin/holiday/upload',[lmsholidaycontroller::class,'upload']);
-Route::get('admin/holiday/edit/{id}',[lmsholidaycontroller::class,'editholiday']);
-Route::post('admin/holiday/update',[lmsholidaycontroller::class,'updateholiday']);
-Route::get('admin/holiday/delete/{id}',[lmsholidaycontroller::class,'deleteholiday']);
-
-
-Route::get('admin/hostel',[lmshostelcontroller::class,'hostel']);
-Route::get('admin/hostel/add',[lmshostelcontroller::class,'addhostel']);
-Route::get('admin/hostel/add/{id}',[lmshostelcontroller::class,'addhostel']);
-Route::post('admin/hostel/save',[lmshostelcontroller::class,'savehostel']);
-Route::get('admin/hostel/delete/{id}',[lmshostelcontroller::class,'deletehostel']);
-
-
-Route::get('admin/cafeteria',[lmshostelcontroller::class,'cafeteria']);
-Route::get('admin/cafeteria/add',[lmshostelcontroller::class,'addcafeteria']);
-Route::get('admin/cafeteria/add/{id}',[lmshostelcontroller::class,'addcafeteria']);
-Route::post('admin/cafeteria/save',[lmshostelcontroller::class,'savecafeteria']);
-Route::get('admin/cafeteria/delete/{id}',[lmshostelcontroller::class,'deletecafeteria']);
-
-
-
-
-Route::get('admin/content/skillattribute',[lmscontentmanagementcontroller::class, 'contentska']);
-Route::post('admin/content/skillattribute/byskillset',[lmscontentmanagementcontroller::class, 'contentskabyskillset']);
-Route::get('admin/content/skillattribute/addskillattribute',[lmscontentmanagementcontroller::class, 'addcontentska']);
-Route::get('admin/content/skillattribute/addskillattribute/{id}',[lmscontentmanagementcontroller::class, 'addcontentska']);
-Route::post('admin/content/skillattribute/saveskillattribute',[lmscontentmanagementcontroller::class,'savecontentska']);
-Route::get('admin/content/skillattribute/{id}',[lmscontentmanagementcontroller::class,'contentskadelete']);
-
-Route::get('admin/assigned/{id}',[adminlifecontroller::class,'assindex']);
-Route::get('admin/assigned/students/{id}',[adminlifecontroller::class,'assstudents']);
-
-
-Route::get('admin/attended/{id}',[adminlifecontroller::class,'attindex']);
-Route::get('admin/attended/students/{id}',[adminlifecontroller::class,'attstudents']);
-Route::get('admin/attended/students/assignments/view/{id}',[adminlifecontroller::class,'assignments']);
-
-Route::get('admin/completed/{id}',[adminlifecontroller::class,'comindex']);
-Route::get('admin/completed/students/{id}',[adminlifecontroller::class,'comstudents']);
-Route::get('admin/completed/students/approved/{id}',[adminlifecontroller::class,'comapstudents']);
-Route::get('admin/completed/students/pass/{id}/{cid}',[adminlifecontroller::class,'postpass']);
-
-
-Route::get('admin/periods/portal',[lmsperiodcontroller::class, 'portal']);
-Route::get('admin/periods/portal/addportal',[lmsperiodcontroller::class, 'addportal']);
-Route::get('admin/periods/portal/addportal/{id}',[lmsperiodcontroller::class, 'addportal']);
-Route::post('admin/periods/portal/saveportal',[lmsperiodcontroller::class,'saveportal']);
-
-Route::get('admin/periods/class',[lmsperiodcontroller::class, 'class']);
-Route::get('admin/periods/class/addclass',[lmsperiodcontroller::class, 'addclass']);
-Route::get('admin/schedule/class/getmaxperiod/',[lmsperiodcontroller::class,'getmax']);
-Route::get('admin/periods/class/addclass/{id}',[lmsperiodcontroller::class, 'addclass']);
-Route::post('admin/periods/class/saveclass',[lmsperiodcontroller::class,'saveclass']);
-Route::get('admin/own/list/{id}/{day}',[schedulelistcontroller::class,'groupmanagerlist']);
-Route::get('admin/manager/list/{id}/{day}',[schedulelistcontroller::class,'managerlist']);
-Route::get('admin/faculty/list/{id}/{day}',[schedulelistcontroller::class,'facultylist']);
-
-Route::get('admin/periods/subject',[lmsperiodcontroller::class, 'subject']);
-Route::get('admin/periods/subject/addsubject',[lmsperiodcontroller::class, 'addsubject']);
-Route::get('admin/periods/subject/addsubject/{id}',[lmsperiodcontroller::class, 'addsubject']);
-Route::post('admin/periods/subject/savesubject',[lmsperiodcontroller::class,'savesubject']);
-Route::get('admin/periods/subject/getsubject/{id}',[lmsperiodcontroller::class,'getsubject']);
-
-
-Route::get('admin/fees/busroute',[adminfeescontroller::class,'busroute']);
-Route::get('admin/fees/addbusroute',[adminfeescontroller::class,'addbusroute']);
-Route::get('admin/fees/addbusroute/{id}',[adminfeescontroller::class,'addbusroute']);
-Route::post('admin/fees/savebusroute',[adminfeescontroller::class,'savebusroute']);
-Route::get('admin/fees/busroute/status/{status}/{id}',[adminfeescontroller::class,'busroutestatus']);
-Route::get('admin/fees/busroute/delete/{id}',[adminfeescontroller::class,'deletebusroute']);
-
-Route::get('admin/fees/distance',[adminfeescontroller::class,'distance']);
-Route::post('admin/fees/distance/upload',[adminfeescontroller::class,'upload']);
-Route::get('admin/fees/adddistance',[adminfeescontroller::class,'adddistance']);
-Route::get('admin/fees/adddistance/{id}',[adminfeescontroller::class,'adddistance']);
-Route::get('admin/fees/distance/status/{status}/{id}',[adminfeescontroller::class,'disstatus']);
-Route::get('admin/fees/distance/delete/{id}',[adminfeescontroller::class,'deletedistance']);
-Route::post('admin/fees/savedistance',[adminfeescontroller::class,'savedistance']);
-
-
-Route::get('admin/fees/category',[adminfeescontroller::class,'category']);
-Route::get('admin/fees/addcategory',[adminfeescontroller::class,'addcategory']);
-Route::get('admin/fees/addcategory/{id}',[adminfeescontroller::class,'addcategory']);
-Route::get('admin/fees/category/status/{status}/{id}',[adminfeescontroller::class,'catstatus']);
-Route::get('admin/fees/category/delete/{id}',[adminfeescontroller::class,'deletecategory']);
-Route::post('admin/fees/savecategory',[adminfeescontroller::class,'savecategory']);
-
-Route::get('admin/fees/schedule',[adminfeescontroller::class,'schedule']);
-Route::get('admin/fees/addschedule',[adminfeescontroller::class,'addschedule']);
-Route::get('admin/fees/addschedule/{id}',[adminfeescontroller::class,'addschedule']);
-Route::get('admin/fees/schedule/delete/{id}',[adminfeescontroller::class,'deleteschedule']);
-Route::post('admin/fees/saveschedule',[adminfeescontroller::class,'saveschedule']);
-
-Route::get('admin/transport/fees/schedule/busroutes',[adminfeescontroller::class,'transportschedule']);
-Route::get('admin/transport/fees/schedule/busroutes/location/{moneystatus}/{busrouteid}',[adminfeescontroller::class,'addtransportschedule']);
-Route::post('admin/transport/fees/schedule/busroutes/save',[adminfeescontroller::class,'savetransportschedule']);
-
-Route::get('admin/fees/discount',[adminfeescontroller::class,'discount']);
-Route::get('admin/fees/adddiscount',[adminfeescontroller::class,'adddiscount']);
-Route::get('admin/fees/adddiscount/{id}',[adminfeescontroller::class,'adddiscount']);
-Route::get('admin/fees/discount/delete/{id}',[adminfeescontroller::class,'deletediscount']);
-Route::post('admin/fees/savediscount',[adminfeescontroller::class,'savediscount']);
-Route::get('admin/fees/discount/getfees',[adminfeescontroller::class,'getfees']);
-Route::get('admin/fees/getstudents',[adminfeescontroller::class,'getstu']);
-
-Route::get('admin/fees/pending',[adminfeescontroller::class,'pendingfeesstudents']);
-Route::post('admin/fees/pending/students/bysection',[adminfeescontroller::class,'pendingfeesstudentsbysection']);
-Route::post('admin/fees/pending/students/pendingfees/initial/save',[adminfeescontroller::class,'pendingfeesinitialsave']);
-Route::post('admin/fees/pending/students/pendingfees/save',[adminfeescontroller::class,'pendingfeessave']);
-Route::get('admin/fees/pending/students/export/{class}/{section}',[adminfeescontroller::class,'pendingfeesexport']);
-Route::get('admin/fees/index/students',[adminfeescontroller::class,'indexfeesstudents']);
-Route::post('admin/fees/index/students/bysection',[adminfeescontroller::class,'indexfeesstudentsbysection']);
-Route::get('admin/fees/index/students/export/{id}',[adminfeescontroller::class,'feesexport']);
-Route::get('admin/fees/index/students/view/structure/{id}',[adminfeescontroller::class,'feesstructure']);
-Route::post('admin/fees/students/save',[adminfeescontroller::class,'feessave']);
-Route::post('admin/fees/index/fees/transfer',[adminfeescontroller::class,'feestransfer']);
-Route::get('admin/fees/pending/currentyear',[adminfeescontroller::class,'currentyearpendingfeesstudents']);
-Route::post('admin/fees/pending/currentyear/students/bysection',[adminfeescontroller::class,'currentyearpendingfeesstudentsbysection']);
-Route::post('admin/fees/pending/currentyear/students/export',[adminfeescontroller::class,'currentyearpendingfeesexport']);
-
-Route::get('admin/analytics/pendingfees',[admintotalfeesanalyticcontroller::class,'index']);
-Route::post('admin/analytics/pendingfees/fetch',[admintotalfeesanalyticcontroller::class,'fetch']);
-Route::get('admin/analytics/currentfees',[admintotalfeesanalyticcontroller::class,'currentindex']);
-Route::post('admin/analytics/currentfees/fetch',[admintotalfeesanalyticcontroller::class,'currentfetch']);
-Route::get('admin/analytic/currentfees/monthwise',[admintotalfeesanalyticcontroller::class,'getmonth']);
+Route::get('controller/logout',function(){
+    session()->forget('Controller_ID');
+    session()->forget('Controller_ADMIN_ID');
+    session()->forget('Controller_Name');
+    session()->forget('Controller_Email');
+    session()->forget('Controller_Number');
+    session()->flash('logout','Logged Out Sucessfully');
+    return redirect('/');
+    });

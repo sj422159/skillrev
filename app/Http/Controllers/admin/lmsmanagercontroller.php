@@ -46,7 +46,7 @@ class lmsmanagercontroller extends Controller
             $result['teachingclasses']='';
         }
 
-        $aid=session()->get('Controller_ID');  
+        $aid=session()->get('ADMIN_ID');  
         $result['supervisors']=DB::table('supervisors')->where('aid',$aid)->get(); 
         return view("admin.addmanager",$result);
 
@@ -81,7 +81,7 @@ class lmsmanagercontroller extends Controller
         $permitted_chars = '0123456789';
         $password = substr(str_shuffle($permitted_chars), 0, 5);
 
-        $model->aid=session()->get('Controller_ID');
+        $model->aid=session()->get('ADMIN_ID');
         $model->mname=$request->post('name');
         $model->memail=$request->post('email');
         $model->mnumber=$request->post('number');

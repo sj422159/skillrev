@@ -47,7 +47,7 @@
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="{{url('corporatecontroller/groupmanager/export')}}/{{$data[0]->id}}" class="small-box-footer">Export</a>
+              <a href="{{url('corporateadmin/groupmanager/export')}}/{{$data[0]->id}}" class="small-box-footer">Export</a>
             </div>
           </div>
           <div class="col-lg-4 col-6">

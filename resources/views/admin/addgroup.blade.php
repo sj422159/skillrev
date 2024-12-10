@@ -1,4 +1,4 @@
-@extends('controller/layout')
+@extends('admin/layout')
 @section('title','Add Group')
 @section('Dashboard_select','active')
 @section('container')
@@ -10,7 +10,7 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form action="{{url('controller/groups/savegroup')}}" method="post" enctype="multipart/form-data">
+            <form action="{{url('admin/group/savegroup')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="form-row mt-2">

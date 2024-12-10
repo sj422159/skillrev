@@ -1,4 +1,4 @@
-@extends('controller/layout') @section('title','Date') @section('Dashboard_select','active extra') @section('container') <style type="text/css"></style>
+@extends('admin/layout') @section('title','Date') @section('Dashboard_select','active extra') @section('container') <style type="text/css"></style>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">

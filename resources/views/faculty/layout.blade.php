@@ -164,6 +164,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a  href="{{url('Faculty/content/skillattribute')}}" class="nav-link" class="@yield('dashboard_schedule')">
+              <i class="nav-icon fas fa-bookmark"></i>
+              <p>
+                Training Content
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a  href="{{url('faculty/rescheduled/classes')}}" class="nav-link" class="@yield('dashboard_schedule')">
               <i class="nav-icon fas fa-bookmark"></i>
               <p>

@@ -7,18 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class questionbank extends Model
 {
-    protected $fillable = [
-        'aid', 
-        'Controller_ID', // Add Controller_ID here
-        'Controller_ADMIN_ID', 
-        'skillattribute', 
-        'qtype', 
-        'qtext', 
-        'choice1', 
-        'choice2', 
-        'choice3', 
-        'choice4', 
-        'RightChoices', 
-        'difficultylevel'
-    ];
+   use HasFactory;
+   protected $fillable = ['aid','skillattribute','qtype','qtext','choice1','choice2','choice3','choice4','RightChoices','qualifier1','qualifier2','qualifier3','qualifier4','difficultylevel'];
 }

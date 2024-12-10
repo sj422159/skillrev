@@ -1,4 +1,4 @@
-@extends('controller/layout')
+@extends('controller/academ/layout')
 @section('title','Dashboard')
 @section('Dashboard_select','active')
 @section('container')
@@ -69,16 +69,21 @@
     <div class="row col-12">
         <div class="card card-widget widget-user" style="width:300px;height: 280px;margin:0px 20px 0px 15px;">
             <div class="widget-user-header bg-primary" style="background-image: linear-gradient(to right,#5235ba,#7e3ded);">
-                <h3 class="widget-user-username" style="color:#fff";>Academic Controller</h3>
+                <h3 class="widget-user-username" style="color:#fff";>{{ session()->get('Controller_Name') }}</h3>
             </div>
             <div class="widget-user-image">
-            <img class="img-circle elevation-2" src="{{ asset('adminimages/1672736310.jpg') }}" alt="User Avatar">
+            {{-- <img class="img-circle elevation-2" src="{{ asset('adminimages/1672736310.jpg') }}" alt="User Avatar"> --}}
+            @foreach($image as $list)
+            <img class="img-circle elevation-2" src="{{asset('adminimages')}}/{{$list->image}}" alt="User Avatar">
+            @endforeach
+
+       
 
 
             </div>
             <div class="card-footer" style="background-color: #fff;">
                 <div class="row col-12" style="display:flex;align-items:center;justify-content: center;padding: 0;margin: 0;">
-                    <a href="{{url('admin/adddetails')}}" class="btn btn-block btn-primary btn-sm col-6" style="background-image: linear-gradient(to right,#5235ba,#7e3ded);">
+                    <a href="{{url('academic_controller/adddetails')}}" class="btn btn-block btn-primary btn-sm col-6" style="background-image: linear-gradient(to right,#5235ba,#7e3ded);">
                     <i class="nav-icon fas fa-edit"></i>&nbsp&nbspProfile
                     </a>
                 </div>
@@ -88,116 +93,49 @@
         <div class="col-lg-4 col-8">
     <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
         <div class="inner">
-            <h3 style="color: #fff" id="profiles">{{ count($contentmanagement) }}</h3>
+            <h3 style="color: #fff" id="profiles">0</h3>
             <p>Content Management</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>                
-        <a href="{{ url('admin/studentdetails') }}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
     </div>
     <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
         <div class="inner">
-            <h3 style="color: #fff">{{ count($Skillsetmanagement) }}</h3>
+            <h3 style="color: #fff">0</h3>
             <p>TBD</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ url('admin/approve/leave') }}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
         <div class="col-lg-4 col-8">
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkgreen,lightgreen);">
                 <div class="inner">
-                    <h3 style="color: #fff">{{ count($Skillsetmanagement) }}</h3>
+                    <h3 style="color: #fff">0</h3>
                     <p>Skillset Management</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="{{url('admin/assesments')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkgreen,lightgreen);">
                 <div class="inner">
-                    <h3 style="color: #fff">{{ count($Skillsetmanagement) }}</h3>
+                    <h3 style="color: #fff">0</h3>
                     <p>Questions</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="{{url('admin/questions')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
-        @php
-        $count=1;
-        @endphp
-        @foreach($trainingtype as $list)
-        <div class="col-lg-4 col-8"> 
-            @if($count==1)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#283048,#859398);">
-            @elseif($count==2)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#cc2b5e,#753a88);">
-            @elseif($count==3)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,red,orange);">
-            @elseif($count==4)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
-            @endif
-                <div class="inner">
-                    <h3 style="color: #fff">{{$list->assigned}}</h3>
-                    <p>ASSIGNED - {{$list->type}}</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="{{url('admin/assigned')}}/{{$list->id}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-4 col-8"> 
-            @if($count==1)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#283048,#859398);">
-            @elseif($count==2)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#cc2b5e,#753a88);">
-            @elseif($count==3)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,red,orange);">
-            @elseif($count==4)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
-            @endif
-                <div class="inner">
-                    <h3 style="color: #fff">{{$list->attended}}</h3>
-                    <p>ATTENDED - {{$list->type}}</p>
-                </div>
-                 <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="{{url('admin/attended')}}/{{$list->id}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-4 col-8">
-            @if($count==1)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#283048,#859398);">
-            @elseif($count==2)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#cc2b5e,#753a88);">
-            @elseif($count==3)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,red,orange);">
-            @elseif($count==4)
-            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
-            @endif
-                <div class="inner">
-                    <h3 style="color: #fff">{{$list->completed}}</h3>
-                    <p>COMPLETED - {{$list->type}}</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="{{url('admin/completed')}}/{{$list->id}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        @php
-        $count++;
-        @endphp
-        @endforeach              
+                     
 </div>
 </div>
 <script type="text/javascript">

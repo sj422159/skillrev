@@ -14,199 +14,266 @@ use Redirect,Response;
 
 class adminanalyticcontroller extends Controller
 {
-  public function index() {
-    // Check if admin or controller is logged in
-    $aid = session()->has('ADMIN_ID') ? session()->get('ADMIN_ID') : 0;
-    $controller_id = session()->has('Controller_ID') ? session()->get('Controller_ID') : 0;
-
-    // Initialize result array
-    $result = [
-        'cl' => 0,
-        'tri' => 0,
-        'section' => 0,
-        'presec' => [],
-        'postsec' => [],
-        'cpass' => 0,
-        'cfail' => 0,
-        'fpass' => 0,
-        'ffail' => 0,
-        'capprove' => 0,
-        'fapprove' => 0
-    ];
-
-    // Get data based on logged-in user type
-    if ($aid) {
-        $result['train'] = DB::table('trainings')->where('aid', $aid)->where('status', 1)->get();
-        $result['class'] = DB::table('categories')->where('aid', $aid)->get();
-    } elseif ($controller_id) {
-        $result['train'] = DB::table('trainings')->where('controller_id', $controller_id)->where('status', 1)->get();
-        $result['class'] = DB::table('categories')->where('controller_id', $controller_id)->get();
+    public function index(){
+          $aid=session()->get('ADMIN_ID'); 
+        $d=DB::table('admins')->where("id",$aid)->get();
+        $result['train']=DB::table('trainings')->where('aid',$aid)->where('status',1)->get();
+        $result['class']=DB::table('categories')->where('aid',$aid)->get();
+        $result['cl']=0;
+        $result['tri']=0;
+        $result['section']=0;
+        $result['presec']=[];
+        $result['postsec']=[];
+        $result['cpass']=0;
+        $result['cfail']=0;
+        $result['fpass']=0;
+        $result['ffail']=0;
+        $result['capprove']=0;
+        $result['fapprove']=0;
+        return view('admin.analytics',$result);
     }
+
+    public function fetch(request $request){
+             $aid=session()->get('ADMIN_ID'); 
+        $d=DB::table('admins')->where("id",$aid)->get();
+        $result['train']=DB::table('trainings')->where('aid',$aid)->where('status',1)->get();
+        $result['class']=DB::table('categories')->where('aid',$aid)->get();
+        $result['cl']=$request->class;
+        $result['tri']=$request->training;
+
+      //  return $request->post();
+        $jname=DB::table('trainings')->where('id',$request->training)->get();
+      if(count($jname)>0){
+       $result['jname']=$jname[0]->trainingname;
+      }else{
+        $result['jname']='';
+      }
+      $result['section']=$request->section;
+      $aid=session()->get('ADMIN_ID');
+
+      $pre=DB::table('assesments')->where('train',$request->training)->where('asstype',"Pre")->where('status',1)->get(); 
+           
+      if(count($pre)>0){
+        $result['presec']=DB::table('assesmentsections')->where('ass_id',$pre[0]->id)->get();
+        $cpass=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('training'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('stureports.result','PASS')
+                        ->where('studentbookings.manpreapprove',0)
+                        ->get();
+
+        $result['cpass']=count($cpass);
+
+        $cfail=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('training'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('stureports.result','FAIL')
+                        ->where('studentbookings.manpreapprove',0)
+                        ->get();
+
+        $result['cfail']=count($cfail);
+
+        $capprove=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('training'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('studentbookings.manpreapprove',1)
+                        ->get();
+
+        $result['capprove']=count($capprove);
+
+      }else{
+          $result['presec']=[];
+          $result['preid']=0;
+          $result['cpass']=0;
+          $result['cfail']=0;
+          $result['capprove']=0;
+      }
+
+
+
+      
+         $post=DB::table('assesments')->where('train',$request->training)->where('asstype',"Post")->where('status',1)->get();  
+      if(count($post)>0){
+          $result['postsec']=DB::table('assesmentsections')->where('ass_id',$post[0]->id)->get();
+          $fpass=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('training'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('stureports.postresult','PASS')
+                        ->where('studentbookings.manpreapprove',0)
+                        ->get();
+          $result['fpass']=count($fpass);
+          $ffail=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('training'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('stureports.postresult','PASS')
+                        ->where('studentbookings.manpreapprove',0)
+                        ->get();
+          $result['ffail']=count($ffail);
+
+          $fapprove=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('training'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('studentbookings.manpreapprove',1)
+                        ->get();
+
+             $result['fapprove']=count($fapprove);
+
+      }else{
+          $result['fpass']=0;
+          $result['ffail']=0;
+          $result['postid']=0;
+          $result['postsec']=[];
+          $result['fapprove']=0;
+      }
+
+     
+     return view('admin.analytics',$result);
+    }
+
+
+    public function predata(request $request){
+        $re = $request->post('id');
+      $name=explode('//', $re);
+      $need='';
+      $result['data']['name']="PRE - ".$name[0];
+      if($name[1]==1){
+       $need="secAmark";
+      }
+      if($name[1]==2){
+       $need="secBmark";
+      }
+      if($name[1]==3){
+       $need="secCmark";
+      }
+      if($name[1]==4){
+       $need="secDmark";
+      }
+
     
-    return view('admin.analytics', $result);
-}
+        $aid=session()->get('ADMIN_ID');
+      $data=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('train'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('studentbookings.aid',$aid)
+                        ->get($need);
 
-public function fetch(Request $request) {
-  $aid = session()->has('ADMIN_ID') ? session()->get('ADMIN_ID') : 0;
-  $controller_id = session()->has('Controller_ID') ? session()->get('Controller_ID') : 0;
+        $result['data'][0]=0;
+        $result['data'][1]=0;
+        $result['data'][2]=0;
+        $result['data'][3]=0;
+        $result['data'][4]=0;
+        $result['data'][5]=0;
+        $result['data'][6]=0;
+        $result['data'][7]=0;
 
-  if ($aid) {
-      $result['train'] = DB::table('trainings')->where('aid', $aid)->where('status', 1)->get();
-      $result['class'] = DB::table('categories')->where('aid', $aid)->get();
-  } elseif ($controller_id) {
-      $result['train'] = DB::table('trainings')->where('controller_id', $controller_id)->where('status', 1)->get();
-      $result['class'] = DB::table('categories')->where('controller_id', $controller_id)->get();
-  }
+      for($i=0;$i<count($data);$i++){
+         if($data[$i]->$need>=90){
+                    $result['data'][7]++;   
+                   }
+          else if($data[$i]->$need>=80){
+                        $result['data'][6]++; 
+                     }
 
-  // Assign other request data
-  $result['cl'] = $request->class;
-  $result['tri'] = $request->training;
-  $result['section'] = $request->section;
+          else if($data[$i]->$need>=70){
+                         $result['data'][5]++; 
+                      }
+          else if($data[$i]->$need>=60){
+                          $result['data'][4]++; 
+                       }
+          else if($data[$i]->$need>=50){
+                           $result['data'][3]++; 
+                       }
+          else if($data[$i]->$need>=40){
+                          $result['data'][2]++; 
+                       }
+          else if($data[$i]->$need>=30){
+                        $result['data'][1]++; 
+                     }
+          else if($data[$i]->$need<30){
+                               $result['data'][0]++; 
+                           }
 
-  // Fetch pre-assessment sections and counts
-  $pre = DB::table('assesments')->where('train', $request->training)->where('asstype', "Pre")->where('status', 1)->first();
-  if ($pre) {
-      $result['presec'] = DB::table('assesmentsections')->where('ass_id', $pre->id)->get();
+          }
+      
+        return Response::json($result['data']);
 
-      $query = DB::table('studentbookings')
-                  ->join('stureports', 'studentbookings.stureports', '=', 'stureports.id')
-                  ->where('trainingid', $request->post('training'))
-                  ->where('ssectionid', $request->post('section'))
-                  ->where('studentbookings.manpreapprove', 0);
+    
+    }
 
-      if ($aid) {
-          $result['cpass'] = $query->where('stureports.result', 'PASS')->where('studentbookings.aid', $aid)->count();
-          $result['cfail'] = $query->where('stureports.result', 'FAIL')->where('studentbookings.aid', $aid)->count();
-      } elseif ($controller_id) {
-          $result['cpass'] = $query->where('stureports.result', 'PASS')->where('studentbookings.controller_id', $controller_id)->count();
-          $result['cfail'] = $query->where('stureports.result', 'FAIL')->where('studentbookings.controller_id', $controller_id)->count();
+    public function postdata(request $request){
+        $re = $request->post('id');
+      $name=explode('//', $re);
+      $need='';
+      $result['data']['name']="POST - ".$name[0];
+      if($name[1]==1){
+       $need="psecAmark";
       }
-  } else {
-      $result['presec'] = [];
-      $result['cpass'] = 0;
-      $result['cfail'] = 0;
-  }
-
-  // Fetch post-assessment sections and counts (similar to above for post data)
-  $post = DB::table('assesments')->where('train', $request->training)->where('asstype', "Post")->where('status', 1)->first();
-  if ($post) {
-      $result['postsec'] = DB::table('assesmentsections')->where('ass_id', $post->id)->get();
-
-      $query = DB::table('studentbookings')
-                  ->join('stureports', 'studentbookings.stureports', '=', 'stureports.id')
-                  ->where('trainingid', $request->post('training'))
-                  ->where('ssectionid', $request->post('section'))
-                  ->where('studentbookings.manpreapprove', 0);
-
-      if ($aid) {
-          $result['fpass'] = $query->where('stureports.postresult', 'PASS')->where('studentbookings.aid', $aid)->count();
-          $result['ffail'] = $query->where('stureports.postresult', 'FAIL')->where('studentbookings.aid', $aid)->count();
-      } elseif ($controller_id) {
-          $result['fpass'] = $query->where('stureports.postresult', 'PASS')->where('studentbookings.controller_id', $controller_id)->count();
-          $result['ffail'] = $query->where('stureports.postresult', 'FAIL')->where('studentbookings.controller_id', $controller_id)->count();
+      if($name[1]==2){
+       $need="psecBmark";
       }
-  } else {
-      $result['postsec'] = [];
-      $result['fpass'] = 0;
-      $result['ffail'] = 0;
-  }
+      if($name[1]==3){
+       $need="psecCmark";
+      }
+      if($name[1]==4){
+       $need="psecDmark";
+      }
 
-  return view('admin.analytics', $result);
-}
+    
+        $aid=session()->get('ADMIN_ID');
+      $data=DB::table('studentbookings')
+                        ->join('stureports','studentbookings.stureports','stureports.id')
+                        ->where('trainingid',$request->post('train'))
+                        ->where('ssectionid',$request->post('section'))
+                        ->where('studentbookings.aid',$aid)
+                        ->get($need);
 
+        $result['data'][0]=0;
+        $result['data'][1]=0;
+        $result['data'][2]=0;
+        $result['data'][3]=0;
+        $result['data'][4]=0;
+        $result['data'][5]=0;
+        $result['data'][6]=0;
+        $result['data'][7]=0;
 
+      for($i=0;$i<count($data);$i++){
+         if($data[$i]->$need>=90){
+                    $result['data'][7]++;   
+                   }
+          else if($data[$i]->$need>=80){
+                        $result['data'][6]++; 
+                     }
 
-public function predata(Request $request) {
-  $aid = session()->has('ADMIN_ID') ? session()->get('ADMIN_ID') : 0;
-  $controller_id = session()->has('Controller_ID') ? session()->get('Controller_ID') : 0;
+          else if($data[$i]->$need>=70){
+                         $result['data'][5]++; 
+                      }
+          else if($data[$i]->$need>=60){
+                          $result['data'][4]++; 
+                       }
+          else if($data[$i]->$need>=50){
+                           $result['data'][3]++; 
+                       }
+          else if($data[$i]->$need>=40){
+                          $result['data'][2]++; 
+                       }
+          else if($data[$i]->$need>=30){
+                        $result['data'][1]++; 
+                     }
+          else if($data[$i]->$need<30){
+                               $result['data'][0]++; 
+                           }
 
-  $re = $request->post('id');
-  $name = explode('//', $re);
-  $need = match ($name[1]) {
-      1 => "secAmark",
-      2 => "secBmark",
-      3 => "secCmark",
-      4 => "secDmark",
-      default => ''
-  };
-  
-  $result['data']['name'] = "PRE - " . $name[0];
-  $data = DB::table('studentbookings')
-            ->join('stureports', 'studentbookings.stureports', '=', 'stureports.id')
-            ->where('trainingid', $request->post('train'))
-            ->where('ssectionid', $request->post('section'));
+          }
+      
+        return Response::json($result['data']);
 
-  if ($aid) {
-      $data = $data->where('studentbookings.aid', $aid)->get($need);
-  } elseif ($controller_id) {
-      $data = $data->where('studentbookings.controller_id', $controller_id)->get($need);
-  }
-
-  $result['data'] = array_fill(0, 8, 0);
-  foreach ($data as $d) {
-      $score = $d->$need;
-      if ($score >= 90) $result['data'][7]++;
-      elseif ($score >= 80) $result['data'][6]++;
-      elseif ($score >= 70) $result['data'][5]++;
-      elseif ($score >= 60) $result['data'][4]++;
-      elseif ($score >= 50) $result['data'][3]++;
-      elseif ($score >= 40) $result['data'][2]++;
-      elseif ($score >= 30) $result['data'][1]++;
-      else $result['data'][0]++;
-  }
-
-  return response()->json($result['data']);
-}
-
-
-public function postdata(Request $request) {
-  // Retrieve the logged-in user's aid or controller_id
-  $aid = session()->has('ADMIN_ID') ? session()->get('ADMIN_ID') : 0;
-  $controller_id = session()->has('Controller_ID') ? session()->get('Controller_ID') : 0;
-
-  // Extract assessment section from the posted id
-  $re = $request->post('id');
-  $name = explode('//', $re);
-  $need = match ($name[1]) {
-      1 => "secAmark",
-      2 => "secBmark",
-      3 => "secCmark",
-      4 => "secDmark",
-      default => ''
-  };
-
-  // Prepare the result data structure
-  $result['data']['name'] = "POST - " . $name[0];
-  $result['data'] = array_fill(0, 8, 0);
-
-  // Fetch the post-assessment data based on the training and section
-  $data = DB::table('studentbookings')
-            ->join('stureports', 'studentbookings.stureports', '=', 'stureports.id')
-            ->where('trainingid', $request->post('train'))
-            ->where('ssectionid', $request->post('section'));
-
-  // Apply filtering based on user type (ADMIN_ID or Controller_ID)
-  if ($aid) {
-      $data = $data->where('studentbookings.aid', $aid)->get($need);
-  } elseif ($controller_id) {
-      $data = $data->where('studentbookings.controller_id', $controller_id)->get($need);
-  }
-
-  // Process data to count marks in different ranges
-  foreach ($data as $d) {
-      $score = $d->$need;
-      if ($score >= 90) $result['data'][7]++;
-      elseif ($score >= 80) $result['data'][6]++;
-      elseif ($score >= 70) $result['data'][5]++;
-      elseif ($score >= 60) $result['data'][4]++;
-      elseif ($score >= 50) $result['data'][3]++;
-      elseif ($score >= 40) $result['data'][2]++;
-      elseif ($score >= 30) $result['data'][1]++;
-      else $result['data'][0]++;
-  }
-
-  // Return the result data as JSON response
-  return response()->json($result['data']);
-}
-
+    
+    }
 }

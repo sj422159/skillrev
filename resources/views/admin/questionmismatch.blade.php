@@ -1,4 +1,4 @@
-@extends('controller/elayout')
+@extends('admin/layout')
 @section('title','Mismatch Question')
 @section('Dashboard_select','active')
 @section('container')

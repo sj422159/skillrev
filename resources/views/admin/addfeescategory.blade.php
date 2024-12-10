@@ -1,4 +1,4 @@
-@extends('controller/Alayout')
+@extends('admin/layout')
 @section('title','Add Category')
 @section('Dashboard_select','active')
 @section('container')

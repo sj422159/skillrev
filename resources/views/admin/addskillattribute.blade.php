@@ -1,4 +1,4 @@
-@extends('controller/layout')
+@extends('admin/layout')
 @section('title','Add Chapter')
 @section('Dashboard_select','active')
 @section('container')
@@ -8,68 +8,54 @@
             <div class="card-header">
                 <h3 class="card-title" style="color:#fff !important;">Create</h3>
             </div>
-            <form action="{{ url('admin/skillattribute/saveskillattribute') }}" method="post" enctype="multipart/form-data">
-              @csrf
-              <div class="card-body">
-                  <div class="form-row">
-                      <div class="col-12 col-sm-6 mt-2 mt-sm-0">
-                          <label for="jobskill">Group</label>
-                          <select id="mainbranch" name="groupid" class="form-control" required="true">
-                              <option value="">Select</option>
-                              @foreach($skillsets as $list)
-                                  <option value="{{ $list->groupid }}" {{ $groupid == $list->groupid ? 'selected' : '' }}>{{ $list->group_name }}</option>
-                              @endforeach
-                          </select>
-                      </div>
-          
-                      <div class="col-12 col-sm-6 mt-2 mt-sm-0">
-                        <label for="branchname">Standard</label>
-                        <select name="category" class="form-control" required="true">
+            <form action="{{url('admin/skillattribute/saveskillattribute')}}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="card-body">
+                    <div class="form-row">
+                    <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                        <label for="jobskill">Group</label>
+                        <select id="mainbranch" name="groupid" type="text" class="form-control" aria-required="true" aria-invalid="false" required="true">
                             <option value="">Select</option>
-                            @foreach($skillsets as $skillset)
-                                <option value="{{ $skillset->category }}" {{ isset($category) && $category == $skillset->category ? 'selected' : '' }}>{{ $skillset->category_name }}</option>
+                            @foreach($groups as $list)
+                            @if($groupid==$list->id)
+                            <option selected value="{{$list->id}}">{{$list->group}}</option>
+                            @else
+                            <option value="{{$list->id}}">{{$list->group}}</option>
+                            @endif
                             @endforeach
                         </select>
                     </div>
-                  </div>
-          
-                  <div class="form-row mt-2">
-                      <div class="col-12 col-sm-6 mt-2 mt-sm-0">
-                          <label for="branchname">Subject</label>
-                          <select name="domain" class="form-control" required="true">
-                              <option value="">Select</option>
-                              @foreach($skillsets as $skillset)
-                                  <option value="{{ $skillset->domain }}" {{ $domain == $skillset->domain ? 'selected' : '' }}>{{ $skillset->dname }}</option>
-                              @endforeach
-                          </select>
-                      </div>
-          
-                      <div class="col-12 col-sm-6 mt-2 mt-sm-0">
-                          <label for="branchname">Module</label>
-                          <select name="skillset" class="form-control" required="true">
-                              <option value="">Select</option>
-                              @foreach($skillsets as $skillset)
-                                  <option value="{{ $skillset->id }}" {{ isset( $skillset_id) && $skillset_id == $skillset->id ? 'selected' : '' }}>{{ $skillset->skillset }}</option>
-                              @endforeach
-                          </select>
-                      </div>
-                  </div>
-          
-                  <div class="form-row mt-2">
-                      <div class="col-12 col-sm-12 mt-2 mt-sm-0">
-                          <label for="jobrole">Chapter</label>
-                          <input type="text" class="form-control" id="subskillset" placeholder="Enter Chapter Name" name="skillattribute" value="{{ $skillattribute }}" required="true">
-                      </div>
-                  </div>
-          
-                  <input type="hidden" name="id" value="{{ $id }}">
-              </div>
-          
-              <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-              </div>
-          </form>
-          
+                    <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                            <label for="branchname">Standard</label>
+                            <select name="category" class="form-control" required="true" data-val="{{$category}}" id="subbranch">
+                            </select>
+                    </div>
+                    </div>
+                    <div class="form-row mt-2">
+                    <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                            <label for="branchname">Subject</label>
+                            <select name="domain"class="form-control"required="true" data-val="{{$domain}}" id="childbranch">
+                            </select>
+                    </div>
+                    <div class="col-12 col-sm-6 mt-2 mt-sm-0">
+                            <label for="branchname">Module</label>
+                            <select name="skillset"class="form-control"required="true" data-val="{{$skillset}}" id="skillset">
+                            </select>
+                    </div>
+                    </div>
+                    <div class="form-row mt-2">
+                    <div class="col-12 col-sm-12 mt-2 mt-sm-0">
+                        <label for="jobrole">Chapter</label>
+                        <input type="text" class="form-control" id="subskillset" placeholder="Enter Chapter Name" name="skillattribute" value="{{$skillattribute}}" required="true">
+                    </div>
+                    </div>
+                    <input type="hidden" name="id" value="{{$id}}">
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+        </div>
+        </form>
     </div>
 </div>
 </div>

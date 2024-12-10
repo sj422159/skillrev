@@ -1,4 +1,4 @@
-@extends('controller/Alayout')
+@extends('admin/layout')
 @section('title','Add Category')
 @section('Dashboard_select','active')
 @section('container')
@@ -86,15 +86,8 @@
                     
                     <div class="col-12 col-sm-4">
                         <label for="jobrole">Students</label>
-                        <select class="form-control" id="students" required name="students" onchange="fee(this)">
-                            <option value="">Select</option>   
-                            @foreach($students as $list)
-                            @if($students==$list->id)
-                            <option selected value="{{$list->id}}">{{$list->sname}} </option>
-                            @else
-                            <option value="{{$list->id}}">{{$list->sname}} </option>
-                            @endif
-                           @endforeach    
+                        <select class="form-control" id="students" data-val="{{$studentid}}" required name="students" onchange="fee(this)">
+                            <option value="">Select</option>       
                         </select>
                     </div>
                    

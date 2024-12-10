@@ -1,4 +1,4 @@
-@extends('controller/layout')
+@extends('admin/layout')
 @section('title','Group')
 @section('Dashboard_select','active')
 @section('container')
@@ -13,7 +13,7 @@
         </div>
 @endif
 @if(count($group)<=3)
-<a href="{{url('controller/groups/addgroup')}}">
+<a href="{{url('admin/group/addgroup')}}">
 <button type="button" class="btn btn-primary">Create</button>  </a>
 @endif
 <div class="row">
@@ -32,7 +32,7 @@
                     <tr>
                         <td>{{$list->group}}</td>
                         <td>
-                            <a href="{{url('controller/groups/addgroup')}}/{{$list->id}}"><button type="button" class="btn btn-success">Edit</button>
+                            <a href="{{url('admin/group/addgroup')}}/{{$list->id}}"><button type="button" class="btn btn-success">Edit</button>
                             </a>
                         </td>
                     </tr>

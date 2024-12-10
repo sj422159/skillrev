@@ -8,13 +8,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Hash; 
 use App\Models\User; 
-use App\Models\Controllers;
+use App\Models\controllers;
 use App\Models\skillset;
 use App\Models\category;
 use App\Models\domain;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\find;
 use Illuminate\Support\Facades\Response;
+use App\Models\admin;
 
 
 class AcademicController extends Controller
@@ -69,13 +71,13 @@ class AcademicController extends Controller
     }
     
         
-            public function categorybygroup(Request $request){
-                $groupid=$request->post('groupid');
-                $aid = session()->get('ADMIN_ID');
-                $controller_id = session()->get('Controller_ID');
-                $result['groups']=DB::table('groups')->where('aid', $aid)->orWhere('controller_id', $controller_id)->get();
-                $result['groupid']=$groupid;
-                $result['category']=DB::table('categories')
+    public function categorybygroup(Request $request){
+        $groupid=$request->post('groupid');
+        $aid = session()->get('ADMIN_ID');
+        $controller_id = session()->get('Controller_ID');
+        $result['groups']=DB::table('groups')->where('aid', $aid)->orWhere('controller_id', $controller_id)->get();
+        $result['groupid']=$groupid;
+        $result['category']=DB::table('categories')
                                 ->join('groups','groups.id','categories.groupid')
                                 ->where('categories.aid',$aid)->orwhere('categories.controller_id',$controller_id)
                                 ->where('categories.groupid',$groupid)
@@ -230,7 +232,108 @@ class AcademicController extends Controller
         // Return login view
         return view('controller.login');
     }
+    public function adddetails(Request $request, $id = "")
+    {
+        // Retrieve the session's Controller ID
+        $sesid = session()->get('Controller_ID');
+        $result = [];
+    
+        // Fetch controller details from the database
+        $controllerData = DB::table('controller')->where(['id' => $sesid])->first();
+    
+        if ($controllerData) {
+            $result['id'] = $controllerData->id;
+            $result['name'] = $controllerData->name;
+            $result['email'] = $controllerData->email;
+            $result['number'] = $controllerData->number;
+            $result['image'] = $controllerData->image;
+            $controllerRoleId = $controllerData->Controller_role_ID; // Use proper field name
+        } else {
+            // Default values if no data found
+            $result['id'] = '';
+            $result['name'] = '';
+            $result['email'] = '';
+            $result['number'] = '';
+            $result['image'] = '';
+            $controllerRoleId = null;
+        }
+    
+        // Handle role-based view rendering
+        switch ($controllerRoleId) {
+            case 1:
+                return view('controller.academ.adddetails', $result);
+            case 2:
+                return view('controller.exam.adddetails', $result);
+            case 3:
+                return view('controller.account.adddetails', $result);
+            default:
+                return redirect('/'); // Redirect to home or an appropriate page
+        }
+    }
+    
 
+    public function savedetails(Request $request)
+    {
+        $controllerRoleId = null;
+    
+        if ($request->post('id') > 0) {
+            // Find the record by ID
+            $model = controllers::find($request->post('id'));
+            if (!$model) {
+                return redirect()->back()->with('error', 'Record not found for update.');
+            }
+    
+            // Fetch Controller_role_id
+            $controllerRoleId = $model->Controller_role_id;
+            $msg = "Corporate Details Updated";
+        } else {
+            $model = new controllers();
+            $msg = "Corporate Details Inserted";
+        }
+    
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $ext = $image->extension();
+            $image_name = time() . '.' . $ext;
+            $image->move(public_path('adminimages'), $image_name);
+            $model->image = $image_name;
+        }
+    
+        // Assign other fields
+        $model->name = $request->post('name');
+        $model->email = $request->post('email');
+        $model->number = $request->post('number');
+    
+        // Save the model
+        $model->save();
+    
+        // If new, fetch the Controller_role_id after saving
+        if (!$controllerRoleId) {
+            $controllerRoleId = $model->Controller_role_ID;
+        }
+        // dd($controllerRoleId);
+        // Determine redirection based on Controller_role_id
+        switch ($controllerRoleId) {
+            case 1:
+                $redirectUrl = '/Controller/Academ/dashboard';
+                break;
+            case 2:
+                $redirectUrl = '/dashboard/examination';
+                break;
+            case 3:
+                $redirectUrl = '/Controller/Account/dashboard';
+                break;
+            default:
+                $redirectUrl = '/';
+                break;
+        }
+    
+        // Set flash message and redirect
+        session()->flash('message', $msg);
+        return redirect($redirectUrl);
+    }
+    
+    
 
 
 public function save(Request $request)
@@ -252,6 +355,7 @@ public function save(Request $request)
             session()->put('Controller_ID', $result->id);
             session()->put('Controller_ADMIN_ID', $result->aid);
             session()->put('Controller_Name', $result->name);
+            session()->put('Controller_image', $result->image);
             session()->put('Controller_Email', $result->email);
             session()->put('Controller_Number', $result->number);
             session()->flash('success', 'Successfully Logged In');
@@ -265,11 +369,11 @@ public function save(Request $request)
             }
         } else {
             $request->session()->flash("error", "Incorrect Password");
-            return redirect()->route('accontrol.login');
+            return redirect()->route('login');
         }
     } else {
         $request->session()->flash("error", "Invalid Login Credentials");
-        return redirect()->route('accontrol.login');
+        return redirect()->route('login');
     }
 }
 
@@ -292,22 +396,18 @@ public function save(Request $request)
         // Example: Sending password reset email
         // PasswordReset::sendResetLink($request->only('email'));
 
-        return redirect()->route('accontrol.login')->with('success', 'Password reset link sent to your email.');
+        return redirect()->route('login')->with('success', 'Password reset link sent to your email.');
     }
 
     
 
     public function academicDashboard()
     {
-        // Query to fetch data from the 'academics' table
-        $list = DB::table('academics')->where('id', session()->get('Controller_ID'))->first();
-    
-      // Fetching different data from 'academics' table based on the 'type' field
-        $contentmanagement = DB::table('academics')->where('type', 'contentmanagement')->get();
-        $Skillsetmanagement = DB::table('academics')->where('type', 'skillsetmanagement')->get();
-        $trainingtype = DB::table('academics')->where('type', 'trainingtype')->get();
-    
-        return view('controller.dashboard', compact('list', 'contentmanagement', 'Skillsetmanagement', 'trainingtype'));
+       $controller_name=session()->get('Controller_Name');
+       $sesid=session()->get('Controller_ID');
+
+       $result['image']=controllers::where('id',$sesid)->get();
+        return view('controller.dashboard',$result);
     }
     
     public function domain(Request $request){
@@ -378,10 +478,7 @@ public function save(Request $request)
             ->orWhere('controller_id', $controller_id)
             ->get();
     
-        $result['categories'] = DB::table('categories')
-            ->where('aid', $aid)
-            ->orWhere('controller_id', $controller_id)
-            ->get();
+      
     
         // Return the view with the result data
         return view('admin.adddomain', $result);
@@ -499,24 +596,38 @@ public function save(Request $request)
         return view('admin.skillset',$result);
     }
 
-    public function addskillset(Request $request,$id=""){   
-
+    public function addSkillset($id = null)
+    {
         $aid=session()->get('ADMIN_ID');
         $controller_id=session()->get('Controller_ID');
-        $result['groups']=DB::table('groups')->where('aid',$aid)->orWhere('Controller_ID',$controller_id)->get();
-        $result['categories']=DB::table('categories')->where('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
-        $result['domain']=DB::table('domains')->where('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
-        
-        if ($id) {
-            $skillset = DB::table('skillsets')->where('id', $id)->first();
-            $result['skillset'] = $skillset ? $skillset->skillset : '';
-        } else {
-         $result['skillset'] = ''; // For creating new skillset
-        }
-         return view("admin.addskillset",$result);
+        $controller_admin_id=session()->get('Controller_ADMIN_ID');
 
+        if ($id) {
+            // Fetch skillset data for editing
+            $skillset = DB::table('skillsets')->where('id', $id)->first();
+    
+            if (!$skillset) {
+                return redirect('admin/skillset')->with('error', 'Skillset not found!');
+            }
+        } else {
+            // Initialize an empty object for creating a new skillset
+            $skillset = (object) [
+                'groupid' => '',
+                'category' => '',
+                'domain' => '',
+                'skillset' => '',
+                'id' => ''
+            ];
+        }
+    
+        $groups=DB::table('groups')->where('aid',$aid)->orWhere('Controller_ID',$controller_id)->get();
+        $categories=DB::table('categories')->where('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
+        $domain=DB::table('domains')->where('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
         
+        // Pass data to the view
+        return view('admin.addskillset', compact('skillset', 'groups', 'categories', 'domain'));
     }
+    
      
     public function saveskillset(Request $request)
     {
@@ -570,7 +681,8 @@ public function save(Request $request)
     
     public function editSkillset($id)
     {
- // Fetch the skillset data for the given ID
+        $aid=session()->get('ADMIN_ID');
+        $controller_id=session()->get('Controller_ID');
  $skillset = DB::table('skillsets')->where('id', $id)->first();
 
  // Check if the skillset exists
@@ -579,7 +691,8 @@ public function save(Request $request)
  }
 
  // Fetch the group related to the skillset's groupid
- $groups = DB::table('groups')->get();
+ $groups=DB::table('groups')->where('aid',$aid)->orWhere('Controller_ID',$controller_id)->get();
+ $categories=DB::table('categories')->where('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
  $selectedGroup = DB::table('groups')->where('id', $skillset->groupid)->first();
 
  // Fetch the remaining dropdown data
@@ -836,7 +949,7 @@ public function save(Request $request)
         $controller_admin_id=session()->get('Controller_ADMIN_ID');
         $id = $_GET['myID'];
        
-        $res = DB::table('categories')->where('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
+        $res = DB::table('categories')->where('groupid',$id)->where('aid',$aid)->orwhere('Controller_ID',$controller_id)->get();
      
         return Response::json($res);
     }

@@ -1,4 +1,4 @@
-@extends('controller/elayout')
+@extends('admin/layout')
 @section('title','Questions')
 @section('Dashboard_select','active')
 @section('container')
@@ -23,64 +23,44 @@
             </button>
         </div>
     @endif
-    <form action="{{ url('admin/questions/bysa') }}" method="post">
-      @csrf
-      <div class="form-row">
-          <!-- Standard Dropdown -->
-          <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-              <label>Standard</label>
-              <select class="form-control" name="category" >
-                  <option value="">Select</option>
-                  @foreach($categories as $list)
-                      <option value="{{ $list->id }}" {{ $categoryid == $list->id ? 'selected' : '' }}>
-                          {{ $list->categories }}
-                      </option>
-                  @endforeach
-              </select>
-          </div>
-  
-          <!-- Subject Dropdown -->
-          <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-              <label for="branchname">Subject</label>
-              <select name="domain" class="form-control" >
-                  <option value="">Select</option>
-                  @foreach($domain as $domains)
-                      <option value="{{ $domains->id }}" {{ $domainid == $domains->id ? 'selected' : '' }}>
-                          {{ $domains->domain }}
-                      </option>
-                  @endforeach
-              </select>
-          </div>
-  
-          <!-- Module Dropdown -->
-          <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-              <label for="branchname">Module</label>
-              <select name="skillset" class="form-control">
-                  <option value="">Select</option>
-                  @foreach($skillsets as $skillset)
-                      <option value="{{ $skillset->id }}" {{ $skillsetid == $skillset->id ? 'selected' : '' }}>
-                          {{ $skillset->skillset }}
-                      </option>
-                  @endforeach
-              </select>
-          </div>
-  
-          <!-- Chapter Dropdown (this triggers the form submission) -->
-          <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-              <label for="branchname">Chapter</label>
-              <select name="skillattribute" class="form-control" onchange="this.form.submit()">
-                  <option value="">Select</option>
-                  @foreach($skillattributes as $skillattribute)
-                      <option value="{{ $skillattribute->id }}" {{ $skillattributeid == $skillattribute->id ? 'selected' : '' }}>
-                          {{ $skillattribute->skillattribute }}
-                      </option>
-                  @endforeach
-              </select>
-          </div>
-      </div>
-  </form>
-  
-  
+<form action="{{url('admin/questions/bysa')}}" method="post">
+    @csrf
+    <div class="form-row">
+        <div class="col-12 col-sm-3 mt-4 mt-sm-0">
+            <label>Standard</label>
+            <select class="form-control" aria-required="true" aria-invalid="false" name="category" id="mainbranch">
+                <option value="">Select</option>
+                @foreach($categories as $list)
+                            @if($categoryid==$list->id)
+                            <option selected value="{{$list->id}}">{{$list->categories}}</option>
+                            @else
+                            <option value="{{$list->id}}">{{$list->categories}}</option>
+                            @endif
+                @endforeach
+            </select>
+        </div>
+        <div class="col-12 col-sm-3 mt-4 mt-sm-0">
+                            <label for="branchname">Subject</label>
+                            <select name="domain" class="form-control" required="true" data-val="{{$domainid}}" id="subbranch">
+                            </select>
+                    </div>
+                    <div class="col-12 col-sm-3 mt-4 mt-sm-0">
+                            <label for="branchname">Module</label>
+                            <select name="skillset" class="form-control" required="true" data-val="{{$skillsetid}}" id="subskillset">
+                            </select>
+                    </div>
+                    <div class="col-12 col-sm-3 mt-4 mt-sm-0">
+                            <label for="branchname">Chapter</label>
+                            <select name="skillattribute" class="form-control" required="true" data-val="{{$skillattributeid}}" id="skillattribute" onchange="yesnoChecked(this)">
+                            </select>
+                    </div>
+        <div class="col-md-6" style="display:flex !important; align-items: flex-end !important;">
+            <button type="submit" class="btn btn-sm btn-success" id="getskillattributes" hidden="true">Get Skill  Attribute Related Questions
+            </button>
+        </div>
+    </div>
+    <div class="form-row mt-4"></div>
+</form>
 <div class="card">
     <div class="card-header">
         <a href="{{url('admin/questions/add')}}">
@@ -105,26 +85,26 @@
                 </tr>
             </thead>
             <tbody>
-              @forelse($questions as $question)
+                @foreach($data as $list)
             <tr>
            
-             <td>{{$question->skillattribute}}</td>
-             <td>{{$question->qtype}}</td>
-            <td>{{$question->qtext}}</td>
+             <td>{{$list->skillattribute}}</td>
+             <td>{{$list->qtype}}</td>
+            <td>{{$list->qtext}}</td>
             <td>
-              @if($question->qstatus=="0")
+              @if($list->qstatus=="0")
               <button class="btn btn-secondary btn-sm">Incomplete</button>
              @else
                <button class="btn btn-success btn-sm">Completed</button>
              @endif
          </td>
          <td>
-            <a href="{{url('admin/question/edit')}}/{{$question->id}}"><button type="button" class="btn btn-success btn-sm">Edit</button>
+            <a href="{{url('admin/question/edit')}}/{{$list->id}}"><button type="button" class="btn btn-success btn-sm">Edit</button>
             </a>
 
-             <a href="{{url('admin/question/delete')}}/{{$question->id}}"><button type="button" class="btn btn-danger btn-sm">Delete</button>
+             <a href="{{url('admin/question/delete')}}/{{$list->id}}"><button type="button" class="btn btn-danger btn-sm">Delete</button>
              </a>
-              <a href="{{url('admin/question/view')}}/{{$question->id}}"><button type="button" class="btn btn-secondary btn-sm">View</button>
+              <a href="{{url('admin/question/view')}}/{{$list->id}}"><button type="button" class="btn btn-secondary btn-sm">View</button>
              </a>
             </td>
           </tr>

@@ -17,7 +17,7 @@ class ControllerName extends Controller
     
         // Check if controller_id exists in the session
         if (!$controller_id) {
-            return redirect()->route('accontrol.login')->withErrors('Controller ID is not set. Please log in.');
+            return redirect()->route('login')->withErrors('Controller ID is not set. Please log in.');
         }
     
         // Pass controller_id to the view

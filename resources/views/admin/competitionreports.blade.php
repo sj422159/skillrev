@@ -1,4 +1,4 @@
-@extends('controller/layout')
+@extends('admin/layout')
 @section('title','Competition Reports')
 @section('Sector_select','active')
 @section('container')

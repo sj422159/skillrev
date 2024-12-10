@@ -22,7 +22,7 @@ class lmsmanagementcontroller extends Controller{
                         ->where('categories.aid',$aid)
                         ->select('groups.group','categories.*')
                         ->get();
-        return view('controller.layout',$result);
+        return view('admin.category',$result);
     }
 
     public function categorybygroup(Request $request){
@@ -36,7 +36,7 @@ class lmsmanagementcontroller extends Controller{
                         ->where('categories.groupid',$groupid)
                         ->select('groups.group','categories.*')
                         ->get();
-        return view('controller.layout',$result);
+        return view('admin.category',$result);
     }
 
     public function addcategory(Request $request,$id=""){   
@@ -130,7 +130,114 @@ class lmsmanagementcontroller extends Controller{
         return redirect('admin/category');
     }
 
+    public function domain(Request $request){
+        $aid=session()->get('ADMIN_ID');
+        $result['groups']=DB::table('groups')->where('aid',$aid)->get();
+        $result['domain']=DB::table('domains')->where('aid',$aid)->get();
+        $result['groupid']='';
+        $result['categoryid']='';
+        return view('admin.domain',$result);
+    }
 
+    public function domainbycategory(Request $request){
+        $category=$request->post('category');
+        $groupid=$request->post('group');
+        $aid=session()->get('ADMIN_ID');
+        $result['groups']=DB::table('groups')->where('aid',$aid)->get();
+        $result['groupid']=$groupid;
+        $result['categoryid']=$category;
+        $result['domain']=DB::table('domains')->where('groupid',$groupid)->where('category',$category)->get();
+        return view('admin.domain',$result);
+    }
+
+    public function adddomain(Request $request,$id=""){  
+        if($id>0){
+            $arr=domain::where(['id'=>$id])->get();
+            $result['id']=$arr['0']->id;
+            $result['groupid']=$arr['0']->groupid;
+            $result['category']=$arr['0']->category;
+            $result['domain']=$arr['0']->domain;
+            $result['stype']=$arr['0']->stype;
+            $result['subtype']=$arr['0']->subtype;
+            $result['show']=$arr['0']->showsub;
+            $result['dname']=$arr['0']->dname;
+        }
+        else{
+            $result['id']='';
+            $result['groupid']='';
+            $result['category']='';
+            $result['domain']='';
+            $result['stype']='';
+            $result['subtype']='';
+            $result['show']='';
+            $result['dname']='';
+        }
+        $aid=session()->get('ADMIN_ID');
+        $result['subtypes']=["CURRICULAR","EXTRACURICULLAR","MANDATORY"];
+        $result['groups']=DB::table('groups')->where('aid',$aid)->get();
+        return view("admin.adddomain",$result);
+    }
+     
+    public function savedomain(Request $request){
+       // return $request->post();
+         $show=0;
+         if($request->post('show')=="on"){
+            $show=1;
+         }
+         $pre="";
+         if($request->post('stype')=="CURRICULAR"){
+           $pre="CU";
+         }else if($request->post('stype')=="MANDATORY"){
+            $pre="MAN";
+         }
+         else{
+            $pre="ECU";
+         }
+
+        if($request->post('id')>0){
+            $model=domain::find($request->post('id'));
+            $msg="Domain updated";
+            $name=DB::table('categories')->where('id',$request->post('category'))->get();
+            $domainname=$name[0]->categories.'_'.$name[0]->shortcateg.'_'.$request->post('dname');
+            $model->domain=$domainname;
+            $model->dname=$request->post('dname');
+        }
+        else{
+            $model=new domain();
+            $msg="Domain inserted";
+            $name=DB::table('categories')->where('id',$request->post('category'))->get();
+            $domainname=$name[0]->categories.'_'.$name[0]->shortcateg.'_'.$request->post('domain');
+            $model->domain=$domainname;
+            $model->dname=$request->post('dname');
+        }
+        $model->aid=session()->get('ADMIN_ID');
+        $model->groupid=$request->post('groupid');
+
+        $g=DB::table('groups')->where('id',$request->post('groupid'))->get('gtype');
+        $model->stype=$g[0]->gtype;
+        $model->category=$request->post('category'); 
+        $model->subtype=$request->post('stype');
+        $model->showsub=$show;
+        $model->save();
+        $request->session()->flash('message',$msg);
+
+        if($request->post('id')>0){
+        DB::table('skillsets')->where('domain',$request->post('id'))
+        ->update(['groupid' => $request->post('groupid'),'category' => $request->post('category')]);
+
+        DB::table('skillattributes')->where('domain',$request->post('id'))
+        ->update(['groupid' => $request->post('groupid'),'category' => $request->post('category')]);
+        }
+
+        return redirect('admin/domain');
+    }
+
+    public function delete(Request $request, $id){
+        $model=domain::find($id);
+        $model->delete();
+        $request->session()->flash('message','Domain Deleted');
+        return redirect('admin/domain');
+    }
 
     public function skillset(Request $request){
         $aid=session()->get('ADMIN_ID');
@@ -193,7 +300,7 @@ class lmsmanagementcontroller extends Controller{
             $skillsetname=$name[0]->domain.'_'.$request->post('skillset');
             $model->skillset=$skillsetname;
         }
-        $model->aid=session()->get('Controller_ID');
+        $model->aid=session()->get('ADMIN_ID');
         $model->groupid=$request->post('groupid');
         $model->category=$request->post('category');
         $model->domain=$request->post('domain');
@@ -280,7 +387,7 @@ class lmsmanagementcontroller extends Controller{
             $skillattributename=$name[0]->skillset.' _ '.$request->post('skillattribute');
             $model->skillattribute=$skillattributename;
         }
-        $model->aid=session()->get('Controller_ID');
+        $model->aid=session()->get('ADMIN_ID');
         $model->groupid=$request->post('groupid');
         $model->category=$request->post('category');
         $model->domain=$request->post('domain');

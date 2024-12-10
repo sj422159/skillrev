@@ -1,4 +1,4 @@
-@extends('controller/layout')
+@extends('admin/layout')
 @section('title','Add Subject')
 @section('Dashboard_select','active')
 @section('container')
@@ -28,16 +28,10 @@
                         </select>
                     </div>
                     <div class="col-12 col-sm-4 mt-2 mt-sm-0">
-                        <label for="branchname">Standard</label>
-                        <select name="category" class="form-control" id="subbranches">
-                            <option value="">Select Standard</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->categories }}</option>
-                            @endforeach
-                        </select>
+                            <label for="branchname">Standard</label>
+                            <select name="category" class="form-control" required="true" data-val="{{$category}}" id="subbranch">
+                            </select>
                     </div>
-                    
-                    
                     <div class="col-12 col-sm-4 mt-2 mt-sm-0">
                         <label for="jobskill">Subject Type</label>
                         <select id="mainbranch" name="stype" type="text" class="form-control" aria-required="true" aria-invalid="false" required="true">
@@ -93,43 +87,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-<script>
-    jQuery(document).ready(function(){
-               jQuery('#group').change(function (){
-                 let cid=jQuery(this).val();
-                 jQuery.ajax({
-                  url:'{{url("admin/questionbank/getcategory")}}',
-                  type:'get',
-                  data:'cid='+cid+
-                  '&_token={{csrf_token()}}',
-                  success:function(result){
-                    jQuery('#category').html(result)
-                  }
-                 });
-               });           
-    });
-    
-    $(document).ready(function(){
-        var group = $('#group').val();
-        var category =$('#category').attr('data-val');
-            $('#category').html('');
-                $.ajax({
-                  url:'{{url("admin/skillset/getcategory/{id}")}}',
-                  type:'GET',
-                  data:{myID:group},
-                  dataType: "json",
-                  success:function(data){ 
-                    $.each(data, function(key,jobskills){   
-                        if(category==jobskills.id){
-                           $('#category').prop('disabled', false).append('<option value="'+jobskills.id+' " selected>'+jobskills.categories+'</option>');
-                        }else{
-                            $('#category').prop('disabled', false).append('<option value="'+jobskills.id+'">'+jobskills.categories+'</option>');
-                        }
-                    });
-                  }
-        });
-    });
-    </script>
+
 
  <script type="text/javascript">
         $(document).ready(function(){

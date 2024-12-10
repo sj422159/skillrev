@@ -63,7 +63,7 @@
                                     <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Month</th>
+                                            <th>Student</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>

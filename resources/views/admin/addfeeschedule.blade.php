@@ -1,4 +1,4 @@
-@extends('controller/Alayout')
+@extends('admin/layout')
 @section('title','Add Category')
 @section('Dashboard_select','active')
 @section('container')
@@ -17,62 +17,49 @@
                   
                     <div class="col-12 col-sm-3">
                         <label for="jobrole">Category</label>
-                        <select class="form-control" name="category" id="category" required="true">
+
+                        <select class="form-control" name="category" id="category" required="true" onchange="check(this)">
                             <option value="">Select</option>
                              @foreach($categories as $list)
-                             @if($shcategory == $list->id)
+                             @if($shcategory==$list->id)
                              <option value="{{$list->id}}**{{$list->fctype}}" selected>{{$list->fcategory}}</option>
                              @else
-                             <option value="{{$list->id}}**{{$list->fctype}}">{{$list->fcategory}}</option>
+                             @if($id>0)
+                               <!-- <option value="{{$list->id}}**{{$list->fctype}}">{{$list->fcategory}}</option> -->
+                             @else
+                               <option value="{{$list->id}}**{{$list->fctype}}">{{$list->fcategory}}</option>
+                             @endif
                              @endif
                             @endforeach
                         </select>
                     </div>
-
                     <div class="col-12 col-sm-3">
                         <label for="jobrole">Class</label>
-                        <select class="form-control" name="type" id="by">
-                            <option value="">Select</option>
-                            <option value="class">Class</option>
-                            <option value="distance">Distance</option>
+                          <select class="form-control" name="type" id="by" >
+                           <option value="">Select</option>
                         </select>
-                    
-                        <select class="form-control" name="type1" id="cls" style="display:none">
-                            <option value="">Select</option>
-                            @foreach($class as $list)
-                                @if($shtype == $list->categories)
-                                    <option value="{{$list->id}}**{{$list->categories}}" selected>{{$list->categories}}</option>
-                                @else
-                                    <option value="{{$list->id}}**{{$list->categories}}">{{$list->categories}}</option>
-                                @endif
-                            @endforeach
+
+                        <select class="form-control" name="type1" id="cls"  style="display:none">
+                           <option value="">Select</option>
+                           @foreach($class as $list)
+                           @if($shtype==$list->categories)
+                            <option value="{{$list->id}}**{{$list->categories}}" selected>{{$list->categories}}</option>
+                           @else
+                            <option value="{{$list->id}}**{{$list->categories}}">{{$list->categories}}</option>
+                            @endif
+                           @endforeach
                         </select>
-                    
-                        <select class="form-control" name="type2" id="dis" style="display:none">
-                            <option value="">Select</option>
-                            @foreach($distance as $list)
-                                @if($shtype == ($list->distance)." Km")
-                                    <option value="{{$list->id}}**{{$list->distance}} Km" selected>{{$list->location}}</option>
-                                @else
-                                    <option value="{{$list->id}}**{{$list->distance}} Km">{{$list->location}}</option>
-                                @endif
-                            @endforeach
+                        <select class="form-control" name="type2"  id="dis" style="display:none">
+                           <option value="">Select</option>
+                           @foreach($distance as $list)
+                            @if($shtype==($list->distance)." Km")
+                            <option value="{{$list->id}}**{{$list->distance}} Km" selected>{{$list->location}}</option>
+                            @else
+                            <option value="{{$list->id}}**{{$list->distance}} Km">{{$list->location}}</option>
+                            @endif
+                           @endforeach
                         </select>
                     </div>
-
-                    <script>
-                        // Show relevant dropdown based on 'by' selection
-                        document.getElementById('by').addEventListener('change', function() {
-                            document.getElementById('cls').style.display = 'none';
-                            document.getElementById('dis').style.display = 'none';
-                            
-                            if (this.value === 'class') {
-                                document.getElementById('cls').style.display = 'block';
-                            } else if (this.value === 'distance') {
-                                document.getElementById('dis').style.display = 'block';
-                            }
-                        });
-                    </script>
 
                      <div class="col-12 col-sm-3">
                         <label for="jobrole">Annual</label>
@@ -105,4 +92,39 @@
     </div>
 </div>
 </div>
+<script type="text/javascript">
+    function check(that){
+        var val=that.value.split("**");
+        if(val[1]==1){
+            document.getElementById('cls').style="display:block";
+            document.getElementById('dis').style="display:none";  
+            document.getElementById('by').style="display:none";  
+
+        }else{
+          document.getElementById('dis').style="display:block";  
+          document.getElementById('cls').style="display:none";
+           document.getElementById('by').style="display:none";  
+
+        }
+    }
+
+    var test=document.getElementById('category').value;
+
+    if(test!=""){
+       
+         var check=test.split("**");
+         if(check[1]==1){
+            document.getElementById('cls').style="display:block";
+            document.getElementById('dis').style="display:none";  
+            document.getElementById('by').style="display:none";  
+
+        }else{
+          document.getElementById('dis').style="display:block";  
+          document.getElementById('cls').style="display:none";
+           document.getElementById('by').style="display:none";  
+
+        }
+    }
+
+</script>
 @endsection

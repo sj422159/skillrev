@@ -64,7 +64,7 @@
                     SkillRevelation-SMS
                 </a>
             </h2>
-            <nav id="menu" class="main-nav">
+            <nav id="menus" class="main-navs">
                 <ul class="main-menu">
                   <li><a href="#section1">Features</a></li>
                   <li><a href="#section2">Steps</a></li>
@@ -92,36 +92,8 @@
 
     </header>
 
-    <script>
-        const toggleBtn = document.querySelector('.toggle_btn')
-        const toggleBtnIcon = document.querySelector('.toggle_btn i')
-        const dropDownMenu = document.querySelector('.dropdown_menu')
-
-        toggleBtn.onclick = function() {
-
-            dropDownMenu.classList.toggle('open')
-            const isOpen = dropDownMenu.classList.contains('open')
-
-            toggleBtnIcon.classList = isOpen
-
-                ?
-                'fa-solid fa-bars' :
-                'fa-solid fa-bars'
-
-        }
-
-        document.addEventListener('click', function(event)
-        {
-            const isClickInside = dropDownMenu.contains(event.target) || toggleBtn.contains(event.target);
-            if (!isClickInside && dropDownMenu.classList.contains('open'))
-            {
-                dropDownMenu.classList.remove('open');
-                toggleBtnIcon.classList = 'fa-solid fa-bars';
-            }
-        });
-    </script>
-
-    <main>
+   
+    <main id="section1">
         <ul class='sliders'>
             <li class="items" style="background-image: url({{ asset('storage/' . $slide[0]->image1) }})">
                 <div class='contents'>
@@ -201,44 +173,7 @@
         </nav>
     </main>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script>
-        const slider = document.querySelector('.sliders');
-        let autoSlideInterval;
 
-        function activate(e)
-        {
-            const items = document.querySelectorAll('.items');
-            e.target.matches('.next') && slider.append(items[0])
-            e.target.matches('.prev') && slider.prepend(items[items.length-1]);
-        }
-
-        function activateAutoSlide()
-        {
-            autoSlideInterval = setInterval(function()
-            {
-                const items = document.querySelectorAll('.items');
-                slider.append(items[0]);
-            }, 3000); // Change image every 3 seconds (3000 milliseconds)
-        }
-
-        // Call the activateAutoSlide function to start automatic sliding
-        activateAutoSlide();
-
-        // Stop automatic sliding when user interacts with the slider
-        slider.addEventListener('mouseenter', function()
-        {
-            clearInterval(autoSlideInterval);
-        });
-
-        slider.addEventListener('mouseleave', function()
-        {
-            activateAutoSlide();
-        });
-
-        document.addEventListener('click', activate, false);
-    </script>
 
 
 {{--Responsive Image Sliders for width: 1318px and below --}}
@@ -312,7 +247,7 @@
 
     {{-- Steps --}}
 
-    <section class = "section steps step_section" data-section="section2">
+    <section class = "section steps step_section" id="section2">
         <div class="steps">
         <div class="swiper">
             <div class="col-md-12">
@@ -456,40 +391,7 @@
 
 
 
-        <script>
-            var swiper = new Swiper(".swiper", {
-                effect: "coverflow",
-                grabCursor: true,
-                centeredSlides: true,
-                coverflowEffect: {
-                    rotate: 0,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 2.5
-                },
-                keyboard: {
-                    enabled: true
-                },
-                mousewheel: {
-                    thresholdDelta: 70
-                },
-                spaceBetween: 30,
-                loop: true,
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2
-                    },
-                    1024: {
-                        slidesPerView: 3
-                    }
-                },
-                initialSlide: 0
-            });
-
-            // swiper.slideTo(1, false, false);
-        </script>
-
-
+    
 
 
 
@@ -540,7 +442,7 @@
         </div>
     </div> <!----> <!----><!----> <!----> <!----> <!----> <!----> <!----> <!----> <!----> <!----> <!---->
 
-    <section class="section courses" data-section="section3">
+    <section class="section courses" id="section3">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -574,7 +476,7 @@
     </section>
 
 
-    <section class="section video" data-section="section4" style="margin-top: 80px">
+    <section class="section video" id="section4" style="margin-top: 80px">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -604,7 +506,7 @@
     </section>
 
 
-    <section class="section coming-soon testimonial text-center" data-section="section5">
+    <section class="section coming-soon testimonial text-center" id="section5">
         <div class="col-md-12" style="margin-top: 120px">
             <div class="section-heading">
                 <h2>Testimonials</h2>
@@ -724,7 +626,7 @@
         </div>
     </section>
 
-    <section class="section contact" data-section="section6">
+    <section class="section contact" id="section6">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -788,7 +690,101 @@
     @include('views_latest.partials._footer')
 
     @include('views_latest.partials._mobile_footer')
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        var swiper = new Swiper(".swiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2.5
+            },
+            keyboard: {
+                enabled: true
+            },
+            mousewheel: {
+                thresholdDelta: 70
+            },
+            spaceBetween: 30,
+            loop: true,
+            breakpoints: {
+                640: {
+                    slidesPerView: 2
+                },
+                1024: {
+                    slidesPerView: 3
+                }
+            },
+            initialSlide: 0
+        });
 
+
+        const slider = document.querySelector('.sliders');
+        let autoSlideInterval;
+
+        function activate(e)
+        {
+            const items = document.querySelectorAll('.items');
+            e.target.matches('.next') && slider.append(items[0])
+            e.target.matches('.prev') && slider.prepend(items[items.length-1]);
+        }
+
+        function activateAutoSlide()
+        {
+            autoSlideInterval = setInterval(function()
+            {
+                const items = document.querySelectorAll('.items');
+                slider.append(items[0]);
+            }, 3000); // Change image every 3 seconds (3000 milliseconds)
+        }
+
+        // Call the activateAutoSlide function to start automatic sliding
+        activateAutoSlide();
+
+        // Stop automatic sliding when user interacts with the slider
+        slider.addEventListener('mouseenter', function()
+        {
+            clearInterval(autoSlideInterval);
+        });
+
+        slider.addEventListener('mouseleave', function()
+        {
+            activateAutoSlide();
+        });
+
+        document.addEventListener('click', activate, false);
+ 
+        const toggleBtn = document.querySelector('.toggle_btn')
+        const toggleBtnIcon = document.querySelector('.toggle_btn i')
+        const dropDownMenu = document.querySelector('.dropdown_menu')
+
+        toggleBtn.onclick = function() {
+
+            dropDownMenu.classList.toggle('open')
+            const isOpen = dropDownMenu.classList.contains('open')
+
+            toggleBtnIcon.classList = isOpen
+
+                ?
+                'fa-solid fa-bars' :
+                'fa-solid fa-bars'
+
+        }
+
+        document.addEventListener('click', function(event)
+        {
+            const isClickInside = dropDownMenu.contains(event.target) || toggleBtn.contains(event.target);
+            if (!isClickInside && dropDownMenu.classList.contains('open'))
+            {
+                dropDownMenu.classList.remove('open');
+                toggleBtnIcon.classList = 'fa-solid fa-bars';
+            }
+        });
+    </script>
 
 
     @if (session()->has('reg'))
@@ -896,14 +892,14 @@
             }
         };
 
-        $('.main-menu, .scroll-to-section').on('click', 'a', function(e) {
-            if ($(e.target).hasClass('external')) {
-                return;
-            }
-            e.preventDefault();
-            $('#menu').removeClass('active');
-            showSection($(this).attr('href'), true);
-        });
+        // $('.main-menu, .scroll-to-section').on('click', 'a', function(e) {
+        //     if ($(e.target).hasClass('external')) {
+        //         return;
+        //     }
+        //     e.preventDefault();
+        //     $('#menu').removeClass('active');
+        //     showSection($(this).attr('href'), true);
+        // });
 
         $(window).scroll(function() {
             checkSection();

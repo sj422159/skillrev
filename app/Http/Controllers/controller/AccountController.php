@@ -14,7 +14,7 @@ class AccountController extends Controller
 {
     public function showLoginForm()
     {
-        return view('accontrol.login'); 
+        return view('login'); 
     }
 
 
@@ -50,18 +50,14 @@ class AccountController extends Controller
             'email' => 'required|email|exists:users,email',
         ]);
 
-        return redirect()->route('accontrol.login')->with('success', 'Password reset link sent to your email.');
+        return redirect()->route('login')->with('success', 'Password reset link sent to your email.');
     }
 
     public function accountDashboard()
     {
-        $list = DB::table('academics')->where('id', session()->get('Controller_ID'))->first();
-        $contentmanagement = DB::table('academics')->where('type', 'contentmanagement')->get();
-        $Skillsetmanagement = DB::table('academics')->where('type', 'skillsetmanagement')->get();
 
-        $trainingtype = DB::table('academics')->where('type', 'trainingtype')->get();
     
-        return view('controller.Adashboard', compact('list', 'contentmanagement', 'Skillsetmanagement', 'trainingtype'));
+        return view('controller.account.Adashboard');
     }
     //expense create
     public function create()
@@ -69,7 +65,7 @@ class AccountController extends Controller
         
         $controller_id = session()->get('Controller_ID');
         if (!$controller_id) {
-            return redirect()->route('accontrol.login')->withErrors('Controller ID is not set. Please log in.');
+            return redirect()->route('login')->withErrors('Controller ID is not set. Please log in.');
         }
         return view('controller.expcreate', compact('controller_id'));
     }
@@ -77,7 +73,7 @@ class AccountController extends Controller
     {
         $controller_id = session()->get('Controller_ID');
         if (!$controller_id) {
-            return redirect()->route('accontrol.login')->withErrors('Controller ID is not set. Please log in.');
+            return redirect()->route('login')->withErrors('Controller ID is not set. Please log in.');
         }
         $expenseGroups = DB::table('expenses')->select('Group') ->where('Controller_ID', $controller_id)->distinct()->get();
         return view('controller.expcreatecat', compact('controller_id', 'expenseGroups'));

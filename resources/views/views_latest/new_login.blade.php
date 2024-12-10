@@ -48,8 +48,7 @@
                 <select class="drop_down" name="external" id="external" required>
                     <option class="opt" value="{{ url('select/login/save') }}">Role</option>
                     <option class="opt" value="{{ url('admin/login/save') }} ">School Admin</option>
-                    <option class="opt" value="{{ url('Accontrol/login/save') }} ">Controller</option>
-                    
+                    <option class="opt" value="{{ url('Accontrol/login/save') }} ">School Controller</option>
                     <option class="opt" value="{{ url('supervisor/login/save') }} ">School Group Manager</option>
                     <option class="opt" value="{{ url('manager/login/save') }} ">School Manager</option>
                     <option class="opt" value="{{ url('classteacher/login/save') }}">School Classteacher</option>

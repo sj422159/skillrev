@@ -8,7 +8,7 @@
             <div class="card-header">
                 <h3 class="card-title" style="color:#fff !important;">Bus Route</h3>
             </div>
-            <!-- /.card-header -->
+
             <!-- form start -->
             <form action="{{url('admin/fees/savebusroute')}}" method="post" enctype="multipart/form-data">
                 @csrf

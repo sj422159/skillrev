@@ -1,11 +1,11 @@
-@extends('controller/elayout')
+@extends('admin/layout')
 @section('title','Create Assesment')
 @section('Dashboard_select','active')
 @section('container')
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <form action="{{url('admin/assesment/savemodule')}}" method="post" enctype="multipart/form-data">
+            <form action="{{url('admin/assesment/createmodule')}}" method="post" enctype="multipart/form-data">
                 @csrf
             
             <div class="card-body">
@@ -52,7 +52,7 @@
                     </div>
                      <div class="col-12 col-sm-3 mt-4 mt-sm-0">
                         <label for="trains">Training Program</label>
-                        <select id="trains" name="training" type="text" data-val="{{$training}}" class="form-control" requied="true" >
+                        <select id="trains" name="training" type="text" data-val="{{$training}}" class="form-control" required="true">
                             <option value="">Select</option>
                         </select>
                     </div>
