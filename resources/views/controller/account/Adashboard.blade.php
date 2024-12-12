@@ -98,7 +98,7 @@ p {
                 </div>
             </div>
         </div>
-
+        
         <div class="col-lg-4 col-8">
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
@@ -108,7 +108,7 @@ p {
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i
+                <a href="{{url('account/fees/pending')}}" class="small-box-footer">More Details<i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
@@ -119,7 +119,7 @@ p {
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i
+                <a href="{{url('account/fees/discount')}}" class="small-box-footer">More Details<i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -133,7 +133,7 @@ p {
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i
+                <a href="{{url('account/fees/pending/currentyear')}}" class="small-box-footer">More Details<i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkgreen,lightgreen);">
@@ -144,7 +144,7 @@ p {
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i
+                <a href="{{url('account/fees/index/students')}}" class="small-box-footer">More Details<i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>

@@ -154,7 +154,7 @@
                         </li>
 
 
-                   <li class="nav-item">
+                        <li class="nav-item" id="skillsetMgmtMenu">
                             <a href="#" class="nav-link @yield('manage_select')">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
@@ -162,57 +162,42 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none;">
+                            <ul id="skillsetMgmtDropdown" class="nav nav-treeview" style="display: none;">
                                 <li class="nav-item">
                                     <a href="{{url('academic_controller/groups')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Group</p>
                                     </a>
                                 </li>
-                               <li class="nav-item">
-                                    <a href="{{url('academic_controller/standard')}}" class="nav-link"
-                                        class="@yield('Questions_select')">
+                                <li class="nav-item">
+                                    <a href="{{url('academic_controller/standard')}}" class="nav-link" class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Standard
-                                        </p>
+                                        <p>Standard</p>
                                     </a>
                                 </li>
-                              <li class="nav-item">
-                                    <a href="{{url('academic_controller/domain')}}" class="nav-link"
-                                        class="@yield('Questions_select')">
+                                <li class="nav-item">
+                                    <a href="{{url('academic_controller/domain')}}" class="nav-link" class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Subject
-                                        </p>
+                                        <p>Subject</p>
                                     </a>
                                 </li>
-
-                                    <li class="nav-item">
-                                    <a href="{{url('academic_controller/skillset')}}" class="nav-link"
-                                        class="@yield('Questions_select')">
+                                <li class="nav-item">
+                                    <a href="{{url('academic_controller/skillset')}}" class="nav-link" class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Module
-                                        </p>
+                                        <p>Module</p>
                                     </a>
                                 </li>
-
-                            <li class="nav-item">
-                                    <a href="{{url('academic_controller/skillattribute')}}" class="nav-link"
-                                        class="@yield('Questions_select')">
+                                <li class="nav-item">
+                                    <a href="{{url('academic_controller/skillattribute')}}" class="nav-link" class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Chapter
-                                        </p>
+                                        <p>Chapter</p>
                                     </a>
                                 </li>
-
                             </ul>
                         </li>
+                        
 
-
-                           <li class="nav-item">
+                        <li class="nav-item" id="contentMgmtMenu">
                             <a href="#" class="nav-link @yield('manage_select')">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
@@ -220,22 +205,16 @@
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="display: none;">
-
+                            <ul id="contentMgmtDropdown" class="nav nav-treeview" style="display: none;">
                                 <li class="nav-item">
                                     <a href="{{url('academic_controller/content/skillattribute')}}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                           Add
-                                        
-                                        </p>
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Add</p>
                                     </a>
-                                 
                                 </li>
-
-                       
                             </ul>
                         </li>
+                        
  
 
 
@@ -455,6 +434,9 @@
     <!-- Main JS-->
     <script src="{{asset('registerexamform/js/main.js')}}"></script>
     <script src="{{asset('dashboard/plugins/chart.js/Chart.min.js')}}"></script>
+
+    
+    
 
 
 
