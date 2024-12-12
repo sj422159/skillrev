@@ -49,6 +49,77 @@
 
 <style>
     .mySlides {display:none;}
+    section.courses .owl-carousel button.owl-dot {
+    display: none;
+    height: 10px;
+    background-color: #fff;
+    margin: 50px 10px 0px 10px;
+    outline: none;
+    }
+/* Card Container */
+.card-no-hover {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    height: 100%; /* Ensure all cards have the same height */
+}
+
+/* Image Styling */
+.card-no-hover img {
+    width: 100%; /* Ensure images fill the available space */
+    max-width: 250px; /* Set a maximum width for consistency */
+    height: 150px; /* Set a fixed height */
+    object-fit: cover; /* Ensure images are cropped proportionally */
+    border-radius: 10px;
+}
+
+/* Text Styling */
+.card-no-hover .school-name {
+    margin-top: 10px;
+    color: #fff;
+    text-align: center;
+    font-size: 1.2rem;
+    word-wrap: break-word;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .card-no-hover {
+        margin: 5px auto;
+        width: 90%;
+    }
+
+    .card-no-hover img {
+        height: 120px; /* Adjust height for smaller screens */
+    }
+
+    .school-name {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .mobile-footer {
+        display: none;
+    }
+}
+
+/* Hide regular footer on small screens */
+@media (max-width: 767px) {
+    .regular-footer {
+        display: none;
+    }
+}
+
+
+
 </style>
 
 </head>
@@ -64,13 +135,14 @@
                     SkillRevelation-SMS
                 </a>
             </h2>
-            <nav id="menus" class="main-navs">
+            <nav id="menu" class="main-nav">
                 <ul class="main-menu">
                   <li><a href="#section1">Features</a></li>
                   <li><a href="#section2">Steps</a></li>
                   <li><a href="#section3">Schools</a></li>
                   <li><a href="#section4">Tutorial</a></li>
                   <li><a href="#section5">Testimonial</a></li>
+                  <li><a href="#services">Services</a></li>
                   <li><a href="#section6">Contact</a></li>
                 </ul>
             </nav>
@@ -92,8 +164,9 @@
 
     </header>
 
-   
-    <main id="section1">
+
+
+    <main>
         <ul class='sliders'>
             <li class="items" style="background-image: url({{ asset('storage/' . $slide[0]->image1) }})">
                 <div class='contents'>
@@ -180,7 +253,7 @@
 
 @include('views_latest.partials._mobile_image_slider')
 
-<section class="section features" data-section="section1">
+<section class="section features" id="section1">
     <div class="px-4 py-16 mx-auto w-full md:px-24 lg:px-8 lg:py-20">
         <div class="mainhead max-w-2xl mb-10 sm:text-center">
             <h2 class="max-w-2xl mx-auto mb-6 font-sans text-4xl font-bold leading-none tracking-tight text-white sm:text-5xl md:mx-auto">
@@ -386,16 +459,6 @@
 
             </div>
         </div>
-
-
-
-
-
-    
-
-
-
-
     </div>
     </section>
 
@@ -446,34 +509,34 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="section-heading">
+                    <div class="section-heading text-center">
                         <h2>Schools</h2>
                     </div>
                 </div>
-
-                <div class="owl-carousel owl-theme; container">
-                    @foreach ($schools as $list)
-                        <div class="card">
-                            <div class="face face1">
+            </div>
+    
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="owl-carousel owl-theme">
+                        @foreach ($schools->map(function($item) {
+                            $item->aname = ucwords(strtolower($item->aname)); // Capitalize first letter of each word
+                            return $item;
+                        })->unique('aname') as $list)
+                            <div class="card-no-hover">
                                 <div class="content">
-                                    <img src="{{ asset('adminimages') }}/{{ $list->image }}"
-                                        alt="University Images">
-                                    <h3>{{ $list->aname }}</h3>
+                                    <a href="{{ $list->awebsitelink }}">
+                                        <img src="{{ asset('adminimages') }}/{{ $list->image }}" alt="University Images" class="img-fluid">
+                                        <h3 class="school-name">{{ $list->aname }}</h3>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="face face2">
-                                <div class="content">
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cum cumque
-                                        minus iste veritatis provident at.</p>
-                                    <a href="{{ $list->awebsitelink }}">Read More</a>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+    
 
 
     <section class="section video" id="section4" style="margin-top: 80px">
@@ -689,9 +752,34 @@
 
     @include('views_latest.partials._footer')
 
-    @include('views_latest.partials._mobile_footer')
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    {{-- @include('views_latest.partials._mobile_footer', ['class' => 'mobile-footer']) --}}
+    
+
+
+
+    @if (session()->has('reg'))
+        <script>
+            swal({
+                title: "Registered Successfully",
+                text: "Thanks For Registering as College",
+                icon: "success",
+            });
+        </script>
+    @endif
+
+
+    @if (session()->has('message'))
+        <script>
+            swal({
+                title: "Message Sent Successfully",
+                text: "Our Team Will Contact You Soon",
+                icon: "success",
+            });
+        </script>
+    @endif
+
+
+    
     <script>
         var swiper = new Swiper(".swiper", {
             effect: "coverflow",
@@ -722,91 +810,8 @@
             initialSlide: 0
         });
 
-
-        const slider = document.querySelector('.sliders');
-        let autoSlideInterval;
-
-        function activate(e)
-        {
-            const items = document.querySelectorAll('.items');
-            e.target.matches('.next') && slider.append(items[0])
-            e.target.matches('.prev') && slider.prepend(items[items.length-1]);
-        }
-
-        function activateAutoSlide()
-        {
-            autoSlideInterval = setInterval(function()
-            {
-                const items = document.querySelectorAll('.items');
-                slider.append(items[0]);
-            }, 3000); // Change image every 3 seconds (3000 milliseconds)
-        }
-
-        // Call the activateAutoSlide function to start automatic sliding
-        activateAutoSlide();
-
-        // Stop automatic sliding when user interacts with the slider
-        slider.addEventListener('mouseenter', function()
-        {
-            clearInterval(autoSlideInterval);
-        });
-
-        slider.addEventListener('mouseleave', function()
-        {
-            activateAutoSlide();
-        });
-
-        document.addEventListener('click', activate, false);
- 
-        const toggleBtn = document.querySelector('.toggle_btn')
-        const toggleBtnIcon = document.querySelector('.toggle_btn i')
-        const dropDownMenu = document.querySelector('.dropdown_menu')
-
-        toggleBtn.onclick = function() {
-
-            dropDownMenu.classList.toggle('open')
-            const isOpen = dropDownMenu.classList.contains('open')
-
-            toggleBtnIcon.classList = isOpen
-
-                ?
-                'fa-solid fa-bars' :
-                'fa-solid fa-bars'
-
-        }
-
-        document.addEventListener('click', function(event)
-        {
-            const isClickInside = dropDownMenu.contains(event.target) || toggleBtn.contains(event.target);
-            if (!isClickInside && dropDownMenu.classList.contains('open'))
-            {
-                dropDownMenu.classList.remove('open');
-                toggleBtnIcon.classList = 'fa-solid fa-bars';
-            }
-        });
+        // swiper.slideTo(1, false, false);
     </script>
-
-
-    @if (session()->has('reg'))
-        <script>
-            swal({
-                title: "Registered Successfully",
-                text: "Thanks For Registering as College",
-                icon: "success",
-            });
-        </script>
-    @endif
-
-
-    @if (session()->has('message'))
-        <script>
-            swal({
-                title: "Message Sent Successfully",
-                text: "Our Team Will Contact You Soon",
-                icon: "success",
-            });
-        </script>
-    @endif
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -847,8 +852,60 @@
     <script src="{{ asset('webpages/college/assets/js/custom.js') }}"></script>
 
     {{-- Testimonials --}}
+    <script>
+        const toggleBtn = document.querySelector('.toggle_btn')
+        const toggleBtnIcon = document.querySelector('.toggle_btn i')
+        const dropDownMenu = document.querySelector('.dropdown_menu')
 
+        toggleBtn.onclick = function() {
 
+            dropDownMenu.classList.toggle('open')
+            const isOpen = dropDownMenu.classList.contains('open')
+
+            toggleBtnIcon.classList = isOpen
+
+                ?
+                'fa-solid fa-bars' :
+                'fa-solid fa-bars'
+
+        }
+
+        document.addEventListener('click', function(event)
+        {
+            const isClickInside = dropDownMenu.contains(event.target) || toggleBtn.contains(event.target);
+            if (!isClickInside && dropDownMenu.classList.contains('open'))
+            {
+                dropDownMenu.classList.remove('open');
+                toggleBtnIcon.classList = 'fa-solid fa-bars';
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(.section courses).owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: false, // No navigation arrows
+                dots: false, // Disables the dots
+                autoplay: true,
+                autoplayTimeout: 3000,
+                autoplayHoverPause: true,
+                responsive: {
+                    0: {
+                        items: 1 // 1 item on small screens
+                    },
+                    768: {
+                        items: 2 // 2 items on tablets
+                    },
+                    1024: {
+                        items: 3 // 3 items on desktops
+                    }
+                }
+            });
+        });
+    </script>
+    
     <script>
         //according to loftblog tut
         $('.nav li:first').addClass('active');
@@ -905,6 +962,44 @@
             checkSection();
         });
     </script>
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        <script>
+            const slider = document.querySelector('.sliders');
+            let autoSlideInterval;
+    
+            function activate(e)
+            {
+                const items = document.querySelectorAll('.items');
+                e.target.matches('.next') && slider.append(items[0])
+                e.target.matches('.prev') && slider.prepend(items[items.length-1]);
+            }
+    
+            function activateAutoSlide()
+            {
+                autoSlideInterval = setInterval(function()
+                {
+                    const items = document.querySelectorAll('.items');
+                    slider.append(items[0]);
+                }, 3000); // Change image every 3 seconds (3000 milliseconds)
+            }
+    
+            // Call the activateAutoSlide function to start automatic sliding
+            activateAutoSlide();
+    
+            // Stop automatic sliding when user interacts with the slider
+            slider.addEventListener('mouseenter', function()
+            {
+                clearInterval(autoSlideInterval);
+            });
+    
+            slider.addEventListener('mouseleave', function()
+            {
+                activateAutoSlide();
+            });
+    
+            document.addEventListener('click', activate, false);
+        </script>
 </body>
 
 </html>
