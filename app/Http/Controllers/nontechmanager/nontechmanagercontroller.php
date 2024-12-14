@@ -241,6 +241,9 @@ class nontechmanagercontroller extends Controller{
         }elseif($department[0]->category==5){
             return view('nontechmanager.library.dashboard',$result);
         }
+        elseif($department[0]->category==6){
+            return view('nontechmanager.account.dashboards',$result);
+        }
        
         
        
