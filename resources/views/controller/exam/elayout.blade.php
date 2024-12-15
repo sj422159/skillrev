@@ -110,7 +110,7 @@
                         class="nav-link dropdown-toggle" style="color:#fff !important">Account</a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
                         style="left:auto; right:10px;">
-                        <li><a href="{{url('admin/profile')}}" class="dropdown-item">Change Password </a></li>
+                        <li><a href="{{url('controller/profile')}}" class="dropdown-item">Change Password </a></li>
                         <li><a href="{{url('controller/logout')}}" class="dropdown-item">Logout</a></li>
                     </ul>
                 </li>

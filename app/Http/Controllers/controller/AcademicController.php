@@ -1161,5 +1161,78 @@ public function save(Request $request)
             return redirect('controller')->with('error', 'Error sending mail: ' . $e->getMessage());
         }
     }
+    public function profile()
+    {
+        $id = session()->get('Controller_ID');
+        $controller = controllers::find($id); // Fetch the controller data
+    
+        // Determine layout based on Controller_role_ID
+        $layout = match ($controller->Controller_role_ID) {
+            1 => 'controller/academ/layout',
+            2 => 'controller/exam/elayout',
+            3 => 'controller/account/Alayout',
+            default => 'layouts/default',
+        };
+    
+        $model['data'] = controllers::where('id', $id)->get();
+    
+        // Pass the layout dynamically to the view
+        return view('controller.profile', ['model' => $model, 'layout' => $layout]);
+    }
+    
+
+    public function update(Request $request)
+    {
+        $id = session()->get('Controller_ID');
+        $pwd = $request->post('npass');
+        $repwd = $request->post('cpass');
+    
+        if ($pwd !== $repwd) {
+            session()->flash('error', "Passwords Are Not Matching");
+            return redirect('controller/profile');
+        }
+    
+        $model1 = controllers::find($id);
+    
+        if (Hash::check($request->post('opass'), $model1->password)) {
+            $model = controllers::find($id);
+    
+            if ($pwd == '' && $repwd == '') {
+                $model->password = Hash::make($request->post('opass'));
+            } else {
+                $model->password = Hash::make($request->post('npass'));
+            }
+    
+            $model->save();
+            session()->flash('message', 'Profile Updated Successfully');
+    
+            // Fetch the Controller_role_ID for redirection
+            $controllerRoleId = $model->Controller_role_ID;
+    
+            // Determine redirection based on Controller_role_ID
+            switch ($controllerRoleId) {
+                case 1:
+                    $redirectUrl = '/Controller/Academ/dashboard';
+                    break;
+                case 2:
+                    $redirectUrl = '/dashboard/examination';
+                    break;
+                case 3:
+                    $redirectUrl = '/Controller/Account/dashboard';
+                    break;
+                default:
+                    $redirectUrl = '/';
+                    break;
+            }
+    
+            return redirect($redirectUrl);
+        } else {
+            session()->flash('error', 'Old Password Not Matched');
+            return redirect('controller/profile');
+        }
+    }
+    
     
 }
+
+

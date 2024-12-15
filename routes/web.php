@@ -2062,3 +2062,7 @@ Route::delete('nontech/manager/hostel/expense/subcategory/delete/{id}', [HostelE
 Route::get('nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'index'])->name('subcategory.index');
 Route::post('nontech/manager/hostel/expense/subcategory/store', [HostelExpenseController::class, 'store'])->name('subcategory.store');
 Route::get('controller/school/mail/{id}',[AcademicController::class,'sendmail']);
+
+
+Route::get('controller/profile',[AcademicController::class,'profile']);
+Route::post('controller/profile/processing',[AcademicController::class,'update']);
