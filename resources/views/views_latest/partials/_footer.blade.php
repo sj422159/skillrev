@@ -24,7 +24,7 @@
 
                     <li>
                         <i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i>
-                        <a href="https://www.skillrevelation.com/" style="font-size: 15px; color: white ">&nbsp; SkillRevelation - EBS (Employability Benchmarking System)</a>
+                        <a href="https://www.skillrevelationebs.com/" style="font-size: 15px; color: white ">&nbsp; SkillRevelation - EBS (Employability Benchmarking System)</a>
                     </li>
                     <li>
                         <i class="fa-solid fa-graduation-cap" style="color: #ffffff;"></i>

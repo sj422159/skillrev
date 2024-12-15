@@ -16,7 +16,6 @@ class facculyschedulecontroller extends Controller
      public function list(){
       $result['role']="FACULTY";
       $id=session()->get('FACULTY_ID');
-  
        $d=DB::table('faculties')->where('id',$id)->get();
        $result['Name']=$d[0]->fname;
        $result['id']=$id;

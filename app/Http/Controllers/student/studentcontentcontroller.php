@@ -17,11 +17,7 @@ class studentcontentcontroller extends Controller
         $sid=session()->get('STUDENT_ID');
         $class=DB::table('students')->where('id',$sid)->get();
         $result['category']=DB::table('categories')->where('aid',$aid)->where('id',$class[0]->sclassid)->get();
-        $result['data']=DB::table('contentskillattributes')
-                        ->join('skillattributes','skillattributes.id','contentskillattributes.skillattribute')
-                        ->where('contentskillattributes.aid',$aid)
-                        ->select('skillattributes.skillattribute','contentskillattributes.id','contentskillattributes.type1','contentskillattributes.content1','contentskillattributes.type2','contentskillattributes.content2','contentskillattributes.type3','contentskillattributes.content3','contentskillattributes.type4','contentskillattributes.content4')
-                        ->get();
+        $result['data']=[];
         return view('student.contentskillattribute',$result); 
     }
 

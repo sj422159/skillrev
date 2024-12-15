@@ -7,7 +7,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex p-0">
-                    <h3 class="card-title p-3"><a href="{{url('exam_controller/assesment/createassesment')}}" class="btn btn-primary">Create</a></h3>
+                    <h3 class="card-title p-3"><a href="{{url('admin/assesment/createassesment')}}" class="btn btn-primary">Create</a></h3>
                     <ul class="nav nav-pills ml-auto p-2">
                         <!-- <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Fresher</a></li>
                             <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Lateral</a></li> -->

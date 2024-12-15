@@ -35,20 +35,12 @@ return [
     |
     */
 
-'guards' => [
-    // Default guard
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
-
-    // Add the new guard for Academic Controllers
-    'academic_controller' => [
-        'driver' => 'session',
-        'provider' => 'academic_controllers',
-    ],
-],
-
 
     /*
     |--------------------------------------------------------------------------
@@ -68,18 +60,16 @@ return [
     */
 
     'providers' => [
-    // Default user provider
-    'users' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\User::class,
-    ],
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
 
-    // Add the new provider for Academic Controllers
-    'academic_controllers' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\AcademicController::class, // Make sure this model exists
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
     ],
-],
 
     /*
     |--------------------------------------------------------------------------

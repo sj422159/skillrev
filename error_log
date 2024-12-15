@@ -1,81 +1,223 @@
-[19-Jan-2023 13:08:27 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[19-Jan-2023 13:08:27 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[19-Jan-2023 13:08:27 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+[08-Apr-2024 23:14:44 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[08-Apr-2024 23:14:44 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[19-Jan-2023 13:08:44 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[19-Jan-2023 13:08:44 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[19-Jan-2023 13:08:44 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[08-Apr-2024 23:15:01 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[08-Apr-2024 23:15:01 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[18-Mar-2023 11:47:32 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:47:32 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:47:32 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:13:59 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:13:59 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[18-Mar-2023 11:47:37 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:47:37 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:47:37 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:01 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:01 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[18-Mar-2023 11:49:16 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:16 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:16 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:17 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:17 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[18-Mar-2023 11:49:22 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:22 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:22 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:23 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:23 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[18-Mar-2023 11:49:43 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:43 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:43 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:25 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:25 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[18-Mar-2023 11:49:46 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:46 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:46 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:28 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:28 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
-[18-Mar-2023 11:49:53 UTC] PHP Warning:  include(/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php): failed to open stream: No such file or directory in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:53 UTC] PHP Warning:  include(): Failed opening '/home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/../../app/Http/Kernel.php' for inclusion (include_path='.:/opt/alt/php74/usr/share/pear') in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/composer/ClassLoader.php on line 478
-[18-Mar-2023 11:49:53 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Http\Kernel does not exist in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php:877
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:29 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:29 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
 Stack trace:
-#0 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(877): ReflectionClass->__construct('App\\Http\\Kernel')
-#1 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build('App\\Http\\Kernel')
-#2 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(851): Illuminate\Container\Container->resolve('App\\Http\\Kernel', Array, false)
-#3 /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php(296): Illuminate\Foundation\Application->resolve('App\\Http\\Kernel', Array, false)
-#4 /home/in in /home/inq82z9fllwz/public_html/schoollms.skillrevelation.com/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 879
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:30 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:30 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:39 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:14:39 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:15:06 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:15:06 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:02 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:02 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:04 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:04 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:32 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:32 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:43 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:43 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:50 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:17:50 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:20:19 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:20:19 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:24:21 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:24:21 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:24:23 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:24:23 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:26 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:26 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:26 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:33 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:33 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:33 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:38 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:38 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:38 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:44 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:44 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:44 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:54 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:54 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:54 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:55 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:55 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:25:55 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:26:34 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:26:34 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:26:34 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:26:34 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:26:34 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:26:34 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:01 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:01 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:01 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php73/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:19 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:19 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php74/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:23 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:23 America/Chicago] PHP Fatal error:  require(): Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php74/root/usr/share/pear') in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:37 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:37 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:27:37 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:00 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:00 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:00 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:00 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:00 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:00 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:09 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:09 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:09 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:15 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:15 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:15 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:16 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:16 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:28:16 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:32:29 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:32:29 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:32:29 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:54:15 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:54:15 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 03:54:15 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:17:17 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:17:17 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:17:17 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:24:11 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:24:11 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:24:11 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:24:11 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:24:11 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 04:24:11 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:41:19 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:41:19 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:41:19 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:41:19 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:41:19 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:41:19 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:47:38 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:47:38 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:47:38 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:47:39 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:47:39 America/Chicago] PHP Warning:  require(/home4/skillkpq/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 05:47:39 America/Chicago] PHP Fatal error:  Uncaught Error: Failed opening required '/home4/skillkpq/public_html/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home4/skillkpq/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home4/skillkpq/public_html/index.php on line 34
+[20-Apr-2024 17:50:51 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/skillkpq/public_html/vendor/facade/ignition/src/SolutionProviders/MergeConflictSolutionProvider.php on line 52
+[20-Apr-2024 19:47:48 UTC] PHP Deprecated:  Using ${var} in strings is deprecated, use {$var} instead in /home4/skillkpq/public_html/vendor/facade/ignition/src/SolutionProviders/MergeConflictSolutionProvider.php on line 52

@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class distance extends Model
 {
     use HasFactory;
-    protected $fillable = ['aid','Controller_ID','busrouteid','location','distance','disstatus'];
+    protected $fillable = ['aid','busrouteid','location','distance','disstatus'];
 }

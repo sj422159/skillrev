@@ -38,6 +38,7 @@ class AcademicModuleController extends Controller
 
     public function addskillset(Request $request,$id=""){   
         if($id>0){
+            // dd($id);
             $arr=skillset::where(['id'=>$id])->get();
             $result['id']=$arr['0']->id;
             $result['groupid']=$arr['0']->groupid;
@@ -62,19 +63,19 @@ class AcademicModuleController extends Controller
         $Controller_ADMIN_ID=session()->get('Controller_ADMIN_ID');
         $controller_id=session()->get('Controller_ID');
         if($request->post('id')>0){
+            // dd($request->post('id'));
             $model=skillset::find($request->post('id'));
             $msg="skillset updated";
-            if($model->domain!=$request->post('domain')){
-                $name=DB::table('domains')->where('id',$request->post('domain'))->get();
-                $skillsetname=$name[0]->domain.'_'.$request->post('skillset');
+
+                $name=DB::table('categories')->where('id',$request->post('category'))->get();
+                $skillsetname=$name[0]->shortcateg.'_'.$request->post('skillset');
                 $model->skillset=$skillsetname;
-            }
         }
         else{
             $model=new skillset();
             $msg="skillset inserted";
-            $name=DB::table('domains')->where('id',$request->post('domain'))->get();
-            $skillsetname=$name[0]->domain.'_'.$request->post('skillset');
+            $name=DB::table('categories')->where('id',$request->post('category'))->get();
+                $skillsetname=$name[0]->shortcateg.'_'.$request->post('skillset');
             $model->skillset=$skillsetname;
         }
         $model->aid=$Controller_ADMIN_ID;

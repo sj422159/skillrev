@@ -27,7 +27,13 @@ class classteacherattendancecontroller extends Controller{
 
         $tommorowdate = date('d-m-Y', strtotime('+1 days'));
         $day= date("l", strtotime($tommorowdate));
-        if($day=="Sunday" && count($result['attendance'])==0){
+        $result['tommorowattendance'] = DB::table('attendances')
+                            ->where('classteacherid',$ctid)
+                            ->where('classid',$classid)
+                            ->where('sectionid',$sectionid)
+                            ->where('date',$tommorowdate)
+                            ->get('id');
+        if($day=="Sunday" && count($result['tommorowattendance'])==0){
             $data = DB::table('students')->where('sclassid',$classid)->where('ssectionid',$sectionid)->get('id');
             $student=[];
             $attendance=[];

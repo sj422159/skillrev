@@ -79,6 +79,12 @@
 </button>
 
                                 <button class="btn btn-danger btn-delete" data-id="{{ $controller->id }}">Delete</button>
+                                @if($controller->mailstatus == 0)
+                                <a href="{{ url('controller/school/mail') }}/{{ $controller->id }}">
+                                    <button type="button" class="btn btn-sm btn-primary">Send</button>
+                                </a>
+                            @endif
+                            
                             </td>
                         </tr>
                     @endforeach

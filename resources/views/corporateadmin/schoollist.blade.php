@@ -67,12 +67,18 @@
                                     <a href="{{url('corporateadmin/school/mail')}}/{{$list->id}}">
                                        <button type="button" class="btn btn-sm btn-primary">Resend</button>
                                     </a> 
+                                    <a href="{{url('corporateadmin/school/mail/delete')}}/{{$list->id}}">
+                                       <button type="button" class="btn btn-sm btn-secondary">Delete</button>
+                                    </a> 
                                  @elseif($list->mailstatus==0) 
                                     <a href="#">
                                        <button type="button" class="btn btn-sm btn-info">Unsent</button>
                                     </a> 
                                     <a href="{{url('corporateadmin/school/mail')}}/{{$list->id}}">
                                        <button type="button" class="btn btn-sm btn-primary">Send</button>
+                                    </a> 
+                                    <a href="{{url('corporateadmin/school/mail/delete')}}/{{$list->id}}">
+                                       <button type="button" class="btn btn-sm btn-secondary">Delete</button>
                                     </a> 
                                  @endif 
                               </td>
@@ -119,6 +125,7 @@
                                     <a href="{{url('corporateadmin/school/mail')}}/{{$list->id}}">
                                        <button type="button" class="btn btn-sm btn-secondary">Resend</button>
                                     </a> 
+                                   
                                  @elseif($list->mailstatus==0) 
                                     <a href="#">
                                        <button type="button" class="btn btn-sm btn-info">Unsent</button>
@@ -126,6 +133,7 @@
                                     <a href="{{url('corporateadmin/school/mail')}}/{{$list->id}}">
                                        <button type="button" class="btn btn-sm btn-primary">Send</button>
                                     </a> 
+                                 
                                  @endif 
                                  <a href="{{url('corporateadmin/school/data')}}/{{$list->id}}" class="btn btn-primary btn-sm">Get Data</a>
                               </td>

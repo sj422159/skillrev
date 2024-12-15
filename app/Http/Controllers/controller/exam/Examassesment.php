@@ -49,7 +49,7 @@ class Examassesment extends Controller
      $result['trainings']=DB::table('trainingtypes')->get();    
      $result['asstype']=DB::table('asstypes')->get();
      $result['managers']=DB::table('managers')->where('aid',$sesid)->get();
-     return view('controller.exam.createassesment',$result);
+     return view('admin.createassesment',$result);
     }
 
     public function gettrainings(){
@@ -129,22 +129,21 @@ class Examassesment extends Controller
        ->select('skillsets.skillset','domains.domain','assesmentsections.id','assesmentsections.sectionname','assesmentsections.skillset','assesmentsections.totalquestions','assesmentsections.sectionpass','assesmentsections.sectionduration','assesmentsections.ordering')->get();
         
        $managerclassid=DB::table('managers')->where('id',$request->post('mid'))->get();
-      //  dd($managerclassid);
-       $result['categories']=DB::table('categories')->where('aid',$sesid)->get();
+       $result['categories']=DB::table('categories')->where('id',$managerclassid[0]->classid)->get();
 
        $trainings=DB::table('trainings')->where('id',$request->post('training'))->get();
        $result['domains']=DB::table('domains')->where('id',$trainings[0]->domain)->get();
 
        if ($request->post("ttype")=="1") {
-          $result['skillsets']=DB::table('skillsets')->where('aid',$sesid)->get(); 
+          $result['skillsets']=DB::table('skillsets')->where('id',$trainings[0]->skillset)->get(); 
           $result['skillattributes']=DB::table('skillattributes')->where('id',$trainings[0]->skillattribute)->get(); 
        } else {
           $skillsetid=explode("##",$trainings[0]->skillset);
-          $result['skillsets']=DB::table('skillsets')->whereIn('aid',$sesid)->get(); 
+          $result['skillsets']=DB::table('skillsets')->whereIn('id',$skillsetid)->get(); 
           $result['skillattributes']=[]; 
        }
        
-      return view('controller.exam.assesmentsection',$result);
+      return view('admin.assesmentsection',$result);
 
    }
 
@@ -327,7 +326,7 @@ class Examassesment extends Controller
           $result['skillattributes']=[]; 
        }
     
-    return view('controller.exam.assesmentsection',$result);
+    return view('admin.assesmentsection',$result);
 
    }
 

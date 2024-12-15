@@ -14,7 +14,7 @@ class AcademicGroupController extends Controller
     public function group(Request $request){
         $controller_id=session()->get('Controller_ID');
         $controller_admin_id=session()->get('Controller_ADMIN_ID');
-        $result['group']=DB::table('groups')->where('aid',$controller_admin_id)->orWHERE('Controller_ID',$controller_id)->get();
+        $result['group']=DB::table('groups')->where('aid',$controller_admin_id)->get();
         return view('controller.academ.group',$result);
     }
     public function addgroup(Request $request,$id=""){     

@@ -300,14 +300,14 @@
             <ul class="nav nav-treeview" style="display: none;">
              
             <li class="nav-item">
-            {{-- <a href="#" class="nav-link">
+            <a href="#" class="nav-link">
                <i class="fas fa-hands-helping nav-icon"></i>
               <p>
                 Skillset Mgmt
                 <i class="right fas fa-angle-left"></i>
               </p>
-            </a> --}}
-            {{-- <ul class="nav nav-treeview" style="display: none;">
+            </a>
+            <ul class="nav nav-treeview" style="display: none;">
             <li class="nav-item">
                     <a href="{{url('admin/group')}}" class="nav-link">
                       <i class="far fa-circle nav-icon"></i>
@@ -349,7 +349,7 @@
              </a>
              </li>
            
-            </ul> --}}
+            </ul>
           </li>
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -430,14 +430,14 @@
       </li>
 
                      <li class="nav-item">
-            {{-- <a href="#" class="nav-link">
+           <a href="#" class="nav-link">
               <i class="fas fa-hands-helping nav-icon"></i>
               <p>
                 Content Mgmt
                 <i class="fas fa-angle-left right"></i>
               </p>
-            </a> --}}
-            {{-- <ul class="nav nav-treeview" >
+            </a> 
+          <ul class="nav nav-treeview" >
                 <li class="nav-item">
             <a href="{{url('admin/content/skillattribute')}}" class="nav-link" class="@yield('Questions_select')">
               <i class="far fa-circle nav-icon"></i>
@@ -447,7 +447,7 @@
             </a>
           </li>
            
-            </ul> --}}
+            </ul>
       </li>
 
                 <li class="nav-item">

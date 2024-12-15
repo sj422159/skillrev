@@ -12,11 +12,12 @@ class AcademicStandardController extends Controller
     public function category(Request $request){
         $Controller_ID=session()->get('Controller_ID');
         $controller_admin_id=session()->get('Controller_ADMIN_ID');
-        $result['groups']=DB::table('groups')->where('aid',$controller_admin_id)->orwhere('Controller_ID',$Controller_ID)->get();
+     
+        $result['groups']=DB::table('groups')->where('aid',$controller_admin_id)->get();
         $result['groupid']='';
         $result['category']=DB::table('categories')
                         ->join('groups','groups.id','categories.groupid')
-                        ->where('categories.Controller_ID',$Controller_ID)
+                        ->where('categories.aid',$controller_admin_id)
                         ->select('groups.group','categories.*')
                         ->get();
         return view('controller.academ.category',$result);
@@ -30,7 +31,7 @@ class AcademicStandardController extends Controller
         $result['groupid']=$groupid;
         $result['category']=DB::table('categories')
                         ->join('groups','groups.id','categories.groupid')
-                        ->where('categories.Controller_ID',$Controller_ID)
+                        ->where('categories.aid',$controller_admin_id)
                         ->where('categories.groupid',$groupid)
                         ->select('groups.group','categories.*')
                         ->get();
@@ -55,8 +56,8 @@ class AcademicStandardController extends Controller
             $result['standardid']='';
             $result['max']=0;
         }
-        $Controller_ID=session()->get('Controller_ID');
-        $result['groups']=DB::table('groups')->where('Controller_ID',$Controller_ID)->get();
+        $controller_admin_id=session()->get('Controller_ADMIN_ID');
+        $result['groups']=DB::table('groups') ->where('aid',$controller_admin_id)->get();
         $result['standards']=DB::table('standards')->get();
         return view("controller.academ.addcategory",$result);
     }

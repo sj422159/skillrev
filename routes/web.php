@@ -182,6 +182,8 @@ use App\Http\Controllers\faculty\FacultyContentController;
 use App\Http\Controllers\controller\account\Feescontroller;
 use App\Http\Controllers\controller\account\Feesanalyticcontroller;
 
+use App\Http\Controllers\nontechmanager\hostel\HostelExpenseController;
+
 
 Route::get('corporateadmin/login',[corporateadminauthcontroller::class ,'login']);
 Route::post('corporateadmin/login/save',[corporateadminauthcontroller::class,'logincheck']);
@@ -248,6 +250,8 @@ Route::get('corporateadmin/school/list',[corporateadminschoolcontroller::class,'
 Route::get('corporateadmin/school/status/{status}/{id}',[corporateadminschoolcontroller::class,'schoolstatus']);
 Route::get('corporateadmin/school/mail/{id}',[corporateadminschoolcontroller::class,'sendmail']);
 Route::get('corporateadmin/school/data/{id}',[corporateadminschoolcontroller::class,'schooldata']);
+Route::get('corporateadmin/school/mail/delete/{id}', [corporateadminschoolcontroller::class, 'delete'])->name('mail.delete');
+
 
 Route::get('corporateadmin/admin/export/{adminid}',[corporateadminschoolcontroller::class,'adminexport']);
 Route::get('corporateadmin/groupmanager/export/{adminid}',[corporateadminschoolcontroller::class,'groupmanagerexport']);
@@ -1898,6 +1902,7 @@ Route::post('academic_controller/skillset/bydomain',[AcademicModuleController::c
 Route::get('academic_controller/skillset/addskillset',[AcademicModuleController::class, 'addskillset']);
 Route::get('academic_controller/skillset/addskillset/{id}',[AcademicModuleController::class, 'addskillset']);
 Route::post('academic_controller/skillset/saveskillset',[AcademicModuleController::class,'saveskillset']);
+Route::post('academic_controller/skillset/saveskillset/{id}',[AcademicModuleController::class,'saveskillset']);
 Route::get('academic_controller/skillset/{id}',[AcademicModuleController::class,'skillsetdelete']);
 
 Route::get('academic_controller/getdomains',[AcademicModuleController::class,'skillsetgetdomains']);
@@ -2044,3 +2049,16 @@ Route::get('controller/logout',function(){
     session()->flash('logout','Logged Out Sucessfully');
     return redirect('/');
     });
+
+
+Route::get('/nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'subcategory'])->name('expense.subcategory');
+Route::get('/nontech/manager/hostel/expense/items', [HostelExpenseController::class, 'subitem'])->name('expense.subitems');
+Route::get('nontech/manager/hostel/expense/subcategory/create', [HostelExpenseController::class, 'createSubcategory'])->name('subcategory.create');
+
+Route::get('nontech/manager/hostel/expense', [HostelExpenseController::class, 'index']);
+Route::put('nontech/manager/hostel/expense/subcategory/update', [HostelExpenseController::class, 'update'])->name('subcategory.update');
+
+Route::delete('nontech/manager/hostel/expense/subcategory/delete/{id}', [HostelExpenseController::class, 'destroy'])->name('subcategory.delete');
+Route::get('nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'index'])->name('subcategory.index');
+Route::post('nontech/manager/hostel/expense/subcategory/store', [HostelExpenseController::class, 'store'])->name('subcategory.store');
+Route::get('controller/school/mail/{id}',[AcademicController::class,'sendmail']);

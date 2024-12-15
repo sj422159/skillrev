@@ -13,13 +13,15 @@ class AcademicContent extends Controller
     public function contentska(Request $request){
         $aid=session()->get('Controller_ADMIN_ID');
         $Controller_id=session()->get('Controller_ID');
-        $result['category']=DB::table('categories')->where('Controller_ID',$Controller_id)->get();
+         $controller_admin_id=session()->get('Controller_ADMIN_ID');
+        $controller_admin_id=session()->get('Controller_ADMIN_ID');
+        $result['category']=DB::table('categories')->where('aid',$controller_admin_id)->get();
         $result['categoryid']='';
         $result['domainid']='';
         $result['skillsetid']='';
         $result['data']=DB::table('contentskillattributes')
         ->join('skillattributes','skillattributes.id','contentskillattributes.skillattribute')
-        ->where('contentskillattributes.Controller_ID',$Controller_id)
+        ->where('contentskillattributes.aid',$controller_admin_id)
         ->select('skillattributes.skillattribute','contentskillattributes.id')
         ->get();
         return view('controller.academ.contentskillattribute',$result); 
@@ -28,15 +30,16 @@ class AcademicContent extends Controller
     public function contentskabyskillset(Request $request){
           $aid=session()->get('Controller_ADMIN_ID');
           $Controller_id=session()->get('Controller_ID');
+           $controller_admin_id=session()->get('Controller_ADMIN_ID');
         $domain=$request->post('domain');
         $skillset=$request->post('skillset');
         $result['domainid']=$domain;
         $result['skillsetid']=$skillset;
-        $result['category']=DB::table('categories')->where('Controller_ID',$Controller_id)->get();
+        $result['category']=DB::table('categories')->where('aid',$controller_admin_id)->get();
         $result['categoryid']=$request->post('category');
         $result['data']=DB::table('contentskillattributes')
                         ->join('skillattributes','skillattributes.id','contentskillattributes.skillattribute')
-                        ->where('contentskillattributes.Controller_ID',$Controller_id)
+                        ->where('contentskillattributes.aid',$controller_admin_id)
                         ->where('contentskillattributes.skillset',$skillset)
                         ->select('skillattributes.skillattribute','contentskillattributes.id')
                         ->get();
@@ -77,7 +80,8 @@ class AcademicContent extends Controller
         }
         $aid=session()->get('Controller_ADMIN_ID');
         $Controller_id=session()->get('Controller_ID');
-        $result['categories']=DB::table('categories')->where('Controller_ID',$Controller_id)->get();
+         $controller_admin_id=session()->get('Controller_ADMIN_ID');
+        $result['categories']=DB::table('categories')->where('aid',$controller_admin_id)->get();
         $result['contenttypes1']=DB::table('contenttypes')->where('id',1)->get();
         $result['contenttypes2']=DB::table('contenttypes')->where('id',2)->get();
         $result['contenttypes3']=DB::table('contenttypes')->where('id',3)->get();
@@ -156,6 +160,7 @@ class AcademicContent extends Controller
     public  function questionbankgetdomains(request $request){
       $aid=session()->get('Controller_ADMIN_ID');
       $Controller_id=session()->get('Controller_ID');
+       $controller_admin_id=session()->get('Controller_ADMIN_ID');
       $cid = $request->post('cid');
       $a=DB::table('categories')->where('id',$cid)->get();
       $b=DB::table('groups')->where('id',$a[0]->groupid)->get();

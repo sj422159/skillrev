@@ -34,24 +34,61 @@ class corporateadminschoolcontroller extends Controller{
         $request->session()->flash("success","Status Changed Succesfully");
         return redirect('corporateadmin/school/list');
     }
+    public function delete($id)
+    {
+        // Find the item by its ID
+        $mail = admin::find($id);
 
-    public function sendmail($id){
+        // Check if the mail exists
+        if ($mail) {
+            // Delete the mail record
+            $mail->delete();
 
-        $model=admin::find($id);
-        $model->mailstatus=1;
+            // Redirect with success message
+            return redirect('corporateadmin/school/list');
+        }
+
+        // If the mail doesn't exist, redirect with error message
+        return redirect('corporateadmin/school/list');
+    }
+
+    public function sendmail(Request $request, $id)
+    {
+        // Find the admin by ID
+        $model = admin::find($id);
+        
+        // Check if the admin is found
+        if (!$model) {
+            // Handle the case where the admin isn't found
+            return redirect()->back()->with('error', 'Admin not found');
+        }
+    
+        // Update mail status
+        $model->mailstatus = 1;
         $model->save();
         
-        $data=['name'=>$model->aname,'email'=>$model->aemail,'number'=>$model->anumber,'password'=>$model->p];
-        $user['to']=$model->aemail;
-        Mail::send('mail.adminregistermail',$data,function($messages) use ($user){
-        $messages->to($user['to']);
-        $messages->subject('Login Credentials Of Your Account');
+        // Prepare the data to send in the email
+        $data = [
+            'name' => $model->aname,
+            'email' => $model->aemail,
+            'number' => $model->anumber,
+            'password' => $model->p
+        ];
+        
+        // Set the recipient email address
+        $user['to'] = $model->aemail;
+        
+        // Send the email
+        Mail::send('mail.adminregistermail', $data, function($message) use ($user) {
+            $message->to($user['to']);
+            $message->subject('Login Credentials Of Your Account');
         });
-        
-        
-        $request->session()->flash("success","Mail Sent Succesfully");
+    
+        // Flash a success message and redirect
+        $request->session()->flash("success", "Mail Sent Successfully");
         return redirect('corporateadmin/school/list');
-    }  
+    }
+    
 
     public function schooldata($id){
         $school=DB::table('admins')->where('id',$id)->get();

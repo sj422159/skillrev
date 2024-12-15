@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\find;
 use Illuminate\Support\Facades\Response;
 use App\Models\admin;
+use Illuminate\Support\Str;
+
+use Mail;
 
 
 class AcademicController extends Controller
@@ -1110,6 +1113,53 @@ public function save(Request $request)
         }
     
         return view('admin.attendancemonths', $result);
+    }
+    public function sendmail($id, Request $request)
+    {
+        // Fetch the controller using the provided ID
+        $model = controllers::find($id);
+    
+        // Check if the model is found
+        if (!$model) {
+            return redirect('controller')->with('error', 'Controller not found!');
+        }
+    
+        // Generate a random password
+        $randomPassword = Str::random(10); // You can adjust the length as needed
+    
+        // Set the random password to the model and save it
+        $model->password = bcrypt($randomPassword); // Hash the password before saving
+        $model->save();
+    
+        // Prepare the data to send via mail
+        $data = [
+            'name' => $model->name,
+            'email' => $model->email,
+            'number' => $model->number,
+            'password' => $randomPassword, // Send the raw password in the email
+        ];
+    
+        // Define the recipient email address
+        $user['to'] = $model->email;
+    
+        try {
+            // Send the email
+            Mail::send('mail.controllerregistermail', $data, function ($messages) use ($user) {
+                $messages->to($user['to']);
+                $messages->subject('Login Credentials Of Your Account');
+            });
+    
+            // Update mailstatus only after mail is successfully sent
+            $model->mailstatus = 1;
+            $model->save();
+    
+            // Flash success message
+            $request->session()->flash('success', 'Mail Sent Successfully');
+            return redirect('controller');
+        } catch (\Exception $e) {
+            // Catch any errors and display them
+            return redirect('controller')->with('error', 'Error sending mail: ' . $e->getMessage());
+        }
     }
     
 }
