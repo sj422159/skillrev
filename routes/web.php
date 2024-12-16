@@ -1881,6 +1881,7 @@ Route::post('academic_controller/group/savegroup',[AcademicGroupController::clas
 
 Route::get('academic_controller/standard',[AcademicStandardController::class, 'category']);
 Route::post('academic_controller/category/bygroup',[AcademicStandardController::class, 'categorybygroup']);
+Route::get('academic_controller/category/bygroup',[AcademicStandardController::class, 'categorybygroup'])->name('controller.academ.category');
 Route::get('academic_controller/category/addcategory',[AcademicStandardController::class, 'addcategory']);
 Route::get('academic_controller/category/addcategory/{id}',[AcademicStandardController::class, 'addcategory']);
 Route::post('academic_controller/category/savecategory',[AcademicStandardController::class,'savecategory']);
@@ -1889,6 +1890,7 @@ Route::get('academic_controller/category/{id}',[AcademicStandardController::clas
 
 Route::get('academic_controller/domain',[AcademicSubjectController::class, 'domain'])->name('controller.academ.domain');
 Route::post('academic_controller/domain/bycategory',[AcademicSubjectController::class, 'domainbycategory']);
+Route::get('academic_controller/domain/bycategory',[AcademicSubjectController::class, 'domainbycategory'])->name('academic_controller.domain.bycategory');
 Route::get('academic_controller/domain/adddomain',[AcademicSubjectController::class, 'adddomain']);
 Route::get('academic_controller/domain/adddomain/{id}',[AcademicSubjectController::class, 'adddomain']);
 Route::post('academic_controller/domain/savedomain',[AcademicSubjectController::class,'savedomain']);
@@ -1897,8 +1899,10 @@ Route::any('academic_controller/questionbank/getcategory',[AcademicSubjectContro
 Route::get('academic_controller/skillset/getcategory/{id}',[AcademicSubjectController::class,'skillsetcategory']);
 
 
-Route::get('academic_controller/skillset',[AcademicModuleController::class, 'skillset']);
-Route::post('academic_controller/skillset/bydomain',[AcademicModuleController::class, 'skillsetbydomain']);
+Route::get('academic_controller/skillset', [AcademicModuleController::class, 'skillset'])->name('academic_controller.skillset');
+Route::post('academic_controller/skillset/bydomain', [AcademicModuleController::class, 'skillsetbydomain']);
+Route::get('academic_controller/skillset/bydomain', [AcademicModuleController::class, 'skillsetbydomain'])
+    ->name('academic_controller.skillsetbydomain');
 Route::get('academic_controller/skillset/addskillset',[AcademicModuleController::class, 'addskillset']);
 Route::get('academic_controller/skillset/addskillset/{id}',[AcademicModuleController::class, 'addskillset']);
 Route::post('academic_controller/skillset/saveskillset',[AcademicModuleController::class,'saveskillset']);
@@ -1912,6 +1916,7 @@ Route::get('academic_controller/skillset/getskillset/{id}',[AcademicModuleContro
 
 Route::get('academic_controller/skillattribute',[AcademicChapterController::class, 'skillattribute']);
 Route::post('academic_controller/skillattribute/byskillset',[AcademicChapterController::class, 'skillattributebyskillset']);
+Route::get('academic_controller/skillattribute/byskillset',[AcademicChapterController::class, 'skillattributebyskillset'])->name('academic_controller.skillattribute.byskillset');
 Route::get('academic_controller/skillattribute/addskillattribute',[AcademicChapterController::class, 'addskillattribute']);
 Route::get('academic_controller/skillattribute/addskillattribute/{id}',[AcademicChapterController::class, 'addskillattribute']);
 Route::post('academic_controller/skillattribute/saveskillattribute',[AcademicChapterController::class,'saveskillattribute']);
@@ -1924,6 +1929,7 @@ Route::post('academic_controller/questionbank/getskillset',[AcademicChapterContr
 
 Route::get('academic_controller/content/skillattribute',[AcademicContent::class, 'contentska']);
 Route::post('academic_controller/content/skillattribute/byskillset',[AcademicContent::class, 'contentskabyskillset']);
+Route::get('academic_controller/content/skillattribute/byskillset',[AcademicContent::class, 'contentskabyskillset'])->name('academic_controller.content.byskillset');
 Route::get('academic_controller/content/skillattribute/addskillattribute',[AcademicContent::class, 'addcontentska']);
 Route::get('academic_controller/content/skillattribute/addskillattribute/{id}',[AcademicContent::class, 'addcontentska']);
 Route::post('academic_controller/content/skillattribute/saveskillattribute',[AcademicContent::class,'savecontentska']);
@@ -2062,7 +2068,5 @@ Route::delete('nontech/manager/hostel/expense/subcategory/delete/{id}', [HostelE
 Route::get('nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'index'])->name('subcategory.index');
 Route::post('nontech/manager/hostel/expense/subcategory/store', [HostelExpenseController::class, 'store'])->name('subcategory.store');
 Route::get('controller/school/mail/{id}',[AcademicController::class,'sendmail']);
-
-
 Route::get('controller/profile',[AcademicController::class,'profile']);
 Route::post('controller/profile/processing',[AcademicController::class,'update']);

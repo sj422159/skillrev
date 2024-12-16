@@ -19,11 +19,7 @@ class AcademicContent extends Controller
         $result['categoryid']='';
         $result['domainid']='';
         $result['skillsetid']='';
-        $result['data']=DB::table('contentskillattributes')
-        ->join('skillattributes','skillattributes.id','contentskillattributes.skillattribute')
-        ->where('contentskillattributes.aid',$controller_admin_id)
-        ->select('skillattributes.skillattribute','contentskillattributes.id')
-        ->get();
+        $result['data']=[];
         return view('controller.academ.contentskillattribute',$result); 
     }
 
@@ -148,7 +144,12 @@ class AcademicContent extends Controller
        
         $model->save();
         $request->session()->flash('success',$msg);
-        return redirect('academic_controller/content/skillattribute');
+        return redirect()->route('academic_controller.content.byskillset', [
+          'group' => $request->post('groupid'),
+          'category' => $request->post('category'),
+          'domain' => $request->post('domain'),
+         'skillset'=>$request->post('skillset'),
+      ]);
     }
 
     public function contentskadelete(Request $request, $id){

@@ -20,7 +20,7 @@ class AcademicChapterController extends Controller
         $result['categoryid']='';
         $result['domainid']='';
         $result['skillsetid']='';
-        $result['skillattribute']=DB::table('skillattributes')->where('aid',$aid)->orwhere('Controller_ID',$Controller_ID)->get();
+        $result['skillattribute']=[];
         return view('controller.academ.skillattribute',$result);
     }
 
@@ -90,7 +90,13 @@ class AcademicChapterController extends Controller
         $model->skillset=$request->post('skillset'); 
         $model->save();
         $request->session()->flash('message',$msg);
-        return redirect('academic_controller/skillattribute');
+        return redirect()->route('academic_controller.skillattribute.byskillset', [
+            'group' => $request->post('groupid'),
+            'category' => $request->post('category'),
+            'domain' => $request->post('domain'),
+           'skillset'=>$request->post('skillset'),
+        ]);
+
     }
 
     public function skillattributedelete(Request $request, $id){

@@ -15,11 +15,7 @@ class AcademicStandardController extends Controller
      
         $result['groups']=DB::table('groups')->where('aid',$controller_admin_id)->get();
         $result['groupid']='';
-        $result['category']=DB::table('categories')
-                        ->join('groups','groups.id','categories.groupid')
-                        ->where('categories.aid',$controller_admin_id)
-                        ->select('groups.group','categories.*')
-                        ->get();
+        $result['category']=[];
         return view('controller.academ.category',$result);
     }
 
@@ -120,7 +116,11 @@ class AcademicStandardController extends Controller
         ->update(['groupid' => $request->post('groupid')]);
         }
 
-        return redirect('academic_controller/standard');
+        return redirect()->route('controller.academ.category', [
+            'groupid' => $request->post('groupid'),
+
+        ]);
+        // return redirect('academic_controller/standard');
 
       
     }

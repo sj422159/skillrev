@@ -15,7 +15,7 @@ class AcademicSubjectController extends Controller
         $Controller_ADMIN_ID=session()->get('Controller_ADMIN_ID');
           $Controller_ID=session()->get('Controller_ID');
         $result['groups']=DB::table('groups')->where('aid',$Controller_ADMIN_ID)->orwhere('Controller_ID',$Controller_ID)->get();
-        $result['domain']=DB::table('domains')->where('aid',$Controller_ADMIN_ID)->orwhere('Controller_ID',$Controller_ID)->get();
+        $result['domain']=[];
         $result['groupid']='';
         $result['categoryid']='';
         return view('controller.academ.domain',$result);
@@ -63,6 +63,7 @@ class AcademicSubjectController extends Controller
     }
      
     public function savedomain(Request $request){
+        // dd($request);
         $Controller_ADMIN_ID=session()->get('Controller_ADMIN_ID');
           $Controller_ID=session()->get('Controller_ID');
          $show=0;
@@ -81,6 +82,7 @@ class AcademicSubjectController extends Controller
 
         if($request->post('id')>0){
             $model=domain::find($request->post('id'));
+          
             $msg="Domain updated";
             $name=DB::table('categories')->where('id',$request->post('category'))->get();
             $domainname=$name[0]->categories.'_'.$name[0]->shortcateg.'_'.$request->post('dname');
@@ -115,7 +117,11 @@ class AcademicSubjectController extends Controller
         ->update(['groupid' => $request->post('groupid'),'category' => $request->post('category')]);
         }
 
-        return redirect(url('academic_controller/domain'));
+        return redirect()->route('academic_controller.domain.bycategory', [
+            'group' => $request->post('groupid'),
+            'category' => $request->post('category'),
+           
+        ]);
 
     }
 

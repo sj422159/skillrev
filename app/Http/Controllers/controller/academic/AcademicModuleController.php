@@ -18,7 +18,7 @@ class AcademicModuleController extends Controller
         $result['groupid']='';
         $result['categoryid']='';
         $result['domainid']='';
-        $result['skillset']=DB::table('skillsets')->where('aid',$Controller_ADMIN_ID)->orwhere('Controller_ID',$controller_id)->get();
+        $result['skillset']=[];
         return view('controller.academ.skillset',$result);
     }
 
@@ -89,16 +89,44 @@ class AcademicModuleController extends Controller
         if($request->post('id')>0){
         DB::table('skillattributes')->where('skillset',$request->post('id'))
         ->update(['groupid' => $request->post('groupid'),'category' => $request->post('category'),'domain' => $request->post('domain')]);
-        }
-        return redirect('academic_controller/skillset');
+        }        // Debug parameters
+        // dd('Redirecting to:', route('academic_controller.skillsetbydomain', [
+        //     'group' => $request->post('groupid'),
+        //     'category' => $request->post('category'),
+        //     'domain' => $request->post('domain'),
+        // ]));
+        return redirect()->route('academic_controller.skillsetbydomain', [
+            'group' => $request->post('groupid'),
+            'category' => $request->post('category'),
+            'domain' => $request->post('domain'),
+        ]);
+        
+
+        
+        
+        
+        
     }
 
-    public function skillsetdelete(Request $request,$id){
-        $model=skillset::find($id);
-        $model->delete();
-        $request->session()->flash('message','skillset Deleted');
-       return redirect('academic_controller/skillset');
+    public function skillsetdelete(Request $request, $id)
+    {
+        $model = skillset::find($id);
+    
+        if (!$model) {
+            $request->session()->flash('error', 'Skillset not found.');
+            return redirect('academic_controller/skillset');
+        }
+    
+        try {
+            $model->delete();
+            $request->session()->flash('message', 'Skillset deleted successfully.');
+        } catch (\Exception $e) {
+            $request->session()->flash('error', 'An error occurred while deleting the skillset.');
+        }
+    
+        return redirect('academic_controller/skillset');
     }
+    
     public function skillsetcategory($id){
         $controller_id=session()->get('Controller_ID');
         $id = $_GET['myID'];
