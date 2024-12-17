@@ -3,7 +3,9 @@
 @section('container')
 <div class="container">
     <h2>Expense Subcategories</h2>
-    <a href="{{ route('subcategory.create') }}" class="btn btn-primary mb-3">Add New Subcategory</a>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ route('subcategory.create') }}" class="btn btn-primary">Add New Subcategory</a>
+    </div>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -21,15 +23,19 @@
             @foreach($subcategories as $subcategory)
                 <tr>
                     <td>{{ $subcategory->id }}</td>
-                    <td>{{ $subcategory->groupid }}</td>
-                    <td>{{ $subcategory->categoryid }}</td>
+                    <td>{{ $subcategory->group->Group ?? 'N/A' }}</td>
+                    <td>{{ $subcategory->category->Category ?? 'N/A' }}</td>
                     <td>{{ $subcategory->subcategory }}</td>
                     <td>
-                        <a href="{{ route('subcategory.update', $subcategory->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <!-- Link to Edit -->
+                        <a href="{{ route('subcategory.create', ['id' => $subcategory->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                        
+                        <!-- Form for Delete -->
                         <form action="{{ route('subcategory.delete', $subcategory->id) }}" method="POST" style="display: inline-block;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm" 
+                                    onclick="return confirm('Are you sure you want to delete this subcategory?');">Delete</button>
                         </form>
                     </td>
                 </tr>

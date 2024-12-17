@@ -2060,13 +2060,19 @@ Route::get('controller/logout',function(){
 Route::get('/nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'subcategory'])->name('expense.subcategory');
 Route::get('/nontech/manager/hostel/expense/items', [HostelExpenseController::class, 'subitem'])->name('expense.subitems');
 Route::get('nontech/manager/hostel/expense/subcategory/create', [HostelExpenseController::class, 'createSubcategory'])->name('subcategory.create');
+Route::get('item/create', [HostelExpenseController::class, 'create_item'])->name('item.create');
+Route::post('item/store', [HostelExpenseController::class, 'store_item'])->name('item.store');
 
-Route::get('nontech/manager/hostel/expense', [HostelExpenseController::class, 'index']);
-Route::put('nontech/manager/hostel/expense/subcategory/update', [HostelExpenseController::class, 'update'])->name('subcategory.update');
-
+Route::get('nontech/manager/hostel/expense', [HostelExpenseController::class, 'index'])->name('subcategory.index');
+Route::put('nontech/manager/hostel/expense/subcategory/update/{id}', [HostelExpenseController::class, 'update'])->name('subcategory.update');
+Route::get('nontech/manager/hostel/expense/subcategory/create/{id?}', [HostelExpenseController::class, 'createSubcategory'])->name('subcategory.create');
 Route::delete('nontech/manager/hostel/expense/subcategory/delete/{id}', [HostelExpenseController::class, 'destroy'])->name('subcategory.delete');
 Route::get('nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'index'])->name('subcategory.index');
 Route::post('nontech/manager/hostel/expense/subcategory/store', [HostelExpenseController::class, 'store'])->name('subcategory.store');
 Route::get('controller/school/mail/{id}',[AcademicController::class,'sendmail']);
 Route::get('controller/profile',[AcademicController::class,'profile']);
 Route::post('controller/profile/processing',[AcademicController::class,'update']);
+// In routes/web.php
+Route::get('/nontech/manager/hostel/expense/items/{id}/edit', [HostelExpenseController::class, 'edit'])->name('item.edit');
+// In routes/web.php
+Route::delete('/nontech/manager/hostel/expense/items/{id}', [HostelExpenseController::class, 'destroy_item'])->name('item.delete');

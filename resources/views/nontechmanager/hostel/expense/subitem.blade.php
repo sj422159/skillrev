@@ -5,11 +5,13 @@
     <h2>Expense Items</h2>
     <a href="{{ route('subcategory.index') }}" class="btn btn-secondary mb-3">Back to Subcategories</a>
 
+    <a href="{{ route('item.create') }}" class="btn btn-primary mb-3">Add Expense Item</a>  <!-- Add button for adding items -->
+
     @if($items->isEmpty())
         <div class="alert alert-info">No expense items found.</div>
     @else
         <table class="table table-bordered">
-            <thead>
+            <thead style="background-color: black; color: white;">  <!-- Black background with white text -->
                 <tr>
                     <th>ID</th>
                     <th>Group</th>
