@@ -1,12 +1,12 @@
 @extends('nontechmanager/hostel/layout')
-
+@section('title','Items')
 @section('container')
 <div class="container">
     <h2>Expense Items</h2>
-    <a href="{{ route('subcategory.index') }}" class="btn btn-secondary mb-3">Back to Subcategories</a>
 
+    <div class="d-flex justify-content-end mb-3">
     <a href="{{ route('item.create') }}" class="btn btn-primary mb-3">Add Expense Item</a>  <!-- Add button for adding items -->
-
+    </div>
     @if($items->isEmpty())
         <div class="alert alert-info">No expense items found.</div>
     @else
@@ -26,11 +26,11 @@
                 @foreach($items as $item)
                     <tr>
                         <td>{{ $item->id }}</td>
-                        <td>{{ $item->groupid }}</td>
-                        <td>{{ $item->categoryid }}</td>
+                        <td>{{ $item->Group }}</td>
+                        <td>{{ $item->Category }}</td>
                         <td>{{ $item->subcategory }}</td>
-                        <td>{{ $item->name }}</td>
-                        <td>{{ $item->amount }}</td>
+                        <td>{{ $item->item }}</td>
+                        <td>{{ $item->quantity }}</td>
                         <td>
                             <a href="{{ route('item.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
                             <form action="{{ route('item.delete', $item->id) }}" method="POST" style="display: inline-block;">

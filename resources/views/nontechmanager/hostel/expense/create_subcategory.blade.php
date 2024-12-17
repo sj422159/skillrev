@@ -1,5 +1,5 @@
 @extends('nontechmanager/hostel/layout')
-
+@section('title','Subcategories')
 @section('container')
 <div class="container">
     <!-- Blue Header -->

@@ -1,5 +1,5 @@
 @extends('nontechmanager/hostel/layout')
-
+@section('title','Subcategories')
 @section('container')
 <div class="container">
     <h2>Expense Subcategories</h2>
@@ -12,7 +12,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
+              
                 <th>Group</th>
                 <th>Category</th>
                 <th>Subcategory</th>
@@ -22,7 +22,7 @@
         <tbody>
             @foreach($subcategories as $subcategory)
                 <tr>
-                    <td>{{ $subcategory->id }}</td>
+                    
                     <td>{{ $subcategory->group->Group ?? 'N/A' }}</td>
                     <td>{{ $subcategory->category->Category ?? 'N/A' }}</td>
                     <td>{{ $subcategory->subcategory }}</td>
