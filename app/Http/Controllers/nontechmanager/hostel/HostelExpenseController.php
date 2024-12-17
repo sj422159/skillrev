@@ -14,32 +14,76 @@ class HostelExpenseController extends Controller
 {
     public function index()
     {
+        // Fetch the NONTECH_MANAGER_ID and NONTECH_MANAGER_ADMIN_ID from the session
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
-    $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
-// Fetch the NONTECH_MANAGER_ID from the session
-$nontechManagerId = session()->get('NONTECH_MANAGER_ID');
-
-// Get the department_id based on the NONTECH_MANAGER_ID (you may need to join with users or departments table)
-$nontechManager = NonTechManager::findOrFail($nontechManagerId);
-$departmentId = $nontechManager->department_id; // Assuming this is available in the model
-
-// Fetch the category_id from the departments table based on department_id
-$department = Department::findOrFail($departmentId);
-$result['categoryId'] = $department->category_id;  // Assuming category_id is part of the department model
-
-    // Fetch the subcategories where `nontechmanagerid` and `aid` match the session values
-    $result['subcategories'] = expense_subcat::where('nontechmanagerid', $nontechManagerId)
-                                              ->where('aid', $nontechManagerAdminId)
-                                              ->get();
-        return view('nontechmanager.hostel.expense.index', $result);
+        $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    
+        // Check if the NONTECH_MANAGER_ID exists in the session
+        if (!$nontechManagerId) {
+            return redirect()->back()->with('error', 'Non-Tech Manager ID not found in session.');
+        }
+    
+        // Fetch the department_id for the Non-Tech Manager from the nontechmanagers table
+        $nontechManager = DB::table('nontechmanagers')->where('id', $nontechManagerId)->first();
+        if (!$nontechManager) {
+            return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+        }
+        $departmentId = $nontechManager->departmentid;
+    
+        // Fetch the category for the department from the departments table
+        $department = DB::table('departments')->where('id', $departmentId)->first();
+        if (!$department) {
+            return redirect()->back()->with('error', 'Department not found.');
+        }
+        $category = $department->category;
+    
+        // Determine the layout based on the department's category
+        switch ($category) {
+            case '1':
+                $layout = 'nontechmanager/transport/layout';
+                break;
+            case '2':
+                $layout = 'nontechmanager/infrastructure/layout';
+                break;
+            case '3':
+                $layout = 'nontechmanager/cafeteria/layout';
+                break;
+            case '4':
+                $layout = 'nontechmanager/hostel/layout';
+                break;
+            case '5':
+                $layout = 'nontechmanager/library/layout';
+                break;
+            default:
+                $layout = 'nontechmanager/hostel/layout';
+                break;
+        }
+    
+        // Fetch subcategories where `nontechmanagerid` and `aid` match the session values
+        $subcategories = expense_subcat::with(['group', 'category'])
+            ->where('nontechmanagerid', $nontechManagerId)
+            ->where('aid', $nontechManagerAdminId)
+            ->get();
+    
+        // Pass the data to the view along with the layout
+        return view('nontechmanager.hostel.expense.index', [
+            'category' => $category,
+            'subcategories' => $subcategories,
+            'layout' => $layout,
+        ]);
     }
-
     
 
-    public function subitem()
-    {$nontechManagerId = session()->get('NONTECH_MANAGER_ID');
+    
+    
+
+    public function subitem(Request $request) // Add Request parameter
+    {
+        // Fetch session data for NONTECH_MANAGER_ID and NONTECH_MANAGER_ADMIN_ID
+        $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
         $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
         
+        // Fetch items based on session data
         $items = DB::table('expense_item')
             ->join('expenses', 'expense_item.groupid', '=', 'expenses.id')
             ->join('expense_cat', 'expense_item.categoryid', '=', 'expense_cat.id')
@@ -54,11 +98,49 @@ $result['categoryId'] = $department->category_id;  // Assuming category_id is pa
             )
             ->get();
         
+        // Fetch the department_id for the Non-Tech Manager from the nontechmanagers table
+        $nontechManager = DB::table('nontechmanagers')->where('id', $nontechManagerId)->first();
+        if (!$nontechManager) {
+            return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+        }
+        $departmentId = $nontechManager->departmentid;
+     
+        // Fetch the category for the department from the departments table
+        $department = DB::table('departments')->where('id', $departmentId)->first();
+        if (!$department) {
+            return redirect()->back()->with('error', 'Department not found.');
+        }
+        $category = $department->category;
+     
+        // Determine the layout based on the department's category
+        switch ($category) {
+            case '1':
+                $layout = 'nontechmanager/transport/layout';
+                break;
+            case '2':
+                $layout = 'nontechmanager/infrastructure/layout';
+                break;
+            case '3':
+                $layout = 'nontechmanager/cafeteria/layout';
+                break;
+            case '4':
+                $layout = 'nontechmanager/hostel/layout';
+                break;
+            case '5':
+                $layout = 'nontechmanager/library/layout';
+                break;
+            default:
+                $layout = 'nontechmanager/hostel/layout';
+                break;
+        }
     
-    $request['items'] = $items; // Store $items in the request
-    
-    return view('nontechmanager.hostel.expense.subitem', $request);
+        // Pass data to the view
+        return view('nontechmanager.hostel.expense.subitem', [
+            'items' => $items,
+            'layout' => $layout
+        ]);
     }
+    
 
     public function createSubcategory($id = null)
     {
@@ -66,14 +148,12 @@ $result['categoryId'] = $department->category_id;  // Assuming category_id is pa
         $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
         
         // Fetching distinct groups filtered by nontechmanagerid and aid
-        $result['groups'] = expenses::where('expenses.nontechmanagerid', $nontechManagerId)
-            ->where('expenses.aid', $nontechManagerAdminId)
+        $result['groups'] = expenses::where('expenses.aid', $nontechManagerAdminId)
             ->distinct()
             ->get(['id', 'Group']);
         
         // Fetching distinct categories filtered by nontechmanagerid and aid
-        $result['categories'] = expense_cat::where('expense_cat.nontechmanagerid', $nontechManagerId)
-            ->where('expense_cat.aid', $nontechManagerAdminId)
+        $result['categories'] = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
             ->distinct()
             ->get(['id', 'Category']);
         
@@ -82,6 +162,10 @@ $result['categoryId'] = $department->category_id;  // Assuming category_id is pa
         } else {
             $result['subcategory'] = null;
         }
+
+
+
+
         
         return view('nontechmanager.hostel.expense.create_subcategory', $result);
     }
@@ -146,20 +230,18 @@ $result['categoryId'] = $department->category_id;  // Assuming category_id is pa
 $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
 
 
-$groups = expenses::where('expenses.nontechmanagerid', $nontechManagerId)
-    ->where('expenses.aid', $nontechManagerAdminId)
+$groups = expenses::where('expenses.aid', $nontechManagerAdminId)
     ->select('id', 'Group')
     ->distinct()
     ->get();
 
-$categories = expense_cat::where('expense_cat.nontechmanagerid', $nontechManagerId)
-    ->where('expense_cat.aid', $nontechManagerAdminId)
+$categories = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
     ->select('id', 'Category')
     ->distinct()
     ->get();
 
-$subcategories = expense_subcat::where('expense_subcat.nontechmanagerid', $nontechManagerId)
-    ->where('expense_subcat.aid', $nontechManagerAdminId)
+$subcategories = expense_subcat::where('expense_subcats.nontechmanagerid', $nontechManagerId)
+    ->where('expense_subcats.aid', $nontechManagerAdminId)
     ->select('id', 'subcategory')
     ->distinct()
     ->get();
