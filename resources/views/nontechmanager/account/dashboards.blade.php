@@ -89,25 +89,25 @@
             <!-- Expense Raised -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">{{ $totalCount }}</h3> <!-- Total Expenses Raised -->
+                    <h3 style="color: #fff" id="profiles">{{ $totalCount }}</h3>
                     <p>Expense Raised</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer" data-toggle="modal" data-target="#detailsModal">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
         
             <!-- Expense Validated -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">{{ $approvedCount }}</h3> <!-- Approved Expenses -->
+                    <h3 style="color: #fff" id="profiles">{{ $approvedCount }}</h3>
                     <p>Expense Validated</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer" data-toggle="modal" data-target="#detailsModal">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         
@@ -115,27 +115,64 @@
             <!-- Expense Rejected -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">{{ $rejectedCount }}</h3> <!-- Rejected Expenses -->
+                    <h3 style="color: #fff" id="profiles">{{ $rejectedCount }}</h3>
                     <p>Expense Rejected</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer" data-toggle="modal" data-target="#detailsModal">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
         
             <!-- Expense Approved -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">{{ $pendingCount }}</h3> <!-- Pending Expenses -->
+                    <h3 style="color: #fff" id="profiles">{{ $pendingCount }}</h3>
                     <p>Expense Approved</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer" data-toggle="modal" data-target="#detailsModal">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailsModalLabel">Select Module</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <select id="moduleDropdown" class="form-control">
+                            <option value="transport">Transport</option>
+                            <option value="hostel">Hostel</option>
+                            <option value="cafeteria">Cafeteria</option>
+                            <option value="asset">Asset</option>
+                            <option value="library">Library</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="goButton">Go</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            document.getElementById('goButton').addEventListener('click', function () {
+                const module = document.getElementById('moduleDropdown').value;
+                const baseUrl = '/account/manager/expenses/'; // Absolute path from the domain root
+                window.location.href = baseUrl + module;
+            });
+        </script>
+        
+        
           
 </div>
 @endsection
