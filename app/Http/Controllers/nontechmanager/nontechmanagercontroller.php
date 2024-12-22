@@ -241,51 +241,101 @@ class nontechmanagercontroller extends Controller{
         }elseif($department[0]->category==5){
             return view('nontechmanager.library.dashboard',$result);
         }
-        elseif($department[0]->category==6){
-            return view('nontechmanager.account.dashboards',$result);
+        elseif ($department[0]->category == 6) {
+            
+            $approvedCount = DB::table('expense_item')->where('status', 0)->where('aid', $aid)->count();  // status = 0 (approved)
+            $rejectedCount = DB::table('expense_item')->where('status', -1)->where('aid', $aid)->count(); // status = -1 (rejected)
+            $pendingCount = DB::table('expense_item')->where('status', 1)->where('aid', $aid)->count();   // status = 1 (pending)
+        
+            // Count the total number of expense raised (all IDs)
+            $totalCount = DB::table('expense_item')->where('aid', $aid)->count(); // Total records in expense_item table
+        
+            // Prepare the data to be passed to the view
+            $result['approvedCount'] = $approvedCount;
+            $result['rejectedCount'] = $rejectedCount;
+            $result['pendingCount'] = $pendingCount;
+            $result['totalCount'] = $totalCount;
+        
+            return view('nontechmanager.account.dashboards', $result);
         }
+        
        
         
        
     }
+public function profile(){
+    // Get the current NONTECH_MANAGER_ID from session
+    $sesid = session()->get('NONTECH_MANAGER_ID');
+    if (is_null($sesid)) {
+        session()->flash('error', 'Session ID is missing. Please log in again.');
+        return redirect('nontech/manager/login');
+    }
+ 
+    // Retrieve the data for the current non-tech manager
+    $model['data'] = nontechmanager::where('id', $sesid)->get();
 
-    public function profile(){
-        $sesid=session()->get('NONTECH_MANAGER_ID');
-        $model['data']=nontechmanager::where('id',$sesid)->get(); 
-        return view('nontechmanager.profile',$model);
+    // Determine the layout based on NONTECH_MANAGER_ID
+    $layout = null;
+    switch ($sesid) {
+        case 1:
+            $layout = 'nontechmanager/hostel/layout';
+            break;
+        case 2:
+            $layout = 'nontechmanager/asset/layout';
+            break;
+        case 3:
+            $layout = 'nontechmanager/cafeteria/layout';
+            break;
+        case 4:
+            $layout = 'nontechmanager/transport/layout';
+            break;
+        case 5:
+            $layout = 'nontechmanager/library/layout';
+            break;
+        case 7:
+            $layout = 'nontechmanager/account/layout';
+            break;
+        
     }
 
-    public function update(request $request){
-        $sesid=session()->get('NONTECH_MANAGER_ID');
-        $pwd=$request->post('npass');
-        $repwd=$request->post('cpass');
-        if($pwd!==$repwd){
-            session()->flash('error',"Password Are Not Matching");
+    // Pass the layout and model data to the view
+    return view('nontechmanager.profile', ['layout' => $layout, 'model' => $model]);
+}
+
+    public function update(Request $request)
+    {
+        $sesid = session()->get('NONTECH_MANAGER_ID');
+        $pwd = $request->post('npass');
+        $repwd = $request->post('cpass');
+        
+        if ($pwd !== $repwd) {
+            session()->flash('error', "Password Are Not Matching");
             return redirect('nontech/manager/profile');
         }
-
-       $model1=nontechmanager::find($sesid);
-
-       if(Hash::check($request->post('opass'),$model1->password)){
-
-        $model=nontechmanager::find($id);
-        if($pwd=='' && $repwd=='')
-        {
-        $model->password=Hash::make($request->post('opass'));
+    
+        $model1 = nontechmanager::find($sesid);
+    
+        if (Hash::check($request->post('opass'), $model1->password)) {
+    
+            // Here, we use the session ID ($sesid) to find the correct user record
+            $model = nontechmanager::find($sesid);
+            
+            if ($pwd == '' && $repwd == '') {
+                $model->password = Hash::make($request->post('opass'));
+            } else {
+                $model->password = Hash::make($request->post('npass'));
+            }
+            
+            $model->save();
+            
+            session()->flash('message', 'Profile Updated Successfully');
+            return redirect('nontech/manager/dashboard');
+        } else {
+            session()->flash('error', 'Old Password Not Matched');
+            return redirect('nontech/manager/profile');
         }
-        else{
-        $model->password=Hash::make($request->post('npass'));
-        }
-        $model->save();
-        session()->flash('message','Profile Updated Successfully');
-        return redirect('nontech/manager/dashboard');
-
-       }
-       else{
-        session()->flash('error','Old Password Not Matched');
-        return redirect('nontech/manager/profile');
-       }
     }
+    
 
     public function adddetails(Request $request,$id=""){
         $sesid=session()->get('NONTECH_MANAGER_ID');

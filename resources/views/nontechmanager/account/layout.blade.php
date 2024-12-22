@@ -152,209 +152,44 @@
 
          
             <li class="nav-item">
-              <a href="#" class="nav-link @yield('manage_select')">
+              <a href="{{ route('account.manager.expenses', 'transport') }}" class="nav-link @yield('manage_select')">
                 <i class="nav-icon fas fa-bookmark"></i>
                 <p>
                   Transport 
-                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Raised</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Validated </p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Approved</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Rejected</p>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link @yield('manage_select')">
+              <a href="{{ route('account.manager.expenses', 'hostel') }}" class="nav-link @yield('manage_select')">
                 <i class="nav-icon fas fa-bookmark"></i>
                 <p>
                   Hostel Manager 
-                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Raised</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Validated </p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Approved</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Rejected</p>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link @yield('manage_select')">
+              <a href="{{ route('account.manager.expenses', 'asset') }}" class="nav-link @yield('manage_select')">
                 <i class="nav-icon fas fa-bookmark"></i>
                 <p>
                  Asset Manager
-                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Raised</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Validated </p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Approved</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Rejected</p>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link @yield('manage_select')">
+              <a href="{{ route('account.manager.expenses', 'cafeteria') }}" class="nav-link @yield('manage_select')">
                 <i class="nav-icon fas fa-bookmark"></i>
                 <p>
                   Cafetria Manager 
-                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Raised</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Validated </p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Approved</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Rejected</p>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link @yield('manage_select')">
+              <a href="{{ route('account.manager.expenses', 'library') }}" class="nav-link @yield('manage_select')">
                 <i class="nav-icon fas fa-bookmark"></i>
                 <p>
                   Library Manager 
-                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Raised</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Validated </p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Approved</p>
-                  </a>
-                </li>
-              </ul>
-              <ul class="nav nav-treeview" style="display: none;">
-                <li class="nav-item">
-                  <a href="#" class="nav-link" class="nav-link @yield('report_select')">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Expense Rejected</p>
-                  </a>
-                </li>
-              </ul>
             </li>
 
           

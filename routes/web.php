@@ -183,7 +183,7 @@ use App\Http\Controllers\controller\account\Feescontroller;
 use App\Http\Controllers\controller\account\Feesanalyticcontroller;
 
 use App\Http\Controllers\nontechmanager\hostel\HostelExpenseController;
-
+use App\Http\Controllers\nontechmanager\account\accountexpensecontroller;
 
 Route::get('corporateadmin/login',[corporateadminauthcontroller::class ,'login']);
 Route::post('corporateadmin/login/save',[corporateadminauthcontroller::class,'logincheck']);
@@ -2078,3 +2078,10 @@ Route::get('controller/profile',[AcademicController::class,'profile']);
 Route::post('controller/profile/processing',[AcademicController::class,'update']);
 Route::get('/expense-item/edit/{id}', [HostelExpenseController::class, 'create_item'])->name('item.edit');
 Route::delete('/nontech/manager/hostel/expense/items/{id}', [HostelExpenseController::class, 'destroy_item'])->name('item.delete');
+
+
+Route::prefix('account/manager')->group(function () {
+    Route::get('/', [nontechmanagercontroller::class, 'dashboaard'])->name('account.manager.index');
+    Route::get('/expenses/{module}', [accountexpensecontroller::class, 'showExpenses'])->name('account.manager.expenses');
+    Route::patch('/expense/update-status/{id}', [accountexpensecontroller::class, 'updateStatus'])->name('expense.updateStatus');
+});

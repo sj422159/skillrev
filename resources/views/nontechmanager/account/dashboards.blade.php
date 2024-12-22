@@ -86,20 +86,23 @@
         </div>
       
         <div class="col-lg-4 col-8">
+            <!-- Expense Raised -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">0</h3>
+                    <h3 style="color: #fff" id="profiles">{{ $totalCount }}</h3> <!-- Total Expenses Raised -->
                     <p>Expense Raised</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
-                </div>                
+                </div>
                 <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
+        
+            <!-- Expense Validated -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">0</h3>
-                    <p>Expense Validated </p>
+                    <h3 style="color: #fff" id="profiles">{{ $approvedCount }}</h3> <!-- Approved Expenses -->
+                    <p>Expense Validated</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
@@ -107,21 +110,24 @@
                 <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
-     
+        
         <div class="col-lg-4 col-8">
+            <!-- Expense Rejected -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">0</h3>
+                    <h3 style="color: #fff" id="profiles">{{ $rejectedCount }}</h3> <!-- Rejected Expenses -->
                     <p>Expense Rejected</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
-                </div>                
+                </div>
                 <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
+        
+            <!-- Expense Approved -->
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
-                    <h3 style="color: #fff" id="profiles">0</h3>
+                    <h3 style="color: #fff" id="profiles">{{ $pendingCount }}</h3> <!-- Pending Expenses -->
                     <p>Expense Approved</p>
                 </div>
                 <div class="icon">
@@ -129,6 +135,7 @@
                 </div>
                 <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
-        </div>     
+        </div>
+          
 </div>
 @endsection
