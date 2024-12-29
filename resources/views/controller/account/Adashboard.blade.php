@@ -151,40 +151,39 @@ p {
         <div class="col-lg-4 col-8">
             <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
                 <div class="inner">
-                    <h3 style="color: #fff">0</h3>
+                    <h3 style="color: #fff">{{ $approvedCount }}</h3>
                     <p>Expenses Approved</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i
+                <a href="/account/controller/expenses/approve" class="small-box-footer">More Details<i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
-
         </div>
         <div class="col-lg-4 col-8">
             <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
                 <div class="inner">
-                    <h3 style="color: #fff">0</h3>
+                    <h3 style="color: #fff">{{ $validatecount }}</h3>
                     <p>Expenses Validated</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i
+                <a href="/account/controller/expenses/validate" class="small-box-footer">More Details<i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="col-lg-4 col-8">
             <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
                 <div class="inner">
-                    <h3 style="color: #fff">0</h3>
+                    <h3 style="color: #fff">{{ $totalCount }}</h3>
                     <p>Expenses Raised</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i
+                <a href="/account/controller/expenses/raised" class="small-box-footer">More Details<i
                         class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>

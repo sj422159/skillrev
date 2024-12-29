@@ -142,16 +142,7 @@
                 </div>                
                 <a href="{{url('nontech/manager/food/category')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
-            <div class="small-box bg-info" style="background-image:linear-gradient(to right,red,orange);">
-                <div class="inner">
-                    <h3 style="color: #fff" id="profiles">0</h3>
-                    <p>TBD </p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
-            </div>
+            
         </div>
          <div class="col-lg-4 col-8">
             <div class="small-box bg-info" style="background-image:linear-gradient(to right,red,orange);">
@@ -164,16 +155,7 @@
                 </div>                
                 <a href="{{url('nontech/manager/food/items')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
-            <div class="small-box bg-info" style="background-image:linear-gradient(to right,red,orange);">
-                <div class="inner">
-                    <h3 style="color: #fff" id="profiles">0</h3>
-                    <p>TBD </p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
-            </div>
+           
         </div>
          <div class="col-lg-4 col-8">
             <div class="small-box bg-info" style="background-image:linear-gradient(to right,red,orange);">
@@ -186,16 +168,49 @@
                 </div>                
                 <a href="{{url('nontech/manager/food/caterer')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
-            <div class="small-box bg-info" style="background-image:linear-gradient(to right,red,orange);">
+            
+        </div>
+        <div class="col-lg-4 col-8">
+            <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
                 <div class="inner">
                     <h3 style="color: #fff" id="profiles">0</h3>
-                    <p>TBD </p>
+                    <p>Indent Delivered</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{url('nontech/manager/hostel/bedallocation')}}" class="small-box-footer">More Details<i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
+
+        </div>
+        <div class="col-lg-4 col-8">
+            <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
+                <div class="inner">
+                    <h3 style="color: #fff" id="profiles">{{$expenseapproved}}</h3>
+                    <p>Expense Approved</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{{url('nontech/manager/raise/expense/approve')}}" class="small-box-footer">More Details<i
+                        class="fas fa-arrow-circle-right"></i></a>
+            </div>
+
+        </div>
+        <div class="col-lg-4 col-8">
+            <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
+                <div class="inner">
+                    <h3 style="color: #fff" id="profiles">{{$expenseraised}}</h3>
+                    <p>Expense Raised</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{{url('nontech/manager/raise/expense')}}" class="small-box-footer">More Details<i
+                        class="fas fa-arrow-circle-right"></i></a>
+            </div>
+
         </div>
       
              

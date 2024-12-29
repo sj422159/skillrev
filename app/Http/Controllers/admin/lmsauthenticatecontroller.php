@@ -19,7 +19,7 @@ class lmsauthenticatecontroller extends Controller
         return view("index",$result);
     }
     public function index(request $request){
-        $result['schools']=DB::table('admins')->get();
+        $result['schools']=DB::table('admins')->where('status',1)->get();
         $result['event']=DB::table('homepages')->where('id',1)->get();
         $result['stats']=DB::table('stats')->where('id',1)->get();
         $result['data']=DB::table('steps')->where('id',1)->get();
@@ -52,17 +52,29 @@ class lmsauthenticatecontroller extends Controller
         return view('officer',$result);
     }
 
-    public function contact(Request $request){
-      $data=['name'=>$request->name,'email'=>$request->email,'phone'=>$request->phone,'messages'=>$request->message];
-       $user['to']='support@skillrevelation.com';
-       Mail::send('mail.mail',$data,function($messages) use ($user){
+    public function contact(Request $request)
+{
+
+    $data = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'school_name' => $request->school_name, // New field
+        'messages' => $request->message,
+    ];
+    dd($data);
+    $user['to'] = 'support@skillrevelation.com';
+
+    Mail::send('mail.mail', $data, function($messages) use ($user) {
         $messages->to($user['to']);
         $messages->subject('SMS People Contacted');
-       });
+    });
 
-        $request->session()->flash('message','Message Sent Succesfully');
-        return redirect('/');
-    }
+    $request->session()->flash('message', 'Message Sent Successfully');
+
+    return redirect('/');
+}
+
 
     public function internalcontact(Request $request){
       $data=['name'=>$request->name,'email'=>$request->email,'phone'=>$request->phone,'messages'=>$request->message];

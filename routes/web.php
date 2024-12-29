@@ -2085,3 +2085,21 @@ Route::prefix('account/manager')->group(function () {
     Route::get('/expenses/{module}', [accountexpensecontroller::class, 'showExpenses'])->name('account.manager.expenses');
     Route::patch('/expense/update-status/{id}', [accountexpensecontroller::class, 'updateStatus'])->name('expense.updateStatus');
 });
+
+
+
+Route::get('/nontech/manager/raise/expense', [HostelExpenseController::class, 'showRaisedExpenses'])->name('expense.raised_expenses');
+Route::get('/nontech/manager/raise/expense/approve', [HostelExpenseController::class, 'showapprovedRaisedExpenses'])->name('expense.approved_expenses');
+Route::get('/nontech/manager/raise/raise_expense', [HostelExpenseController::class, 'showRaiseExpenseForm'])->name('nontech.manager.raise.raise_expense');
+Route::post('/nontech/manager/raise/store_expense', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
+Route::delete('nontech/manager/raise/delete-expense/{id}', [HostelExpenseController::class, 'destroyraise'])->name('nontech.manager.raise.delete_expense');
+Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
+Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'showRaiseExpenseForm'])->name('nontech.manager.raise.editraise_expense');
+Route::post('/nontech/manager/raise/update_expense/{id}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.update_expense');
+
+
+
+Route::post('/account/controller/expenses/validate/approve', [accountexpensecontroller::class, 'approveExpense'])->name('expenses.approveAction');
+Route::post('/account/controller/expenses/validate/reject', [accountexpensecontroller::class, 'rejectExpense'])->name('expenses.rejectAction');
+Route::get('/account/controller/expenses/{type}', [accountexpensecontroller::class, 'showExpensesByType'])
+    ->name('expenses.type');

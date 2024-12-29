@@ -128,6 +128,16 @@ class nontechmanagercontroller extends Controller{
                         ->where('students.aid',$aid)
                         ->select('students.*','distances.location','busroutes.busroute')
                         ->get();
+                        $result['expenseraised'] = DB::table('exp_raise')
+                        ->where('nontechmanagerid', $sesid)
+                        ->where('status', 0)
+                        ->orwhere('status', -1)
+                        ->count();
+                        $result['expenseapproved'] = DB::table('exp_raise')
+                        ->where('nontechmanagerid', $sesid)
+                        ->where('status', 2)
+                        ->count();
+            
             return view('nontechmanager.transport.dashboard',$result);
         }elseif($department[0]->category==2){
             $result['groups']=DB::table('infragroups')->where('aid',$aid)->get();
@@ -140,7 +150,7 @@ class nontechmanagercontroller extends Controller{
                          ->where('schoolitems.aid',$aid)
                          ->select('schoolitems.*','categories.categories','lmssections.section','infraitems.infraitem')->get();
                  $result['groups'][$i]->count=count($school);
-
+                
                 }else if($result['groups'][$i]->category=="2"){
                     $hostel=DB::table('hostelitems')
                          ->join('hostels','hostelitems.hostelid','hostels.id')
@@ -149,6 +159,7 @@ class nontechmanagercontroller extends Controller{
                          ->where('hostelitems.mid',$sesid)
                          ->select('hostelitems.*','hostels.hostel','hostelrooms.roomname','infraitems.infraitem')->get();
                          $result['groups'][$i]->count=count($hostel);
+                        
 
                 }else if($result['groups'][$i]->category=="3"){
                     $cafeteria=DB::table('cafeteria_items')
@@ -159,9 +170,19 @@ class nontechmanagercontroller extends Controller{
                            ->where('cafeteria_items.mid',$sesid)
                          ->select('cafeteria_items.*','cafeteriatype.ctype','cafeterias.cafeteria','infraitems.infraitem')->get();;
                          $result['groups'][$i]->count=count($cafeteria);
+                        
                 }else{
                       $result['groups'][$i]->count=0;
                 }
+                $result['expenseraised'] = DB::table('exp_raise')
+                ->where('nontechmanagerid', $sesid)
+                ->where('status', 0)
+                ->orwhere('status', -1)
+                ->count();
+                $result['expenseapproved'] = DB::table('exp_raise')
+                ->where('nontechmanagerid', $sesid)
+                ->where('status', 2)
+                ->count();
             }
             return view('nontechmanager.infrastructure.dashboard',$result);
         }elseif($department[0]->category==3){
@@ -209,6 +230,15 @@ class nontechmanagercontroller extends Controller{
                                    ->join('cafeteriatype','vendors.cafeteriatype','cafeteriatype.id')
                                    ->where('aid',$aid)->where('mid',$sesid)->select('vendors.*','cafeteriatype.ctype')->get();;
             $result['foodcaterer']=count($foodcaterer);
+            $result['expenseraised'] = DB::table('exp_raise')
+            ->where('nontechmanagerid', $sesid)
+            ->where('status', 0)
+            ->orwhere('status', -1)
+            ->count();
+            $result['expenseapproved'] = DB::table('exp_raise')
+            ->where('nontechmanagerid', $sesid)
+            ->where('status', 2)
+            ->count();
 
             return view('nontechmanager.cafeteria.dashboard',$result);
         }elseif($department[0]->category==4){
@@ -237,24 +267,39 @@ class nontechmanagercontroller extends Controller{
              ->select('hostelmenus.*','fooditems.fooditems','foodcategories.foodcategory')
              ->get();
             $result['food']=count($food);
+            $result['expenseraised'] = DB::table('exp_raise')
+            ->where('nontechmanagerid', $sesid)
+            ->where('status', 0)->orwhere('status', -1)
+            ->count();
+            $result['expenseapproved'] = DB::table('exp_raise')
+            ->where('nontechmanagerid', $sesid)
+            ->where('status', 2)
+            ->count();
             return view('nontechmanager.hostel.dashboard',$result);
         }elseif($department[0]->category==5){
+            $result['expenseraised'] = DB::table('exp_raise')
+            ->where('nontechmanagerid', $sesid)
+            ->where('status', 0)->orwhere('status', -1)
+            ->count();
+            $result['expenseapproved'] = DB::table('exp_raise')
+            ->where('nontechmanagerid', $sesid)
+            ->where('status', 2)
+            ->count();
             return view('nontechmanager.library.dashboard',$result);
         }
         elseif ($department[0]->category == 6) {
             
-            $approvedCount = DB::table('expense_item')->where('status', 0)->where('aid', $aid)->count();  // status = 0 (approved)
-            $rejectedCount = DB::table('expense_item')->where('status', -1)->where('aid', $aid)->count(); // status = -1 (rejected)
-            $pendingCount = DB::table('expense_item')->where('status', 1)->where('aid', $aid)->count();   // status = 1 (pending)
-        
-            // Count the total number of expense raised (all IDs)
-            $totalCount = DB::table('expense_item')->where('aid', $aid)->count(); // Total records in expense_item table
+            $approvedCount = DB::table('exp_raise')->where('status', 2)->where('aid', $aid)->count();  // status = 2 (approved)
+            $rejectedCount = DB::table('exp_raise')->where('status', -1)->where('aid', $aid)->count(); // status = -1 (rejected)
+            $validatecount = DB::table('exp_raise')->where('status', 1)->where('aid', $aid)->count();   // status = 1 (pending)
+            $totalCount = DB::table('exp_raise')->where('status', 0)->where('aid', $aid)->count(); // Total records in expense_item table
         
             // Prepare the data to be passed to the view
             $result['approvedCount'] = $approvedCount;
             $result['rejectedCount'] = $rejectedCount;
-            $result['pendingCount'] = $pendingCount;
+            $result['validatecount'] = $validatecount;
             $result['totalCount'] = $totalCount;
+         
         
             return view('nontechmanager.account.dashboards', $result);
         }

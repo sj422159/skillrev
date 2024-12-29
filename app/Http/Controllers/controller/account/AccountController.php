@@ -16,10 +16,22 @@ class AccountController extends Controller
     public function accountDashboard()
     {
         $controller_id=session()->get('Controller_ID');
+        if (!$controller_id) {
+            return redirect()->route('login')->withErrors('Controller ID is not set. Please log in.');
+        }
+        $aid=session()->get('Controller_ADMIN_ID');
 
         $result['image']=controllers::where('id',$controller_id)->get();
+        $approvedCount = DB::table('exp_raise')->where('status', 2)->where('aid', $aid)->count();  // status = 2 (approved)
+        $rejectedCount = DB::table('exp_raise')->where('status', -1)->where('aid', $aid)->count(); // status = -1 (rejected)
+        $validatecount = DB::table('exp_raise')->where('status', 1)->where('aid', $aid)->count();   // status = 1 (pending)
+        $totalCount = DB::table('exp_raise')->where('status', 0)->where('aid', $aid)->count(); // Total records in expense_item table
 
-    
+        $result['approvedCount'] = $approvedCount;
+        $result['rejectedCount'] = $rejectedCount;
+        $result['validatecount'] = $validatecount;
+        $result['totalCount'] = $totalCount;
+
         return view('controller.account.Adashboard',$result);
     }
 

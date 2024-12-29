@@ -18,7 +18,7 @@
                     <th>Category</th>
                     <th>Subcategory</th>
                     <th>Item Name</th>
-                    <th>Amount</th>
+                    <th>Quantity Measure</th>
                     <th>Actions</th>
                 </tr>
             </thead>

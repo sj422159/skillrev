@@ -1,4 +1,4 @@
-@extends('nontechmanager/hostel/layout')
+@extends($layout)
 @section('title','Items')
 @section('container')
 <div class="container mt-4">
@@ -95,9 +95,9 @@
         
                 <!-- Quantity -->
                 <div class="col-md-6">
-                    <label for="quantity" class="form-label">Quantity</label>
+                    <label for="quantity" class="form-label">Quantity Measure</label>
                     <input type="text" class="form-control" id="amount" name="amount" 
-                        value="{{ old('quantity', $item->quantity ?? '') }}" placeholder="Enter quantity" required>
+                        value="{{ old('quantity', $item->quantity ?? '') }}" placeholder="Enter quantity Measure(kg,L,etc)" required>
                 </div>
             </div>
         

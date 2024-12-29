@@ -3,10 +3,12 @@ namespace App\Http\Controllers\nontechmanager\hostel;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\expense_item; // Correct model
-use App\Models\expenses;     // Correct model
-use App\Models\expense_cat;  // Correct model
-use App\Models\expense_subcat; // Correct model
+use App\Models\expense_item;
+use App\Models\ExpenseItem;
+use App\Models\expenses;     
+use App\Models\expense_cat;  
+use App\Models\expense_subcat; 
+use App\Models\ExpenseRaise; 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -14,30 +16,24 @@ class HostelExpenseController extends Controller
 {
     public function index()
     {
-        // Fetch the NONTECH_MANAGER_ID and NONTECH_MANAGER_ADMIN_ID from the session
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
         $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
-    
-        // Check if the NONTECH_MANAGER_ID exists in the session
+
         if (!$nontechManagerId) {
             return redirect()->back()->with('error', 'Non-Tech Manager ID not found in session.');
         }
-    
-        // Fetch the department_id for the Non-Tech Manager from the nontechmanagers table
+
         $nontechManager = DB::table('nontechmanagers')->where('id', $nontechManagerId)->first();
         if (!$nontechManager) {
             return redirect()->back()->with('error', 'Non-Tech Manager not found.');
         }
         $departmentId = $nontechManager->departmentid;
-    
-        // Fetch the category for the department from the departments table
+
         $department = DB::table('departments')->where('id', $departmentId)->first();
         if (!$department) {
             return redirect()->back()->with('error', 'Department not found.');
         }
         $category = $department->category;
-    
-        // Determine the layout based on the department's category
         switch ($category) {
             case '1':
                 $layout = 'nontechmanager/transport/layout';
@@ -58,14 +54,12 @@ class HostelExpenseController extends Controller
                 $layout = 'nontechmanager/hostel/layout';
                 break;
         }
-    
-        // Fetch subcategories where `nontechmanagerid` and `aid` match the session values
+
         $subcategories = expense_subcat::with(['group', 'category'])
             ->where('nontechmanagerid', $nontechManagerId)
             ->where('aid', $nontechManagerAdminId)
             ->get();
-    
-        // Pass the data to the view along with the layout
+
         return view('nontechmanager.hostel.expense.index', [
             'category' => $category,
             'subcategories' => $subcategories,
@@ -77,13 +71,12 @@ class HostelExpenseController extends Controller
     
     
 
-    public function subitem(Request $request) // Add Request parameter
+    public function subitem(Request $request) 
     {
-        // Fetch session data for NONTECH_MANAGER_ID and NONTECH_MANAGER_ADMIN_ID
+  
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
         $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
-        
-        // Fetch items based on session data
+
         $items = DB::table('expense_item')
             ->join('expenses', 'expense_item.groupid', '=', 'expenses.id')
             ->join('expense_cat', 'expense_item.categoryid', '=', 'expense_cat.id')
@@ -146,13 +139,14 @@ class HostelExpenseController extends Controller
     {
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
         $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
-        
-        // Fetching distinct groups filtered by nontechmanagerid and aid
+                if (!$nontechManagerId) {
+            return redirect()->back()->with('error', 'Non-Tech Manager ID not found in session.');
+        }
+
         $result['groups'] = expenses::where('expenses.aid', $nontechManagerAdminId)
             ->distinct()
             ->get(['id', 'Group']);
-        
-        // Fetching distinct categories filtered by nontechmanagerid and aid
+
         $result['categories'] = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
             ->distinct()
             ->get(['id', 'Category']);
@@ -163,10 +157,38 @@ class HostelExpenseController extends Controller
             $result['subcategory'] = null;
         }
 
+        $nontechManager = DB::table('nontechmanagers')->where('id', $nontechManagerId)->first();
+        if (!$nontechManager) {
+            return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+        }
+        $departmentId = $nontechManager->departmentid;
 
+        $department = DB::table('departments')->where('id', $departmentId)->first();
+        if (!$department) {
+            return redirect()->back()->with('error', 'Department not found.');
+        }
+        $category = $department->category;
+        switch ($category) {
+            case '1':
+               $result['layout'] = 'nontechmanager/transport/layout';
+                break;
+            case '2':
+               $result['layout'] = 'nontechmanager/infrastructure/layout';
+                break;
+            case '3':
+               $result['layout'] = 'nontechmanager/cafeteria/layout';
+                break;
+            case '4':
+               $result['layout'] = 'nontechmanager/hostel/layout';
+                break;
+            case '5':
+               $result['layout'] = 'nontechmanager/library/layout';
+                break;
+            default:
+                $result['layout'] = 'nontechmanager/hostel/layout';
+                break;
+        }
 
-
-        
         return view('nontechmanager.hostel.expense.create_subcategory', $result);
     }
 
@@ -227,32 +249,63 @@ class HostelExpenseController extends Controller
     public function create_item(Request $request, $id = null)
     {
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
-$nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
 
 
-$groups = expenses::where('expenses.aid', $nontechManagerAdminId)
+    $groups = expenses::where('expenses.aid', $nontechManagerAdminId)
     ->select('id', 'Group')
     ->distinct()
     ->get();
 
-$categories = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
+    $categories = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
     ->select('id', 'Category')
     ->distinct()
     ->get();
 
-$subcategories = expense_subcat::where('expense_subcats.nontechmanagerid', $nontechManagerId)
+    $subcategories = expense_subcat::where('expense_subcats.nontechmanagerid', $nontechManagerId)
     ->where('expense_subcats.aid', $nontechManagerAdminId)
     ->select('id', 'subcategory')
     ->distinct()
     ->get();
 
         $item = $id ? expense_item::find($id) : null;
-    
+        $nontechManager = DB::table('nontechmanagers')->where('id', $nontechManagerId)->first();
+        if (!$nontechManager) {
+            return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+        }
+        $departmentId = $nontechManager->departmentid;
+
+        $department = DB::table('departments')->where('id', $departmentId)->first();
+        if (!$department) {
+            return redirect()->back()->with('error', 'Department not found.');
+        }
+        $category = $department->category;
+        switch ($category) {
+            case '1':
+               $layout = 'nontechmanager/transport/layout';
+                break;
+            case '2':
+               $layout = 'nontechmanager/infrastructure/layout';
+                break;
+            case '3':
+               $layout = 'nontechmanager/cafeteria/layout';
+                break;
+            case '4':
+               $layout = 'nontechmanager/hostel/layout';
+                break;
+            case '5':
+               $layout = 'nontechmanager/library/layout';
+                break;
+            default:
+                $layout = 'nontechmanager/hostel/layout';
+                break;
+        }
         return view('nontechmanager.hostel.expense.create_item', [
             'groups' => $groups,
             'categories' => $categories,
             'subcategories' => $subcategories,
             'item' => $item, 
+            'layout' => $layout, 
         ]);
     }
     
@@ -260,14 +313,10 @@ $subcategories = expense_subcat::where('expense_subcats.nontechmanagerid', $nont
 
     public function store_item(Request $request)
     {
-        // Fetch session data for `aid` and `nontechmanagerid`
+
         $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
         $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
         
-        // Debug: Check the id being passed
-        // dd($request->route('id'));
-    
-        // Check if the 'id' is present in the request to decide whether to create or update
         if ($request->route('id') != null) {
             $expenseItem = expense_item::findOrFail($request->route('id'));
             $message = 'Expense item updated successfully.';
@@ -304,6 +353,216 @@ $subcategories = expense_subcat::where('expense_subcats.nontechmanagerid', $nont
 
     return redirect()->route('expense.subitems')->with('success', 'Expense item deleted successfully.');
 }
+    
+public function showRaisedExpenses()
+{
 
+    $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
+
+           $nontechManager = DB::table('nontechmanagers')->where('id', $nontechmanagerid)->first();
+           if (!$nontechManager) {
+               return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+           }
+           $departmentId = $nontechManager->departmentid;
+
+    $department = DB::table('departments')->where('id', $departmentId)->first();
+    if (!$department) {
+        return redirect()->back()->with('error', 'Department not found.');
+    }
+    $category = $department->category;
+
+    switch ($category) {
+        case '1':
+            $layout = 'nontechmanager/transport/layout';
+            break;
+        case '2':
+            $layout = 'nontechmanager/infrastructure/layout';
+            break;
+        case '3':
+            $layout = 'nontechmanager/cafeteria/layout';
+            break;
+        case '4':
+            $layout = 'nontechmanager/hostel/layout';
+            break;
+        case '5':
+            $layout = 'nontechmanager/library/layout';
+            break;
+        default:
+            $layout = 'nontechmanager/hostel/layout';
+            break;
+    }
+
+    $raisedExpenses = ExpenseRaise::with(['group', 'category', 'subcategory', 'item'])
+        ->where('aid', $aid)->where('nontechmanagerid', $nontechmanagerid)->where('status',0)->orwhere('status',-1)
+        ->get();
+      
+
+    return view('nontechmanager.hostel.expense.expense_list', compact('raisedExpenses','layout'));
+}
+public function showapprovedRaisedExpenses()
+{
+
+    $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
+
+    $nontechManager = DB::table('nontechmanagers')->where('id', $nontechmanagerid)->first();
+           if (!$nontechManager) {
+               return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+           }
+           $departmentId = $nontechManager->departmentid;
+        
+           // Fetch the category for the department from the departments table
+    $department = DB::table('departments')->where('id', $departmentId)->first();
+    if (!$department) {
+        return redirect()->back()->with('error', 'Department not found.');
+    }
+    $category = $department->category;
+
+    // Determine the layout based on the department's category
+    switch ($category) {
+        case '1':
+            $layout = 'nontechmanager/transport/layout';
+            break;
+        case '2':
+            $layout = 'nontechmanager/infrastructure/layout';
+            break;
+        case '3':
+            $layout = 'nontechmanager/cafeteria/layout';
+            break;
+        case '4':
+            $layout = 'nontechmanager/hostel/layout';
+            break;
+        case '5':
+            $layout = 'nontechmanager/library/layout';
+            break;
+        default:
+            $layout = 'nontechmanager/hostel/layout';
+            break;
+    }
+
+    $raisedExpenses = ExpenseRaise::with(['group', 'category', 'subcategory', 'item'])
+        ->where('aid', $aid)->where('nontechmanagerid', $nontechmanagerid)->where('status',2)
+        ->get();
+
+    return view('nontechmanager.hostel.expense.expense_list', compact('raisedExpenses','layout'));
+}
+
+    
+public function showRaiseExpenseForm(Request $request, $id = null)
+{
+    $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
+   
+       // Fetch the department_id for the Non-Tech Manager from the nontechmanagers table
+       $nontechManager = DB::table('nontechmanagers')->where('id', $nontechmanagerid)->first();
+       if (!$nontechManager) {
+           return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+       }
+       $departmentId = $nontechManager->departmentid;
+    
+       // Fetch the category for the department from the departments table
+    $department = DB::table('departments')->where('id', $departmentId)->first();
+    if (!$department) {
+        return redirect()->back()->with('error', 'Department not found.');
+    }
+    $category = $department->category;
+
+    // Determine the layout based on the department's category
+    switch ($category) {
+        case '1':
+            $result['layout'] = 'nontechmanager/transport/layout';
+            break;
+        case '2':
+            $result['layout'] = 'nontechmanager/infrastructure/layout';
+            break;
+        case '3':
+            $result['layout'] = 'nontechmanager/cafeteria/layout';
+            break;
+        case '4':
+            $result['layout'] = 'nontechmanager/hostel/layout';
+            break;
+        case '5':
+            $result['layout'] = 'nontechmanager/library/layout';
+            break;
+        default:
+            $result['layout'] = 'nontechmanager/hostel/layout';
+            break;
+    }
+
+    // Fetch dropdown data filtered by aid
+    $result['groups'] = expenses::where('aid', $aid)->get();
+    $result['categories'] = expense_cat::where('aid', $aid)->pluck('Category', 'id');
+    $result['subcategories'] = expense_subcat::where('nontechmanagerid', $nontechmanagerid)->pluck('subcategory', 'id');
+    $result['items'] = ExpenseItem::where('nontechmanagerid', $nontechmanagerid)->pluck('item', 'id');
+    $result['quantity_measures'] = ExpenseItem::where('nontechmanagerid', $nontechmanagerid)->distinct()->pluck('quantity');
+   
+    // If an id is provided, fetch the existing expense data
+    if ($id) {
+        $result['expense'] = ExpenseRaise::with(['group', 'category', 'subcategory', 'item'])
+            ->where('aid', $aid)
+            ->findOrFail($id);
+    }
+
+    // Return the view with data
+    return view('nontechmanager.hostel.expense.raised_expenses', $result);
+}
+
+
+    
+ 
+public function storeRaisedExpense(Request $request, $id = null)
+{
+    $validated = $request->validate([
+        'group' => 'required|exists:expenses,id',
+        'category' => 'required|exists:expense_cat,id',
+        'subcategory' => 'required|exists:expense_subcats,id',
+        'item' => 'required|exists:expense_item,id',
+        'quantity_measure' => 'required|string|max:255',
+        'quantity' => 'required|string|max:255',
+    ]);
+
+    $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
+
+    $quantity_with_measure = $validated['quantity'] . '_' . $validated['quantity_measure'];
+
+    if ($id) {
+        $expense = ExpenseRaise::findOrFail($id);
+        $expense->update([
+            'aid' => $aid,
+            'nontechmanagerid' => $nontechmanagerid,
+            'groupid' => $validated['group'],
+            'categoryid' => $validated['category'],
+            'subcatid' => $validated['subcategory'],
+            'itemid' => $validated['item'],
+            'quantity' => $quantity_with_measure,
+            'status' => 0,
+        ]);
+       
+        return redirect()->route('expense.raised_expenses')->with('success', 'Expense updated successfully!');
+    } else {
+        // Create a new expense item
+        ExpenseRaise::create([
+            'aid' => $aid,
+            'nontechmanagerid' => $nontechmanagerid,
+            'groupid' => $validated['group'],
+            'categoryid' => $validated['category'],
+            'subcatid' => $validated['subcategory'],
+            'itemid' => $validated['item'],
+            'quantity' => $quantity_with_measure,
+        ]);
+        return redirect()->route('expense.raised_expenses')->with('success', 'Expense raised successfully!');
+    }
+}
+
+   public function destroyraise($id)
+    {
+    $expense = ExpenseRaise::findOrFail($id);
+    $expense->delete();
+
+    return redirect()->back()
+        ->with('success', 'Expense deleted successfully');
+    }
     
 }

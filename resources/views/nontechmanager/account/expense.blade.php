@@ -57,12 +57,10 @@
                     <td>{{ $item->group->Group ?? 'N/A' }}</td>
                     <td>{{ $item->category->Category ?? 'N/A' }}</td>
                     <td>{{ $item->subcategory->subcategory ?? 'N/A' }}</td>
-                    <td>{{ $item->item }}</td>
+                    <td>{{ $item->item->item }}</td>
                     <td>{{ $item->quantity }}</td>
                     <td>
-                        <!-- Action Buttons based on status -->
                         @if ($item->status == 1)
-                            <!-- Show Reject button only if status is 1 -->
                             <form action="{{ route('expense.updateStatus', $item->id) }}" method="POST">
                                 @csrf
                                 @method('PATCH')

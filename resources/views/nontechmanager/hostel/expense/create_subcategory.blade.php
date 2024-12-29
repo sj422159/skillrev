@@ -1,4 +1,4 @@
-@extends('nontechmanager/hostel/layout')
+@extends($layout)
 @section('title','Subcategories')
 @section('container')
 <div class="container">

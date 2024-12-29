@@ -18,7 +18,11 @@ class ExaminationController extends Controller
 
     public function edashboard()
     {
-        $controller_id=session()->get('Controller_ID');
+        $controller_id = session()->get('Controller_ID');
+        if (!$controller_id) {
+            return redirect()->route('login');
+        }
+        
 
     $result['qtext'] = DB::table('questionbanks')->where('Controller_ID', $controller_id)->get();
     $result['assesmentname'] = DB::table('assesments')->where('Controller_ID', $controller_id)->get();
