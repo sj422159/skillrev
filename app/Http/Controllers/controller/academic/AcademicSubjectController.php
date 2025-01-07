@@ -43,6 +43,7 @@ class AcademicSubjectController extends Controller
             $result['stype']=$arr['0']->stype;
             $result['subtype']=$arr['0']->subtype;
             $result['show']=$arr['0']->showsub;
+            $result['subtype'] = $arr['0']->subtype;
             $result['dname']=$arr['0']->dname;
         }
         else{
@@ -53,11 +54,12 @@ class AcademicSubjectController extends Controller
             $result['stype']='';
             $result['subtype']='';
             $result['show']='';
+            $result['gtype'] = 1;
             $result['dname']='';
         }
         $Controller_ADMIN_ID=session()->get('Controller_ADMIN_ID');
           $Controller_ID=session()->get('Controller_ID');
-        $result['subtypes']=["CURRICULAR","EXTRACURICULLAR","MANDATORY"];
+        // $result['subtypes']=["CURRICULAR","EXTRACURICULLAR","MANDATORY"];
         $result['groups']=DB::table('groups')->where('aid',$Controller_ADMIN_ID)->orwhere('Controller_ID',$Controller_ID)->get();
         return view("controller.academ.adddomain",$result);
     }
@@ -85,7 +87,7 @@ class AcademicSubjectController extends Controller
           
             $msg="Domain updated";
             $name=DB::table('categories')->where('id',$request->post('category'))->get();
-            $domainname=$name[0]->categories.'_'.$name[0]->shortcateg.'_'.$request->post('dname');
+            $domainname=$name[0]->shortcateg.'_'.$request->post('dname');
             $model->domain=$domainname;
             $model->dname=$request->post('dname');
         }
@@ -93,7 +95,7 @@ class AcademicSubjectController extends Controller
             $model=new domain();
             $msg="Domain inserted";
             $name=DB::table('categories')->where('id',$request->post('category'))->get();
-            $domainname=$name[0]->categories.'_'.$name[0]->shortcateg.'_'.$request->post('domain');
+            $domainname=$name[0]->shortcateg.'_'.$request->post('domain');
             $model->domain=$domainname;
             $model->dname=$request->post('dname');
         }
@@ -134,6 +136,7 @@ class AcademicSubjectController extends Controller
     }
     public  function questionbankgetcategories(request $request){
         $controller_id=session()->get('Controller_ID');
+        $Controller_ADMIN_ID=session()->get('Controller_ADMIN_ID');
         $cid = $request->post('cid');
         $a=DB::table('groups')->where('id',$cid)->get();
         if($a[0]->gtype==2){
@@ -148,14 +151,39 @@ class AcademicSubjectController extends Controller
     } 
     public function skillsetcategory($id){
         $controller_id=session()->get('Controller_ID');
+        $Controller_ADMIN_ID=session()->get('Controller_ADMIN_ID');
         $id = $_GET['myID'];
         $a=DB::table('groups')->where('id',$id)->get();
         if($a[0]->gtype==2){
         $res = DB::table('categories')->where('aid',$Controller_ADMIN_ID)->orwhere('Controller_ID',$controller_id)->get();
         }else{
-        $res = DB::table('categories')->where('groupid',$id)->get();
+        $res = DB::table('categories')->where('aid',$Controller_ADMIN_ID)->where('groupid',$id)->get();
         }
         return Response::json($res);
     }
+    public function getSubjectTypes(Request $request, $id) {
+        $controller_id = session()->get('Controller_ID');
+        $Controller_ADMIN_ID = session()->get('Controller_ADMIN_ID');
+        $id = $_GET['myID'];  // Get the group ID from the request
+        
+        $group = DB::table('groups')->where('id', $id)->first();
+        
+        // Initialize the subjectTypes as an array
+        $subjectTypes = [];
+    
+        if ($group && $group->gtype == 2) {
+            // If group type is 2, assign the subject type as "Curricular"
+            $subjectTypes[] = ['type' => 'Curricular'];
+            $subjectTypes[] = ['type' => 'ExtraCurricular']; 
+        } elseif ($group && $group->gtype == 1) {
+            // If group type is 1, assign the subject type as "Mandatory"
+            $subjectTypes[] = ['type' => 'Mandatory'];
+        }
+    
+
+        return response()->json($subjectTypes);
+    }
+    
+
 
 }

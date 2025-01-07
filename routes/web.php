@@ -1897,6 +1897,7 @@ Route::post('academic_controller/domain/savedomain',[AcademicSubjectController::
 Route::get('academic_controller/domain/{id}',[AcademicSubjectController::class,'delete']);
 Route::any('academic_controller/questionbank/getcategory',[AcademicSubjectController::class,'questionbankgetcategories']);
 Route::get('academic_controller/skillset/getcategory/{id}',[AcademicSubjectController::class,'skillsetcategory']);
+Route::get('academic_controller/skillset/getsubjecttypes/{id}',[AcademicSubjectController::class,'getSubjectTypes']);
 
 
 Route::get('academic_controller/skillset', [AcademicModuleController::class, 'skillset'])->name('academic_controller.skillset');
@@ -2061,6 +2062,7 @@ Route::get('/nontech/manager/hostel/expense/subcategory', [HostelExpenseControll
 Route::get('/nontech/manager/hostel/expense/items', [HostelExpenseController::class, 'subitem'])->name('expense.subitems');
 Route::get('nontech/manager/hostel/expense/subcategory/create', [HostelExpenseController::class, 'createSubcategory'])->name('subcategory.create');
 Route::get('item/create', [HostelExpenseController::class, 'create_item'])->name('item.create');
+Route::post('item/create', [HostelExpenseController::class, 'create_item'])->name('item.create');
 Route::post('item/store', [HostelExpenseController::class, 'store_item'])->name('item.store');
 Route::put('item/store', [HostelExpenseController::class, 'store_item'])->name('item.store');
 Route::put('item/update/{id}', [HostelExpenseController::class, 'store_item'])->name('item.update');
@@ -2094,7 +2096,7 @@ Route::get('/nontech/manager/raise/raise_expense', [HostelExpenseController::cla
 Route::post('/nontech/manager/raise/store_expense', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
 Route::delete('nontech/manager/raise/delete-expense/{id}', [HostelExpenseController::class, 'destroyraise'])->name('nontech.manager.raise.delete_expense');
 Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
-Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'showRaiseExpenseForm'])->name('nontech.manager.raise.editraise_expense');
+Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'showRaiseExpenseFormedit'])->name('nontech.manager.raise.editraise_expense');
 Route::post('/nontech/manager/raise/update_expense/{id}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.update_expense');
 
 
@@ -2103,3 +2105,8 @@ Route::post('/account/controller/expenses/validate/approve', [accountexpensecont
 Route::post('/account/controller/expenses/validate/reject', [accountexpensecontroller::class, 'rejectExpense'])->name('expenses.rejectAction');
 Route::get('/account/controller/expenses/{type}', [accountexpensecontroller::class, 'showExpensesByType'])
     ->name('expenses.type');
+
+Route::get('/download-template', [HostelExpenseController::class, 'downloadTemplate'])->name('download.template');
+Route::post('/upload-items', [HostelExpenseController::class, 'uploadItems'])->name('upload.items');
+Route::get('/get-filtered-items', [HostelExpenseController::class, 'getFilteredItems'])
+    ->name('nontech.manager.get.filtered.items');

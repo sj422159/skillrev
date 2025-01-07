@@ -16,10 +16,50 @@
     <div id="bulkUploadForm" class="card p-4 mt-4" style="display: none;">
         <h4 class="text-center">Bulk Upload</h4>
         <div class="text-end mb-3">
-            <a href="#" class="btn btn-success">Download Template</a>
+            <a href="{{ route('download.template') }}" class="btn btn-success">Download Template</a>
         </div>
-        <form action="#" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('upload.items') }}" method="POST" enctype="multipart/form-data" id="bulkUpload">
             @csrf
+                  <div class="row mb-4">
+                <div class="col-md-4">
+                    <label for="groupid" class="form-label">Group</label>
+                    <select class="form-select" id="groupid" name="groupid" required>
+                        <option value="" selected disabled>Select Group</option>
+                        @foreach($groups as $group)
+                            <option value="{{ $group->id }}" 
+                                {{ isset($item) && $item->groupid == $group->id ? 'selected' : '' }}>
+                                {{ $group->Group }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="categoryid" class="form-label">Category</label>
+                    <select class="form-select" id="categoryid" name="categoryid" required>
+                        <option value="" selected disabled>Select Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" 
+                                {{ isset($item) && $item->categoryid == $category->id ? 'selected' : '' }}>
+                                {{ $category->Category }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="subcategoryid" class="form-label">Subcategory</label>
+                    <select class="form-select" id="subcategoryid" name="subcategoryid" required>
+                        <option value="" selected disabled>Select Subcategory</option>
+                        @foreach($subcategories as $subcategory)
+                            <option value="{{ $subcategory->id }}" 
+                                {{ isset($item) && $item->subcatid == $subcategory->id ? 'selected' : '' }}>
+                                {{ $subcategory->subcategory }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="mb-3">
                 <label for="bulkFile" class="form-label">Upload XLSX File</label>
                 <input type="file" class="form-control" id="bulkFile" name="bulkFile" accept=".xlsx" required>
@@ -38,10 +78,9 @@
             @if(isset($item))
                 @method('PUT')
             @endif
-        
+
             <!-- Group, Category, Subcategory Fields -->
             <div class="row mb-4">
-                <!-- Group -->
                 <div class="col-md-4">
                     <label for="groupid" class="form-label">Group</label>
                     <select class="form-select" id="groupid" name="groupid" required>
@@ -54,8 +93,7 @@
                         @endforeach
                     </select>
                 </div>
-        
-                <!-- Category -->
+
                 <div class="col-md-4">
                     <label for="categoryid" class="form-label">Category</label>
                     <select class="form-select" id="categoryid" name="categoryid" required>
@@ -68,8 +106,7 @@
                         @endforeach
                     </select>
                 </div>
-        
-                <!-- Subcategory -->
+
                 <div class="col-md-4">
                     <label for="subcategoryid" class="form-label">Subcategory</label>
                     <select class="form-select" id="subcategoryid" name="subcategoryid" required>
@@ -83,36 +120,31 @@
                     </select>
                 </div>
             </div>
-        
-            <!-- Item Name and Quantity Row -->
+
             <div class="row mb-4">
-                <!-- Item Name -->
                 <div class="col-md-6">
                     <label for="name" class="form-label">Item Name</label>
                     <input type="text" class="form-control" id="name" name="name" 
                         value="{{ old('item', $item->item ?? '') }}" placeholder="Enter item name" required>
                 </div>
-        
-                <!-- Quantity -->
+
                 <div class="col-md-6">
                     <label for="quantity" class="form-label">Quantity Measure</label>
                     <input type="text" class="form-control" id="amount" name="amount" 
                         value="{{ old('quantity', $item->quantity ?? '') }}" placeholder="Enter quantity Measure(kg,L,etc)" required>
                 </div>
             </div>
-        
-            <!-- Submit Button -->
+
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">
                     {{ isset($item) ? 'Update Item' : 'Save Item' }}
                 </button>
             </div>
         </form>
-        
-        
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const bulkUploadButton = document.getElementById('bulkUploadButton');
@@ -120,7 +152,6 @@
         const bulkUploadForm = document.getElementById('bulkUploadForm');
         const singleInputForm = document.getElementById('singleInputForm');
 
-        // Show Bulk Upload Form
         bulkUploadButton.addEventListener('click', () => {
             singleInputForm.style.display = 'none';
             bulkUploadForm.style.display = 'block';
@@ -130,7 +161,6 @@
             singleInputButton.classList.add('btn-secondary');
         });
 
-        // Show Single Input Form
         singleInputButton.addEventListener('click', () => {
             bulkUploadForm.style.display = 'none';
             singleInputForm.style.display = 'block';
@@ -138,6 +168,55 @@
             singleInputButton.classList.remove('btn-secondary');
             bulkUploadButton.classList.remove('btn-primary');
             bulkUploadButton.classList.add('btn-secondary');
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Unexpected server response');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '/nontech/manager/hostel/expense/items';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Something went wrong.',
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'An unexpected error occurred. Please try again.',
+                });
+                console.error('Error:', error);
+            });
         });
     });
 </script>

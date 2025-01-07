@@ -1,5 +1,4 @@
 @extends('nontechmanager/account/layout')
-
 @section('container')
 <div class="container">
     <h2>Expenses for {{ ucfirst($module) }}</h2>
@@ -39,14 +38,13 @@
         </div>
     </form>
 
-    <!-- Expenses Table -->
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Group</th>
                 <th>Category</th>
                 <th>Subcategory</th>
-                <th>Item</th>
+                <th>Items</th>
                 <th>Quantity</th>
                 <th>Action</th>
             </tr>
@@ -57,31 +55,31 @@
                     <td>{{ $item->group->Group ?? 'N/A' }}</td>
                     <td>{{ $item->category->Category ?? 'N/A' }}</td>
                     <td>{{ $item->subcategory->subcategory ?? 'N/A' }}</td>
-                    <td>{{ $item->item->item }}</td>
+                    <td>
+                        @php
+                            $itemIds = explode(',', $item->itemid);
+                            $itemNames = \App\Models\ExpenseItem::whereIn('id', $itemIds)
+                                ->pluck('item')
+                                ->implode(', ');
+                        @endphp
+                        {{ $itemNames }}
+                    </td>
                     <td>{{ $item->quantity }}</td>
                     <td>
-                        @if ($item->status == 1)
-                            <form action="{{ route('expense.updateStatus', $item->id) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" name="status" value="-1" class="btn btn-danger btn-sm">Reject</button>
-                            </form>
-                        @elseif ($item->status == -1)
-                            <!-- Show Validate button only if status is -1 -->
-                            <form action="{{ route('expense.updateStatus', $item->id) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" name="status" value="1" class="btn btn-success btn-sm">Validate</button>
-                            </form>
-                        @else
-                            <!-- Show both buttons if status is not set -->
-                            <form action="{{ route('expense.updateStatus', $item->id) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
+                        <form action="{{ route('expense.updateStatus', $item->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('PATCH')
+                            @if($item->status == 0)
                                 <button type="submit" name="status" value="1" class="btn btn-success btn-sm">Validate</button>
                                 <button type="submit" name="status" value="-1" class="btn btn-danger btn-sm">Reject</button>
-                            </form>
-                        @endif
+                            @elseif($item->status == 1)
+                                <button type="submit" name="status" value="-1" class="btn btn-danger btn-sm">Reject</button>
+                            @elseif($item->status == -1)
+                                <button type="submit" name="status" value="1" class="btn btn-success btn-sm">Validate</button>
+                            @else
+                                <span class="text-success">Approved</span>
+                            @endif
+                        </form>
                     </td>
                 </tr>
             @empty

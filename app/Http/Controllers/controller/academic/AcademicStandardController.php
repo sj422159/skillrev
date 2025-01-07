@@ -20,18 +20,30 @@ class AcademicStandardController extends Controller
     }
 
     public function categorybygroup(Request $request){
-        $groupid=$request->post('groupid');
-        $Controller_ID=session()->get('Controller_ID');
-        $controller_admin_id=session()->get('Controller_ADMIN_ID');
-        $result['groups']=DB::table('groups')->where('aid',$controller_admin_id)->orwhere('Controller_ID',$Controller_ID)->get();
-        $result['groupid']=$groupid;
-        $result['category']=DB::table('categories')
-                        ->join('groups','groups.id','categories.groupid')
-                        ->where('categories.aid',$controller_admin_id)
-                        ->where('categories.groupid',$groupid)
-                        ->select('groups.group','categories.*')
-                        ->get();
-        return view('controller.academ.category',$result);
+        $groupid = $request->post('groupid');
+        $Controller_ID = session()->get('Controller_ID');
+        $controller_admin_id = session()->get('Controller_ADMIN_ID');
+        $result['groups'] = DB::table('groups')->where('aid', $controller_admin_id)->orWhere('Controller_ID', $Controller_ID)->get();
+        
+        $gtype = DB::table('groups')->where('id', $groupid)->value('gtype');
+        $result['gtype'] = $gtype;
+        $result['groupid'] = $groupid;
+
+        if ($gtype == 1) {
+            $result['category'] = DB::table('categories')
+                ->join('groups', 'groups.id', 'categories.groupid')
+                ->where('categories.aid', $controller_admin_id)
+                ->where('categories.groupid', $groupid)
+                ->select('groups.group', 'categories.*')
+                ->get();
+        } elseif ($gtype == 2) {
+            $result['category'] = DB::table('categories')
+                ->where('categories.aid', $controller_admin_id)
+                ->select('categories.*')
+                ->get();
+        }
+
+        return view('controller.academ.category', $result);
     }
 
     public function addcategory(Request $request,$id=""){   

@@ -21,12 +21,24 @@
                 <td>{{ $expense->group->Group ?? 'N/A' }}</td>
                 <td>{{ $expense->category->Category ?? 'N/A' }}</td>
                 <td>{{ $expense->subcategory->subcategory ?? 'N/A' }}</td>
-                <td>{{ $expense->item->item }}</td>
+                <td>
+                    @if($expense->itemid)
+                        @php
+                            // Check if itemid is a CSV string, then convert it to an array
+                            $itemIds = is_array($expense->itemid) ? $expense->itemid : explode(',', $expense->itemid);
+                            // Get the item names based on item ids
+                            $items = \App\Models\ExpenseItem::whereIn('id', $itemIds)->pluck('item')->toArray();
+                        @endphp
+                        {{ implode(', ', $items) }}  <!-- Join the items with a comma -->
+                    @else
+                        {{ 'N/A' }}
+                    @endif
+                </td>
                 <td>{{ $expense->quantity }}</td>
 
                 <!-- Actions Column -->
                 <td>
-                <a href="{{ route('nontech.manager.raise.editraise_expense', ['id' => $expense->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{{ route('nontech.manager.raise.editraise_expense', ['id' => $expense->id]) }}" class="btn btn-warning btn-sm">Edit</a>
                     <form action="{{ route('nontech.manager.raise.delete_expense', $expense->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')

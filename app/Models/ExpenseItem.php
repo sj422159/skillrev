@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,55 +9,47 @@ class ExpenseItem extends Model
 {
     use HasFactory;
 
-    protected $table = 'expense_item';
-    
-        protected $fillable = [
-            'aid', 
-            'nontechmanagerid', 
-            'groupid', 
-            'categoryid', 
-            'subcatid', 
-            'item', 
-            'quantity'
-        ];
-    
-        public function group()
-        {
-            return $this->belongsTo(expenses::class, 'groupid', 'id');
-        }
-    
+    protected $table = 'expense_item'; // Ensure this matches your table name
 
-        public function category()
-        {
-            return $this->belongsTo(expense_cat::class, 'categoryid', 'id');
-        }
+    protected $fillable = [
+        'aid', 
+        'nontechmanagerid', 
+        'groupid', 
+        'categoryid', 
+        'subcatid', 
+        'item', 
+        'quantity'
+    ];
 
-        public function subcategory()
-        {
-            return $this->belongsTo(expense_subcat::class, 'subcatid', 'id');
-        }
-        public function getGroupNameAttribute()
-        {
-            return DB::table('expenses')
-                ->where('id', $this->groupid)
-                ->value('Group'); 
-        }
-    
-    
-        public function getCategoryNameAttribute()
-        {
-            return DB::table('expense_cat')
-                ->where('id', $this->categoryid)
-                ->value('Category'); 
-        }
-    
-       
-        public function getSubcategoryNameAttribute()
-        {
-            return DB::table('expense_subcats')
-                ->where('id', $this->subcatid)
-                ->value('subcategory'); 
-        }
+    // Define relationships
+    public function group()
+    {
+        return $this->belongsTo(expenses::class, 'groupid', 'id'); // Ensure 'id' is correct
     }
-    
 
+    public function category()
+    {
+        return $this->belongsTo(expense_cat::class, 'categoryid', 'id'); // Ensure 'id' is correct
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(expense_subcat::class, 'subcatid', 'id'); // Ensure 'id' is correct
+    }
+
+    // Accessors to get related model names (with null checks)
+    public function getGroupNameAttribute()
+    {
+        return $this->group ? $this->group->Group : null; // Access the group name from the related `expenses` model
+    }
+
+    public function getCategoryNameAttribute()
+    {
+        return $this->category ? $this->category->Category : null; // Access the category name from the related `expense_cat` model
+    }
+
+    public function getSubcategoryNameAttribute()
+    {
+        return $this->subcategory ? $this->subcategory->subcategory : null; // Access the subcategory name from the related `expense_subcat` model
+    }
+}

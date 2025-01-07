@@ -11,7 +11,7 @@
                 <th>Subcategory</th>
                 <th>Item</th>
                 <th>Quantity</th>
-                @if($type === 'validate')
+                @if($type === 'validate' || $type === 'approve')
                 <th>Action</th>
                 @endif
             </tr>
@@ -22,7 +22,12 @@
                 <td>{{ $expense->group->Group }}</td>
                 <td>{{ $expense->category->Category }}</td>
                 <td>{{ $expense->subcategory->subcategory }}</td>
-                <td>{{ $expense->item->item }}</td>
+                <td>
+                    @php
+                        $items = json_decode($expense->item_names, true);
+                        echo $items['item'] ?? 'N/A'; // If 'item' exists in JSON, show it; otherwise, show 'N/A'
+                    @endphp
+                </td>
                 <td>{{ $expense->quantity }}</td>
                 @if($type === 'validate')
                 <td>
@@ -31,6 +36,14 @@
                         <input type="hidden" name="expense_id" value="{{ $expense->id }}">
                         <button type="submit" class="btn btn-success btn-sm">Approve</button>
                     </form>
+                    <form action="{{ route('expenses.rejectAction') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <input type="hidden" name="expense_id" value="{{ $expense->id }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                </td>
+                @elseif($type === 'approve')
+                <td>
                     <form action="{{ route('expenses.rejectAction') }}" method="POST" style="display: inline;">
                         @csrf
                         <input type="hidden" name="expense_id" value="{{ $expense->id }}">
@@ -46,6 +59,5 @@
             @endforelse
         </tbody>
     </table>
-    
 </div>
 @endsection

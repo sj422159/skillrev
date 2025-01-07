@@ -119,6 +119,7 @@ public function showValidated(Request $request)
         return redirect('/login')->with('error', 'Please log in to continue.');
     }
     $expenses = DB::table('exp_raise')->where('aid', $aid)->where('status', 1)->get();
+    dd($expenses->first()->item);
     return view('controller.account.approvexp', ['expenses' => $expenses, 'type' => 'validate']);
 }
 
@@ -145,31 +146,50 @@ public function rejectExpense(Request $request)
     DB::table('exp_raise')->where('id', $expenseId)->update(['status' => -1]);
     return redirect()->back()->with('error', 'Expense rejected successfully.');
 }
-
-
-public function showExpensesByType($type)
-{
-    $aid = session()->get('Controller_ADMIN_ID'); // Fetch admin ID from the session
-
-    // Map type to status
+public function showExpensesByType($type) {
+    $aid = session()->get('Controller_ADMIN_ID');
+    
     $status = match ($type) {
         'raised' => 0,
         'validate' => 1,
         'approve' => 2,
         default => null,
     };
-
-    // Fetch data using relationships
-    $expenses = ExpenseRaise::with(['group', 'category', 'subcategory', 'item'])
+    
+    $expenses = ExpenseRaise::with(['group', 'category', 'subcategory'])
         ->where('aid', $aid)
         ->where('status', $status)
         ->get();
-
+    
+    foreach ($expenses as $expense) {
+        $itemId = $expense->itemid; // Using itemid instead of item
+        if ($itemId) {
+            if (strpos($itemId, ',') !== false) {
+                // Handle multiple items
+                $itemIds = array_map('trim', explode(',', $itemId));
+                $items = ExpenseItem::whereIn('id', $itemIds)->pluck('item')->toArray();
+                $expense->item_names = json_encode(['item' => implode(', ', $items)]);
+            } else {
+                // Handle single item
+                $item = ExpenseItem::where('id', $itemId)->value('item');
+                $expense->item_names = json_encode(['item' => $item ?: 'N/A']);
+            }
+        } else {
+            $expense->item_names = json_encode(['item' => 'N/A']);
+        }
+    }
+    
     return view('controller.account.approveexp', [
         'expenses' => $expenses,
         'type' => $type
     ]);
 }
+
+
+
+
+
+
 
     
     

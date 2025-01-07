@@ -86,69 +86,85 @@ class AcademicContent extends Controller
     }
      
     public function savecontentska(Request $request){
-        if($request->post('id')>0){
-            $model=contentskillattribute::find($request->post('id'));
-            $msg="Content Updated";
-        }
-        else{
-            $model=new contentskillattribute();
-            $msg="Content Inserted";
-        }
-        $model->aid=session()->get('Controller_ADMIN_ID');
-        $model->Controller_ID=session()->get('Controller_ID');
-        $model->category=$request->post('category');
-        $model->domain=$request->post('domain');
-        $model->skillset=$request->post('skillset');
-        $model->skillattribute=$request->post('skillattribute');
+      $controller_admin_id = session()->get('Controller_ADMIN_ID');
+      $skillattribute = $request->post('skillattribute');
+      $skillset = $request->post('skillset');
 
+      if ($request->post('id') == 0) {
+      $existing = contentskillattribute::where('aid', $controller_admin_id)
+          ->where('skillattribute', $skillattribute)
+          ->where('skillset', $skillset)
+          ->first();
 
-        $model->type1=$request->post('contenttype1');
-        if($request->post('contenttype1')=="1"){
-          if($request->hasfile('file1')){  
-            $file=$request->file('file1');
-            $ext=$file->extension();
-            $file_name=time().'.'.$ext;
-            $file->move(public_path().'/content/type1',$file_name);
-            $model->content1=$file_name;
-          }
-        }
-
-
-        $model->type2=$request->post('contenttype2');
-        if($request->post('contenttype2')=="2"){
-          if($request->hasfile('file2')){  
-            $file=$request->file('file2');
-            $ext=$file->extension();
-            $file_name=time().'.'.$ext;
-            $file->move(public_path().'/content/type2',$file_name);
-            $model->content2=$file_name;
-          }
-        }
-
-
-        $model->type3=$request->post('contenttype3');
-        if($request->post('contenttype3')=="3"){
-          if($request->post('video3')!=""){
-           $model->content3=$request->post('video3'); 
-          }
-        }
-
-
-        $model->type4=$request->post('contenttype4');
-        if($request->post('contenttype4')=="4"){
-          if($request->post('video4')!=""){
-           $model->content4=$request->post('video4'); 
-          }
-        }
-       
-       
-        $model->save();
-        $request->session()->flash('success',$msg);
+      if ($existing) {
+        $request->session()->flash('success', 'Data already present');
         return redirect()->route('academic_controller.content.byskillset', [
-          'group' => $request->post('groupid'),
-          'category' => $request->post('category'),
-          'domain' => $request->post('domain'),
-         'skillset'=>$request->post('skillset'),
+        'group' => $request->post('groupid'),
+        'category' => $request->post('category'),
+        'domain' => $request->post('domain'),
+        'skillset' => $skillset,
+        ]);
+      }
+      }
+
+      if ($request->post('id') > 0) {
+      $model = contentskillattribute::find($request->post('id'));
+      $msg = "Content Updated";
+      } else {
+      $model = new contentskillattribute();
+      $msg = "Content Inserted";
+      }
+
+      $model->aid = $controller_admin_id;
+      $model->Controller_ID = session()->get('Controller_ID');
+      $model->category = $request->post('category');
+      $model->domain = $request->post('domain');
+      $model->skillset = $skillset;
+      $model->skillattribute = $skillattribute;
+
+      $model->type1 = $request->post('contenttype1');
+      if ($request->post('contenttype1') == "1") {
+      if ($request->hasfile('file1')) {
+        $file = $request->file('file1');
+        $ext = $file->extension();
+        $file_name = time() . '.' . $ext;
+        $file->move(public_path() . '/content/type1', $file_name);
+        $model->content1 = $file_name;
+      }
+      }
+
+      $model->type2 = $request->post('contenttype2');
+      if ($request->post('contenttype2') == "2") {
+      if ($request->hasfile('file2')) {
+        $file = $request->file('file2');
+        $ext = $file->extension();
+        $file_name = time() . '.' . $ext;
+        $file->move(public_path() . '/content/type2', $file_name);
+        $model->content2 = $file_name;
+      }
+      }
+
+      $model->type3 = $request->post('contenttype3');
+      if ($request->post('contenttype3') == "3") {
+      if ($request->post('video3') != "") {
+        $model->content3 = $request->post('video3');
+      }
+      }
+
+      $model->type4 = $request->post('contenttype4');
+      if ($request->post('contenttype4') == "4") {
+      if ($request->post('video4') != "") {
+        $model->content4 = $request->post('video4');
+      }
+      }
+
+      $model->save();
+      $request->session()->flash('success', $msg);
+      return redirect()->route('academic_controller.content.byskillset', [
+      'group' => $request->post('groupid'),
+      'category' => $request->post('category'),
+      'domain' => $request->post('domain'),
+      'skillset' => $skillset,
       ]);
     }
 
