@@ -2098,6 +2098,7 @@ Route::delete('nontech/manager/raise/delete-expense/{id}', [HostelExpenseControl
 Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
 Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'showRaiseExpenseFormedit'])->name('nontech.manager.raise.editraise_expense');
 Route::post('/nontech/manager/raise/update_expense/{id}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.update_expense');
+Route::post('/nontech/manager/raise/update_edit_expense/{id}', [HostelExpenseController::class, 'storeeditedExpense'])->name('nontech.manager.raise.update_edit_expense');
 
 
 
@@ -2110,3 +2111,5 @@ Route::get('/download-template', [HostelExpenseController::class, 'downloadTempl
 Route::post('/upload-items', [HostelExpenseController::class, 'uploadItems'])->name('upload.items');
 Route::get('/get-filtered-items', [HostelExpenseController::class, 'getFilteredItems'])
     ->name('nontech.manager.get.filtered.items');
+Route::post('/items/fetch/edit', [HostelExpenseController::class, 'fetchItems'])->name('items.fetch');
+

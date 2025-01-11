@@ -1,5 +1,5 @@
 @extends($layout)
-
+@section('title', 'Raised Expenses')
 @section('container')
 <div class="container">
     <h1>Raised Expenses</h1>

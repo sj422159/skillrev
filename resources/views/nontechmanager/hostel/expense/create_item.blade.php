@@ -130,9 +130,18 @@
 
                 <div class="col-md-6">
                     <label for="quantity" class="form-label">Quantity Measure</label>
-                    <input type="text" class="form-control" id="amount" name="amount" 
-                        value="{{ old('quantity', $item->quantity ?? '') }}" placeholder="Enter quantity Measure(kg,L,etc)" required>
+                    <select class="form-select" id="quantity" name="quantity" required>
+                        <option value="" selected disabled>Select Quantity Measure</option>
+                        @foreach($quantityMeasures as $measure)
+                            <option value="{{ $measure->measure }}" 
+                                {{ isset($item) && $item->quantity == $measure->measure ? 'selected' : '' }}>
+                                {{ $measure->measure }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
+                
+                
             </div>
 
             <div class="text-center">

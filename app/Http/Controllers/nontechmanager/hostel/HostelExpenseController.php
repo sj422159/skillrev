@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Log;
 use App\Imports\ItemsImport; // Adjust the namespace based on your file structure
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class HostelExpenseController extends Controller
@@ -56,8 +58,8 @@ class HostelExpenseController extends Controller
             case '5':
                 $layout = 'nontechmanager/library/layout';
                 break;
-            default:
-                $layout = 'nontechmanager/hostel/layout';
+            case '6':
+                $layout = 'nontechmanager/account/layout';
                 break;
         }
 
@@ -72,10 +74,6 @@ class HostelExpenseController extends Controller
             'layout' => $layout,
         ]);
     }
-    
-
-    
-    
 
     public function subitem(Request $request) 
     {
@@ -128,8 +126,8 @@ class HostelExpenseController extends Controller
             case '5':
                 $layout = 'nontechmanager/library/layout';
                 break;
-            default:
-                $layout = 'nontechmanager/hostel/layout';
+            case '6':
+                $layout = 'nontechmanager/account/layout';
                 break;
         }
     
@@ -140,7 +138,6 @@ class HostelExpenseController extends Controller
         ]);
     }
     
-
     public function createSubcategory($id = null)
     {
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
@@ -190,8 +187,8 @@ class HostelExpenseController extends Controller
             case '5':
                $result['layout'] = 'nontechmanager/library/layout';
                 break;
-            default:
-                $result['layout'] = 'nontechmanager/hostel/layout';
+            case '6':
+                $result['layout'] = 'nontechmanager/account/layout';
                 break;
         }
 
@@ -255,99 +252,115 @@ class HostelExpenseController extends Controller
     public function create_item(Request $request, $id = null)
     {
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
-    $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
+        $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
 
 
-    $groups = expenses::where('expenses.aid', $nontechManagerAdminId)
-    ->select('id', 'Group')
-    ->distinct()
-    ->get();
+        $groups = expenses::where('expenses.aid', $nontechManagerAdminId)
+        ->select('id', 'Group')
+        ->distinct()
+        ->get();
 
-    $categories = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
-    ->select('id', 'Category')
-    ->distinct()
-    ->get();
+        $categories = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
+        ->select('id', 'Category')
+        ->distinct()
+        ->get();
 
-    $subcategories = expense_subcat::where('expense_subcats.nontechmanagerid', $nontechManagerId)
-    ->where('expense_subcats.aid', $nontechManagerAdminId)
-    ->select('id', 'subcategory')
-    ->distinct()
-    ->get();
+        $subcategories = expense_subcat::where('expense_subcats.nontechmanagerid', $nontechManagerId)
+        ->where('expense_subcats.aid', $nontechManagerAdminId)
+        ->select('id', 'subcategory')
+        ->distinct()
+        ->get();
+        $quantityMeasures = DB::table('quantity_measure')->select('id', 'measure')->get();
 
-        $item = $id ? expense_item::find($id) : null;
-        $nontechManager = DB::table('nontechmanagers')->where('id', $nontechManagerId)->first();
-        if (!$nontechManager) {
-            return redirect()->back()->with('error', 'Non-Tech Manager not found.');
-        }
-        $departmentId = $nontechManager->departmentid;
+            $item = $id ? expense_item::find($id) : null;
+            $nontechManager = DB::table('nontechmanagers')->where('id', $nontechManagerId)->first();
+            if (!$nontechManager) {
+                return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+            }
+            $departmentId = $nontechManager->departmentid;
 
-        $department = DB::table('departments')->where('id', $departmentId)->first();
-        if (!$department) {
-            return redirect()->back()->with('error', 'Department not found.');
-        }
-        $category = $department->category;
-        switch ($category) {
-            case '1':
-               $layout = 'nontechmanager/transport/layout';
-                break;
-            case '2':
-               $layout = 'nontechmanager/infrastructure/layout';
-                break;
-            case '3':
-               $layout = 'nontechmanager/cafeteria/layout';
-                break;
-            case '4':
-               $layout = 'nontechmanager/hostel/layout';
-                break;
-            case '5':
-               $layout = 'nontechmanager/library/layout';
-                break;
-            default:
+            $department = DB::table('departments')->where('id', $departmentId)->first();
+            if (!$department) {
+                return redirect()->back()->with('error', 'Department not found.');
+            }
+            $category = $department->category;
+            switch ($category) {
+                case '1':
+                $layout = 'nontechmanager/transport/layout';
+                    break;
+                case '2':
+                $layout = 'nontechmanager/infrastructure/layout';
+                    break;
+                case '3':
+                $layout = 'nontechmanager/cafeteria/layout';
+                    break;
+                case '4':
                 $layout = 'nontechmanager/hostel/layout';
-                break;
-        }
-        return view('nontechmanager.hostel.expense.create_item', [
-            'groups' => $groups,
-            'categories' => $categories,
-            'subcategories' => $subcategories,
-            'item' => $item, 
-            'layout' => $layout, 
-        ]);
+                    break;
+                case '5':
+                $layout = 'nontechmanager/library/layout';
+                    break;
+                case '6':
+                    $layout = 'nontechmanager/account/layout';
+                    break;
+            }
+            return view('nontechmanager.hostel.expense.create_item', [
+                'groups' => $groups,
+                'categories' => $categories,
+                'subcategories' => $subcategories,
+                'quantityMeasures' => $quantityMeasures, 
+                'item' => $item, 
+                'layout' => $layout, 
+            ]);
     }
     
     
-
     public function store_item(Request $request)
     {
-
         $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
         $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
         
+        // Check if the expense item already exists
+        $existingItem = expense_item::where('nontechmanagerid', $nontechmanagerid)
+            ->where('aid', $aid)
+            ->where('groupid', $request->input('groupid'))
+            ->where('categoryid', $request->input('categoryid'))
+            ->where('subcatid', $request->input('subcategoryid'))
+            ->whereRaw('LOWER(item) = ?', [strtolower($request->input('name'))])
+            ->first();
+        
+        if ($existingItem && $request->route('id') == null) {
+            return redirect()->route('expense.subitems')->with('success', 'Expense item already exists.');
+        }
+        
+        // Check if we're updating or creating a new expense item
         if ($request->route('id') != null) {
+            // Update existing item
             $expenseItem = expense_item::findOrFail($request->route('id'));
             $message = 'Expense item updated successfully.';
         } else {
+            // Create new item
             $expenseItem = new expense_item();
             $expenseItem->aid = $aid;
             $expenseItem->nontechmanagerid = $nontechmanagerid;
             $message = 'Expense item created successfully.';
         }
     
-        // Update fields and save
+        // Set the expense item fields
         $expenseItem->groupid = $request->input('groupid');
         $expenseItem->categoryid = $request->input('categoryid');
         $expenseItem->subcatid = $request->input('subcategoryid');
         $expenseItem->item = $request->input('name');
-        $expenseItem->quantity = $request->input('amount');
-    
+        $expenseItem->quantity = $request->input('quantity');
+        
+        // Save the expense item
         $expenseItem->save();
     
+        // Return success message
         return redirect()->route('expense.subitems')->with('success', $message);
     }
     
-
     
-        
     
     public function destroy_item($id)
 {
@@ -394,8 +407,8 @@ public function showRaisedExpenses()
         case '5':
             $layout = 'nontechmanager/library/layout';
             break;
-        default:
-            $layout = 'nontechmanager/hostel/layout';
+        case '6':
+            $layout = 'nontechmanager/account/layout';
             break;
     }
 
@@ -442,8 +455,8 @@ public function showapprovedRaisedExpenses()
         case '5':
             $layout = 'nontechmanager/library/layout';
             break;
-        default:
-            $layout = 'nontechmanager/hostel/layout';
+        case '6':
+            $layout = 'nontechmanager/account/layout';
             break;
     }
 
@@ -480,7 +493,8 @@ public function showRaiseExpenseForm(Request $request, $id = null)
         '2' => 'nontechmanager/infrastructure/layout',
         '3' => 'nontechmanager/cafeteria/layout',
         '4' => 'nontechmanager/hostel/layout',
-        '5' => 'nontechmanager/library/layout'
+        '5' => 'nontechmanager/library/layout',
+        '6' => 'nontechmanager/account/layout',
     ];
     
     $result = [
@@ -517,164 +531,203 @@ public function showRaiseExpenseFormedit(Request $request, $id = null)
 {
     $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
     $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
-    
-    // Fetch the department_id for the Non-Tech Manager
+
     $nontechManager = DB::table('nontechmanagers')->where('id', $nontechmanagerid)->first();
     if (!$nontechManager) {
         return redirect()->back()->with('error', 'Non-Tech Manager not found.');
     }
     $departmentId = $nontechManager->departmentid;
 
-    // Fetch department category
     $department = DB::table('departments')->where('id', $departmentId)->first();
     if (!$department) {
         return redirect()->back()->with('error', 'Department not found.');
     }
     $category = $department->category;
 
-    // Layouts based on department category
     $layouts = [
         '1' => 'nontechmanager/transport/layout',
         '2' => 'nontechmanager/infrastructure/layout',
         '3' => 'nontechmanager/cafeteria/layout',
         '4' => 'nontechmanager/hostel/layout',
-        '5' => 'nontechmanager/library/layout'
+        '5' => 'nontechmanager/library/layout',
+        '6' => 'nontechmanager/account/layout',
     ];
-    
+
     $result = [
         'layout' => $layouts[$category] ?? 'nontechmanager/hostel/layout',
         'groups' => expenses::where('aid', $aid)->get(),
         'categories' => expense_cat::where('aid', $aid)->pluck('Category', 'id'),
         'subcategories' => expense_subcat::where('nontechmanagerid', $nontechmanagerid)->pluck('subcategory', 'id'),
         'quantity_measures' => ExpenseItem::where('nontechmanagerid', $nontechmanagerid)->distinct()->pluck('quantity'),
-        'items' => ExpenseItem::where('nontechmanagerid', $nontechmanagerid)->get(),
+        'items' => ExpenseItem::where('nontechmanagerid', $nontechmanagerid)->where('aid', $aid)->get(),
         'expense' => null,
-        'selectedItems' => [], // Empty selected items initially
-        'expenseItems' => [] // Empty expense items initially
+        'selectedItems' => [],
+        'expenseItems' => [],
+        'quantity_value' => null,
+        'quantity_measure' => null,
+        'aid' => $aid,
+        'nontechmanagerid' => $nontechmanagerid,
     ];
 
-    // If editing an existing expense
     if ($id) {
         $expense = ExpenseRaise::where('aid', $aid)
             ->where('nontechmanagerid', $nontechmanagerid)
             ->find($id);
-    
-        if ($expense) {
-            // Convert itemid string into an array
-            $result['expense'] = $expense;
-            $result['expenseItems'] = array_map('trim', explode(',', $expense->itemid)); // Explode to array of item IDs
-          
-            // Retrieve selected items based on itemid values
-            $result['selectedItems'] = ExpenseItem::whereIn('id', $result['expenseItems'])->get(); // Fetch item details from database
-           
-        }
-        
 
+        if ($expense) {
+            $result['expense'] = $expense;
+            $result['expenseItems'] = explode(',', $expense->itemid);
+            $result['selectedItems'] = ExpenseItem::whereIn('id', $result['expenseItems'])->get();
+            // dd($expense->quantity);
+            if ($expense->quantity) {
+                $quantityParts = explode(' ', $expense->quantity);
+                $result['quantity_value'] = $quantityParts[0] ?? null;
+                $result['quantity_measure'] = $quantityParts[1] ?? null;
+            }
+        }
     }
-    // dd($result['items']);
-    // dd($result['expenseItems']);
 
     return view('nontechmanager.hostel.expense.editraised_expenses', $result);
 }
 
 
-public function getFilteredItems(Request $request, $id = null)
+
+
+public function getFilteredItems(Request $request)
 {
     $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
     $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
+    $groupId = $request->get('group_id');
+    $categoryId = $request->get('category_id');
+    $subcategoryId = $request->get('subcategory_id');
 
-    $query = ExpenseItem::query()
-        ->where('aid', $aid)
-        ->where('nontechmanagerid', $nontechmanagerid);
+    $items = DB::table('expense_item')
+        ->join('expenses', 'expense_item.groupid', '=', 'expenses.id')
+        ->join('expense_cat', 'expense_item.categoryid', '=', 'expense_cat.id')
+        ->join('expense_subcats', 'expense_item.subcatid', '=', 'expense_subcats.id')
+        ->select(
+            'expense_item.id',
+            'expense_item.item',
+            'expenses.Group as group_name',
+            'expense_cat.Category as category_name',
+            'expense_subcats.subcategory as subcategory_name'
+        )
+        ->where('expense_item.aid', $aid)
+        ->where('expense_item.nontechmanagerid', $nontechmanagerid)
+        ->when($groupId, function ($query, $groupId) {
+            return $query->where('expense_item.groupid', $groupId);
+        })
+        ->when($categoryId, function ($query, $categoryId) {
+            return $query->where('expense_item.categoryid', $categoryId);
+        })
+        ->when($subcategoryId, function ($query, $subcategoryId) {
+            return $query->where('expense_item.subcatid', $subcategoryId);
+        })
+        ->get();
 
-    if ($request->filled('group_id')) {
-        $query->where('groupid', $request->group_id);
-    }
-
-    if ($request->filled('category_id')) {
-        $query->where('categoryid', $request->category_id);
-    }
-
-    if ($request->filled('subcategory_id')) {
-        $query->where('subcatid', $request->subcategory_id);
-    }
-    if ($id) {
-        $expense = ExpenseRaise::where('aid', $aid)
-            ->where('nontechmanagerid', $nontechmanagerid)
-            ->find($id);
-        if ($expense) {
-            $result['expense'] = $expense;
-            $result['expenseItems'] = explode(',', $expense->itemid); // Populate items
-            $result['selectedItems'] = $expense->selectedItems; // Fetch the actual selected items
-        }
-     
-
-    }
-    // Ensure the `item` attribute is selected correctly
-    $items = $query->select('id', 'item as item_name')->get(); // Rename to match usage in frontend
-
-    return response()->json([
-        'success' => true,
-        'items' => $items
-    ]);
+    return response()->json(['success' => true, 'items' => $items]);
 }
 
-    
 
-
-
-
-
-
- 
 public function storeRaisedExpense(Request $request, $id = null)
 {
-    // Validate the input data
-    $validated = $request->validate([
-        'group' => 'required|exists:expenses,id', // Check that the group exists in expenses table
-        'category' => 'required|exists:expense_cat,id', // Check that the category exists in expense_cat table
-        'subcategory' => 'required|exists:expense_subcats,id', // Check that the subcategory exists in expense_subcats table
-        'item' => 'required|array', // Ensure it's an array of items
-        'item.*' => 'exists:expense_item,id', // Each item should exist in expense_item table
-        'quantity_measure' => 'required|string|max:255', // Ensure quantity_measure is a valid string
-        'quantity' => 'required|string|max:255', // Ensure quantity is a valid string
-    ]);
-
-    // Get the session values for admin and non-tech manager
+    // Retrieve session data
     $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
     $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
 
-    // Combine quantity and quantity measure
-    $quantity_with_measure = $validated['quantity'] . '_' . $validated['quantity_measure'];
+    // Validate required fields
+    $request->validate([
+        'group' => 'required|integer',
+        'category' => 'required|integer',
+        'subcategory' => 'required|integer',
+        'quantity' => 'required|array',
+        'quantity.*' => 'required|numeric|min:1',
+        'quantity_measure' => 'required|array',
+        'quantity_measure.*' => 'required|string|max:10',
+    ]);
 
-    // Convert the array of selected items to a comma-separated string
-    $itemIds = implode(',', $validated['item']); // Join the array of items into a string
+    // Prepare data for multiple items
+    $items = $request->input('quantity');
+    $measures = $request->input('quantity_measure');
 
-    // Prepare the expense data array
-    $expenseData = [
-        'aid' => $aid,
-        'nontechmanagerid' => $nontechmanagerid,
-        'groupid' => $validated['group'],
-        'categoryid' => $validated['category'],
-        'subcatid' => $validated['subcategory'],
-        'itemid' => $itemIds, // Store the comma-separated string
-        'quantity' => $quantity_with_measure,
-    ];
+    foreach ($items as $itemId => $quantity) {
+        $quantityMeasure = $measures[$itemId] ?? null;
 
-    // If updating an existing expense
-    if ($id) {
-        $expense = ExpenseRaise::findOrFail($id); // Find the expense by ID
-        $expenseData['status'] = 0; // Set the status to 0 (e.g., pending)
-        $expense->update($expenseData); // Update the expense with the new data
-        $message = 'Expense updated successfully!'; // Success message for update
-    } else {
-        // Create a new expense if no ID is provided
-        ExpenseRaise::create($expenseData);
-        $message = 'Expense raised successfully!'; // Success message for creation
+        if ($quantityMeasure === null) {
+            continue; // Skip if quantity measure is missing
+        }
+
+        $expenseData = [
+            'aid' => $aid,
+            'nontechmanagerid' => $nontechmanagerid,
+            'groupid' => $request->input('group'),
+            'categoryid' => $request->input('category'),
+            'subcatid' => $request->input('subcategory'),
+            'itemid' => $itemId,
+            'quantity' => $quantity . ' ' . $quantityMeasure,
+            'status' => 0, // Default status
+        ];
+
+        // Insert or update logic
+        if ($id) {
+            // Update existing record if matching item ID exists
+            $existingExpense = ExpenseRaise::where('id', $id)->where('itemid', $itemId)->first();
+            if ($existingExpense) {
+                $existingExpense->update($expenseData);
+            } else {
+                ExpenseRaise::create($expenseData);
+            }
+        } else {
+            // Insert new record
+            ExpenseRaise::create($expenseData);
+        }
     }
 
-    // Redirect to the raised expenses page with a success message
+    // Redirect with success message
+    $message = $id ? 'Expense updated successfully!' : 'Expenses raised successfully!';
     return redirect()->route('expense.raised_expenses')->with('success', $message);
+}
+public function storeEditedExpense(Request $request, $id)
+{
+    $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
+
+    $expense = ExpenseRaise::find($id);
+
+    if (!$expense) {
+        return redirect()->back()->with('error', 'Expense not found.');
+    }
+
+    $expense->update([
+        'groupid' => $request->input('group'),
+        'categoryid' => $request->input('category'),
+        'subcatid' => $request->input('subcategory'),
+        'itemid' => $request->input('item'),
+        'quantity' => $request->input('quantity') . ' ' . $request->input('quantity_measure'),
+        'status' => 0, 
+    ]);
+
+    return redirect()->route('expense.raised_expenses')->with('success', 'Expense updated successfully.');
+}
+
+
+
+public function fetchItems(Request $request) {
+    $groupid = $request->input('groupid');
+    $categoryid = $request->input('categoryid');
+    $subcatid = $request->input('subcatid');
+    $aid = $request->input('aid');
+    $nontechmanagerid = $request->input('nontechmanagerid');
+    
+    $items = DB::table('expense_item')  // Changed variable name from $itemses to $items
+        ->where('groupid', $groupid)
+        ->where('categoryid', $categoryid)
+        ->where('subcatid', $subcatid)
+        ->where('aid', $aid)
+        ->where('nontechmanagerid', $nontechmanagerid)
+        ->get();
+    
+    return response()->json($items);
 }
 
 
@@ -709,8 +762,7 @@ public function storeRaisedExpense(Request $request, $id = null)
             $subcategoryid = $request->input('subcategoryid');
             $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
             $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
-    
-            // Import Excel
+
             Excel::import(new ItemsImport($groupid, $categoryid, $subcategoryid, $aid, $nontechmanagerid), $request->file('bulkFile')->store('temp'));
     
             return redirect()->route('expense.subitems')->with('success', 'Items imported successfully!');
@@ -723,10 +775,42 @@ public function storeRaisedExpense(Request $request, $id = null)
 
     public function downloadTemplate()
     {
-        $headers = ['groupid', 'categoryid', 'subcatid', 'item', 'quantity'];
+        $headers = ['item', 'quantity_measure'];
         $fileName = 'item_template.xlsx';
-
-        return Excel::download(new TemplateExport($headers), $fileName);
+    
+        // Fetch quantity measures from the database
+        $quantityMeasures = DB::table('quantity_measure')->pluck('measure')->toArray();
+    
+        // Create a new spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+    
+        // Add the header row
+        $sheet->fromArray([$headers], null, 'A1');
+    
+        // Add data validation for the quantity_measure column
+        $validation = $sheet->getCell('B2')->getDataValidation();
+        $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
+        $validation->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
+        $validation->setAllowBlank(false);
+        $validation->setShowInputMessage(true);
+        $validation->setShowErrorMessage(true);
+        $validation->setShowDropDown(true);
+        $validation->setFormula1('"' . implode(',', $quantityMeasures) . '"');
+    
+        // Apply the validation to the entire column
+        for ($row = 2; $row <= 100; $row++) {
+            $sheet->getCell('B' . $row)->setDataValidation(clone $validation);
+        }
+    
+        // Stream the file as a download
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Cache-Control' => 'no-store, no-cache',
+        ]);
     }
 
     

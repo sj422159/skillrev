@@ -18,8 +18,7 @@ class accountexpensecontroller extends Controller
     {
         $nontechmanagerId = session()->get('NONTECH_MANAGER_ID'); // Get the logged-in user's ID
         $aid = session()->get('NONTECH_MANAGER_ADMIN_ID'); // Get the NONTECH_MANAGER_ADMIN_ID from session
-    
-        // Define the module-to-status mapping
+
         $moduleStatusMapping = [
             'raise' => 0,
             'rejected' => -1,
@@ -75,7 +74,7 @@ class accountexpensecontroller extends Controller
             'categories' => $categories, // Filtered categories
             'subcategories' => $subcategories, // Filtered subcategories
         ];
-    
+        // dd($result);
         return view('nontechmanager.account.expense', $result);
     }
     

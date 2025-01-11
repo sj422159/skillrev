@@ -151,7 +151,7 @@
             </li>
 
          
-            {{-- <li class="nav-item">
+            <li class="nav-item">
               <a href="{{ route('account.manager.expenses', 'transport') }}" class="nav-link @yield('manage_select')">
                 <i class="nav-icon fas fa-bookmark"></i>
                 <p>
@@ -190,8 +190,32 @@
                   Library Manager 
                 </p>
               </a>
-            </li> --}}
-
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link @yield('manage_select')">
+                <i class="nav-icon fas fa-bookmark"></i>
+                <p>
+                 Expense Claim
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview" style="display: none;">
+                <li class="nav-item">
+                  <a href="{{url('nontech/manager/hostel/expense/subcategory')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Expense subcategory</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url('nontech/manager/hostel/expense/items')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Expense Item</p>
+                  </a>
+                </li>
+               
+               
+              </ul>
+            </li>
           
 
 

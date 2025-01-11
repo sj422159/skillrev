@@ -62,6 +62,9 @@
                 <a href="https://www.facebook.com/share/GeNpBbfRRM1pHUUU/" class="text-white transition-colors duration-300 hover:text-blue-600">
                     <i class="fa-brands fa-facebook"></i>
                 </a>
+                <a href="https://wa.me/message/YSM2SKPG4KFJJ1" class="text-white transition-colors duration-300 hover:text-blue-600">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
             </div>
         </div>
     </div>
