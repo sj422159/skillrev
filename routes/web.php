@@ -169,6 +169,7 @@ use App\Http\Controllers\nontechmanager\infrastructure\infrastructurecafeteriaco
 use App\Http\Controllers\controller\AcademicController;
 use App\Http\Controllers\controller\ExaminationController;
 use App\Http\Controllers\controller\account\AccountController;
+use App\Http\Controllers\controller\controllerlife;
 
 use App\Http\Controllers\controller\academic\AcademicGroupController;
 use App\Http\Controllers\controller\academic\AcademicStandardController;
@@ -177,7 +178,10 @@ use App\Http\Controllers\controller\academic\AcademicModuleController;
 use App\Http\Controllers\controller\academic\AcademicChapterController;
 use App\Http\Controllers\controller\academic\AcademicContent;
 use App\Http\Controllers\controller\academic\AcademicReport;
+use App\Http\Controllers\controller\academic\Academicassignmentscontroller;
 use App\Http\Controllers\controller\exam\Examassesment;
+use App\Http\Controllers\controller\exam\Examassesmentsection;
+use App\Http\Controllers\controller\exam\Examquestionbankcontroller;
 use App\Http\Controllers\faculty\FacultyContentController;
 use App\Http\Controllers\controller\account\Feescontroller;
 use App\Http\Controllers\controller\account\Feesanalyticcontroller;
@@ -1382,7 +1386,7 @@ return redirect('/');
 
 Route::get('dashboard/examination', [ExaminationController::class, 'edashboard'])->name('dashboard.examination');
 Route::get('Controller/Account/dashboard', [AccountController::class, 'accountDashboard'])->name('dashboard.account');
-Route::get('dashboard/account', [AccountController::class, 'accountDashboard'])->name('dashboard.account');
+Route::get('dashboard/account', [AccountController::class, 'accountDashboard'])->name('dashboard.accounts');
 Route::post('Accontrol/login/save', [AcademicController::class, 'save'])->name('accontrol.login.save');
 Route::get('Accontrol/forgotpassword', [AcademicController::class, 'forgotpassword']);
 Route::post('Accontrol/forgotpassword/check', [AcademicController::class, 'forgotpasswordcheck']);
@@ -1940,23 +1944,6 @@ Route::any('academic_controller/questionbank/getdomain',[AcademicContent::class,
 Route::get('academic_controller/reports',[AcademicReport::class,'reports']);
 Route::post('academic_controller/reports/sectionwise',[AcademicReport::class,'fetchstu']);
 
-Route::get('exam_controller/assesments',[Examassesment::class,'colist']);
-Route::get('exam_controller/assesment/createassesment',[Examassesment::class,'createassesment']);
-Route::get('exam_controller/assesment/edit/{id}',[Examassesment::class,'createassesment']);
-Route::get('exam_controller/assesment/delete/{id}',[Examassesment::class,'delete']);
-Route::get('exam_controller/trainings/trains/{id}',[Examassesment::class,'gettrainings']);
-Route::post('exam_controller/skillattribute/domain/',[Examassesment::class,'getdomain']);
-Route::post('exam_controller/skillattribute/skillset/',[Examassesment::class,'getskillset']);
-Route::post('exam_controller/skillattribute/getskillattribute/',[Examassesment::class,'getskillattribute']);
-Route::post('exam_controller/assesment/createmodule',[Examassesment::class,'createmodule']);
-Route::get('exam_controller/assesment/createmodule',[Examassesment::class,'createmodule'])->name('cocreate');
-Route::post('exam_controller/createsection',[Examassesment::class,'index']);
-Route::get('exam_controller/createsection/{id}',[Examassesment::class,'index']);
-Route::post('exam_controller/assesments',[Examassesment::class,'comodule']);
-Route::post('exam_controller/assesment/sectioncreation',[Examassesment::class,'createsession']);
-Route::get('exam_controller/assesment/section/delete/{id}',[Examassesment::class,'delete']);
-
-
 
 Route::get('Faculty/content/skillattribute',[FacultyContentController::class, 'contentska']);
 Route::post('Faculty/content/skillattribute/byskillset',[FacultyContentController::class, 'contentskabyskillset']);
@@ -2096,15 +2083,16 @@ Route::get('/nontech/manager/raise/raise_expense', [HostelExpenseController::cla
 Route::post('/nontech/manager/raise/store_expense', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
 Route::delete('nontech/manager/raise/delete-expense/{id}', [HostelExpenseController::class, 'destroyraise'])->name('nontech.manager.raise.delete_expense');
 Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
-Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'showRaiseExpenseFormedit'])->name('nontech.manager.raise.editraise_expense');
+
 Route::post('/nontech/manager/raise/update_expense/{id}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.update_expense');
 Route::post('/nontech/manager/raise/update_edit_expense/{id}', [HostelExpenseController::class, 'storeeditedExpense'])->name('nontech.manager.raise.update_edit_expense');
+Route::post('/nontech/manager/raise/account/update_edit_expense/{id}', [accountexpensecontroller::class, 'storeeditedExpense'])->name('nontech.manager.raise.account.update_edit_expense');
 
 
 
 Route::post('/account/controller/expenses/validate/approve', [accountexpensecontroller::class, 'approveExpense'])->name('expenses.approveAction');
 Route::post('/account/controller/expenses/validate/reject', [accountexpensecontroller::class, 'rejectExpense'])->name('expenses.rejectAction');
-Route::get('/account/controller/expenses/{type}', [accountexpensecontroller::class, 'showExpensesByType'])
+Route::get('/account/controller/expenses/{type}', [AccountController::class, 'showExpensesByType'])
     ->name('expenses.type');
 
 Route::get('/download-template', [HostelExpenseController::class, 'downloadTemplate'])->name('download.template');
@@ -2113,3 +2101,67 @@ Route::get('/get-filtered-items', [HostelExpenseController::class, 'getFilteredI
     ->name('nontech.manager.get.filtered.items');
 Route::post('/items/fetch/edit', [HostelExpenseController::class, 'fetchItems'])->name('items.fetch');
 
+Route::get('exam_controller/assesments',[Examassesment::class,'colist']);
+Route::get('exam_controller/assesment/createassesment',[Examassesment::class,'createassesment']);
+Route::get('exam_controller/assesment/edit/{id}',[Examassesment::class,'createassesment']);
+Route::get('exam_controller/assesment/delete/{id}',[Examassesment::class,'delete']);
+Route::get('exam_controller/trainings/trains/{id}',[Examassesment::class,'gettrainings']);
+Route::post('exam_controller/skillattribute/domain/',[Examassesment::class,'getdomain']);
+Route::post('exam_controller/skillattribute/skillset/',[Examassesment::class,'getskillset']);
+Route::post('exam_controller/skillattribute/getskillattribute/',[Examassesment::class,'getskillattribute']);
+Route::post('exam_controller/assesment/createmodule',[Examassesment::class,'createmodule']);
+Route::get('exam_controller/assesment/createmodule',[Examassesment::class,'createmodule'])->name('exam_cocreate');
+Route::post('exam_controller/createsection',[Examassesmentsection::class,'index']);
+Route::get('exam_controller/createsection/{id}',[Examassesmentsection::class,'index']);
+Route::post('exam_controller/assesments',[Examassesmentsection::class,'comodule']);
+Route::post('exam_controller/assesment/sectioncreation',[Examassesmentsection::class,'createsession']);
+Route::get('exam_controller/assesment/section/delete/{id}',[Examassesmentsection::class,'delete']);
+
+Route::get('exam_controller/questions',[Examquestionbankcontroller::class,'questions']);
+Route::post('exam_controller/questions/bysa',[Examquestionbankcontroller::class,'questionsbysa']);
+Route::get('exam_controller/questions/add',[Examquestionbankcontroller::class,'add']);
+Route::post('exam_controller/questions/upload',[Examquestionbankcontroller::class,'upload']);
+Route::get('exam_controller/question/edit/{id}',[Examquestionbankcontroller::class,'editQuestion']);
+Route::get('exam_controller/question/view/{id}',[Examquestionbankcontroller::class,'examview']);
+Route::post('exam_controller/question/update',[Examquestionbankcontroller::class,'updateQuestion']);
+Route::get('exam_controller/question/delete/{id}',[Examquestionbankcontroller::class,'deleteQuestion']);
+Route::any('exam_controller/questionbank/getcategory',[Examquestionbankcontroller::class,'questionbankgetcategories']);
+Route::any('exam_controller/questionbank/getdomain',[Examquestionbankcontroller::class,'questionbankgetdomains']);
+Route::post('exam_controller/questionbank/getskillset',[Examquestionbankcontroller::class,'questionbankgetskillsets']);
+Route::any('exam_controller/questionbank/getskillattribute',[Examquestionbankcontroller::class,'questionbankgetskillattributes']);
+Route::get('exam_controller/questions/mismatch',[Examquestionbankcontroller::class,'mismatch']);
+Route::get('exam_controller/questions/improper',[Examquestionbankcontroller::class,'improper']);
+Route::get('exam_controller/skillattribute/domain/{id}',[Examquestionbankcontroller::class,'getdomain']);
+Route::get('exam_controller/skillattribute/skillset/{id}',[Examquestionbankcontroller::class,'getskillset']);
+Route::get('exam_controller/skillattribute/getskillattribute/{id}',[Examquestionbankcontroller::class,'getskillattribute']);
+
+
+Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'showRaiseExpenseFormedit'])->name('nontech.manager.raise.editraise_expense');
+Route::match(['get', 'post'], 'nontech/manager/raise/account/expense/{id?}', [accountexpensecontroller::class, 'showRaiseExpenseFormedit'])->name('nontech.manager.raise.account.editraise_expense');
+
+Route::get('controller/assigned/{id}',[controllerlife::class,'assindex']);
+Route::get('controller/assigned/students/{id}',[controllerlife::class,'assstudents']);
+
+
+Route::get('controller/attended/{id}',[controllerlife::class,'attindex']);
+Route::get('controller/attended/students/{id}',[controllerlife::class,'attstudents']);
+Route::get('controller/attended/students/assignments/view/{id}',[controllerlife::class,'assignments']);
+
+Route::get('controller/completed/{id}',[controllerlife::class,'comindex']);
+Route::get('controller/completed/students/{id}',[controllerlife::class,'comstudents']);
+Route::get('controller/completed/students/approved/{id}',[controllerlife::class,'comapstudents']);
+Route::get('controller/completed/students/pass/{id}/{cid}',[controllerlife::class,'postpass']);
+Route::get('controller/examreport/{bid}/{id}',[controllerlife::class,'sectionreports']);
+Route::post('controller/exam/detailedreport',[controllerlife::class,'detailedreport']);
+Route::get('controller/exam/swot/{id}',[controllerlife::class,'swot']);
+
+
+
+Route::get('academic_controller/assignments',[Academicassignmentscontroller::class,'reports']);
+Route::post('academic_controller/assignments/trainingwise',[Academicassignmentscontroller::class,'fetchstu']);
+
+
+Route::get('faculty/content/skillattribute',[FacultyContentController::class, 'contentska']);
+Route::post('faculty/content/skillattribute/byskillset',[FacultyContentController::class, 'contentskabyskillset']);
+Route::get('faculty/content/skillattribute/domain',[FacultyContentController::class,'getdomain']);
+Route::get('faculty/content/skillattribute/skillset',[FacultyContentController::class,'getskillset']);

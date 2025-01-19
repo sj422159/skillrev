@@ -111,10 +111,10 @@
                         <input type="hidden" name="sectionid[]" value="{{$list->id}}" form="Form1"></td>
                        
                   
-                       <td><a href="{{url('admin/createsection')}}/{{$list->id}}">
+                       <td><a href="{{url('exam_controller/createsection')}}/{{$list->id}}">
                         <button type="button" class="btn btn-success">Edit</button>
                             </a>
-                          <a href="{{url('admin/assesment/section/delete')}}/{{$list->id}}">
+                          <a href="{{url('exam_controller/assesment/section/delete')}}/{{$list->id}}">
                             <button type="button" class="btn btn-danger">Delete</button>
                           </a>
                        </td>
@@ -147,7 +147,7 @@
 //           jQuery('#country').change(function (){
 //              let cid=jQuery(this).val();
 //              jQuery.ajax({
-//               url:'{{url("admin/skillattribute/domain")}}',
+//               url:'{{url("exam_controller/skillattribute/domain")}}',
 //               type:'post',
 //               data:'cid='+cid+
 //               '&_token={{csrf_token()}}',
@@ -163,7 +163,7 @@
 //             //str=1;
 //              // alert(str);
 //              jQuery.ajax({
-//               url:'{{url("admin/skillattribute/skillset")}}',
+//               url:'{{url("exam_controller/skillattribute/skillset")}}',
 //               type:'post',
 //               data:'sid='+str+
 //               '&_token={{csrf_token()}}',
@@ -177,7 +177,7 @@
 //             var tid=jQuery(this).val();
 //             var ttr=String(tid);
 //              jQuery.ajax({
-//               url:'{{url("admin/skillattribute/getskillattribute")}}',
+//               url:'{{url("exam_controller/skillattribute/getskillattribute")}}',
 //               type:'post',
 //               data:'tid='+ttr+
 //               '&_token={{csrf_token()}}',

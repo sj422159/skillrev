@@ -687,6 +687,7 @@ public function storeRaisedExpense(Request $request, $id = null)
     $message = $id ? 'Expense updated successfully!' : 'Expenses raised successfully!';
     return redirect()->route('expense.raised_expenses')->with('success', $message);
 }
+
 public function storeEditedExpense(Request $request, $id)
 {
     $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');

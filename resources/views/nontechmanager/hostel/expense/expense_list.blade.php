@@ -36,9 +36,8 @@
                 </td>
                 <td>{{ $expense->quantity }}</td>
 
-                <!-- Actions Column -->
                 <td>
-                    <a href="{{ route('nontech.manager.raise.editraise_expense', ['id' => $expense->id]) }}" class="btn btn-warning btn-sm">Edit</a>
+                   <a href="{{ url('nontech/manager/raise/expense/' . $expense->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     <form action="{{ route('nontech.manager.raise.delete_expense', $expense->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')

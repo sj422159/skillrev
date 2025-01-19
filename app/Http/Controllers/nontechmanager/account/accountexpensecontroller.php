@@ -4,10 +4,12 @@ namespace App\Http\Controllers\nontechmanager\account;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\expense_item;
 use App\Models\ExpenseItem;
-use App\Models\ExpenseRaise;
-use App\Models\expense_cat;
-use App\Models\expense_subcat;
+use App\Models\expenses;     
+use App\Models\expense_cat;  
+use App\Models\expense_subcat; 
+use App\Models\ExpenseRaise; 
 use Carbon\CarbonPeriod;
 use Redirect,Response;
 
@@ -63,9 +65,8 @@ class accountexpensecontroller extends Controller
         // Filter subcategories based on nontechmanagerid
         $subcategories = DB::table('expense_subcats')
             ->where('aid', $aid)
-            ->where('nontechmanagerid', $nontechmanagerId)
             ->pluck('subcategory', 'id');
-    
+        
         // Prepare data for the view
         $result = [
             'module' => ucfirst($module), // Capitalized module name for display
@@ -73,6 +74,7 @@ class accountexpensecontroller extends Controller
             'groups' => $groups, // Filtered groups
             'categories' => $categories, // Filtered categories
             'subcategories' => $subcategories, // Filtered subcategories
+            'nontechmanagerId' => $nontechmanagerId, // Filtered subcategories
         ];
         // dd($result);
         return view('nontechmanager.account.expense', $result);
@@ -145,52 +147,84 @@ public function rejectExpense(Request $request)
     DB::table('exp_raise')->where('id', $expenseId)->update(['status' => -1]);
     return redirect()->back()->with('error', 'Expense rejected successfully.');
 }
-public function showExpensesByType($type) {
-    $aid = session()->get('Controller_ADMIN_ID');
-    
-    $status = match ($type) {
-        'raised' => 0,
-        'validate' => 1,
-        'approve' => 2,
-        default => null,
-    };
-    
-    $expenses = ExpenseRaise::with(['group', 'category', 'subcategory'])
-        ->where('aid', $aid)
-        ->where('status', $status)
-        ->get();
-    
-    foreach ($expenses as $expense) {
-        $itemId = $expense->itemid; // Using itemid instead of item
-        if ($itemId) {
-            if (strpos($itemId, ',') !== false) {
-                // Handle multiple items
-                $itemIds = array_map('trim', explode(',', $itemId));
-                $items = ExpenseItem::whereIn('id', $itemIds)->pluck('item')->toArray();
-                $expense->item_names = json_encode(['item' => implode(', ', $items)]);
-            } else {
-                // Handle single item
-                $item = ExpenseItem::where('id', $itemId)->value('item');
-                $expense->item_names = json_encode(['item' => $item ?: 'N/A']);
+public function showRaiseExpenseFormedit(Request $request, $id = null)
+{
+    $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $nontechmanagerid = session()->get('NONTECH_MANAGER_ID');
+
+    $nontechManager = DB::table('nontechmanagers')->where('id', $nontechmanagerid)->first();
+    if (!$nontechManager) {
+        return redirect()->back()->with('error', 'Non-Tech Manager not found.');
+    }
+    $departmentId = $nontechManager->departmentid;
+
+    $department = DB::table('departments')->where('id', $departmentId)->first();
+    if (!$department) {
+        return redirect()->back()->with('error', 'Department not found.');
+    }
+    $category = $department->category;
+
+    $layouts = [
+        '1' => 'nontechmanager/transport/layout',
+        '2' => 'nontechmanager/infrastructure/layout',
+        '3' => 'nontechmanager/cafeteria/layout',
+        '4' => 'nontechmanager/hostel/layout',
+        '5' => 'nontechmanager/library/layout',
+        '6' => 'nontechmanager/account/layout',
+    ];
+
+    $result = [
+        'layout' => $layouts[$category] ?? 'nontechmanager/hostel/layout',
+        'groups' => DB::table('expenses')->where('aid', $aid)->get(),
+        'categories' => DB::table('expense_cat')->where('aid', $aid)->pluck('Category', 'id'),
+        'subcategories' => DB::table('expense_subcats')->where('aid', $aid)->pluck('subcategory', 'id'),
+        'quantity_measures' => DB::table('expense_item')->where('aid', $aid)->distinct()->pluck('quantity'),
+        'items' => DB::table('expense_item')->where('aid', $aid)->get(),
+        'expense' => null,
+        'selectedItems' => [],
+        'expenseItems' => [],
+        'quantity_value' => null,
+        'quantity_measure' => null,
+        'aid' => $aid,
+        'nontechmanagerid' => $nontechmanagerid,
+    ];
+
+    if ($id) {
+        $expense = ExpenseRaise::where('aid', $aid)->find($id);
+
+        if ($expense) {
+            $result['expense'] = $expense;
+            $result['expenseItems'] = explode(',', $expense->itemid);
+            $result['selectedItems'] = ExpenseItem::whereIn('id', $result['expenseItems'])->get();
+            if ($expense->quantity) {
+                $quantityParts = explode(' ', $expense->quantity);
+                $result['quantity_value'] = $quantityParts[0] ?? null;
+                $result['quantity_measure'] = $quantityParts[1] ?? null;
             }
-        } else {
-            $expense->item_names = json_encode(['item' => 'N/A']);
         }
     }
-    
-    return view('controller.account.approveexp', [
-        'expenses' => $expenses,
-        'type' => $type
-    ]);
+
+    return view('nontechmanager.account.editraised_expenses', $result);
 }
+public function storeEditedExpense(Request $request, $id)
+{
+    $aid = session()->get('NONTECH_MANAGER_ADMIN_ID');
+    $expense = ExpenseRaise::find($id);
 
+    if (!$expense) {
+        return redirect()->back()->with('error', 'Expense not found.');
+    }
 
+    $expense->update([
+        'groupid' => $request->input('group'),
+        'categoryid' => $request->input('category'),
+        'subcatid' => $request->input('subcategory'),
+        'itemid' => $request->input('item'),
+        'quantity' => $request->input('quantity') . ' ' . $request->input('quantity_measure'),
+        'status' => 0, 
+    ]);
 
-
-
-
-
-    
-    
+    return redirect()->route('account.manager.expenses', ['module' => 'raise'])->with('success', 'Expense updated successfully.');
+} 
 
 }

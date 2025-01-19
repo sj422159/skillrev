@@ -12,30 +12,46 @@
             </button>
         </div>
 @endif
-<form action="{{url('Faculty/content/skillattribute/byskillset')}}" method="post">
+<form action="{{url('faculty/content/skillattribute/byskillset')}}" method="post">
     @csrf
     <div class="form-row">
-        <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-            <label>Standard</label>
-            <select class="form-control" aria-required="true" aria-invalid="false" name="category" id="category">
-                <option value="">Select</option>
+      <div class="col-12 col-sm-3 mt-4 mt-sm-0">
+        <label>Standard</label>
+        <select class="form-control" aria-required="true" aria-invalid="false" name="category" id="category">
+            <option value="">Select</option>
+            @if(!empty($category))
                 @foreach($category as $list)
-                <option value="{{$list->id}}">{{$list->categories}}</option>
-                @endforeach 
-            </select>
-        </div>
+                    <option value="{{ $list->id }}" 
+                        @if($list->id == old('category', $standard ?? '')) selected @endif>
+                        {{ $list->categories }}
+                    </option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+    
+    
+    
         <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-            <label>Subject</label>
-            <select class="form-control" id="domain" aria-required="true"aria-invalid="false"name="domain">
-                <option value="">Select</option>
-            </select>
-        </div>
-        <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-            <label>Module</label>
-            <select class="form-control" required="true" name="skillset" id="skillset" onchange="yesnoChecked(this)">
-                <option selected="selected" value="">Select</option>
-            </select>
-        </div>
+          <label>Subject</label>
+          <select class="form-control" id="domain" name="domain" aria-required="true" aria-invalid="false">
+              <option value="">Select</option>
+              @if(!empty($domain))
+              <option value="{{ $domain }}" selected>{{ $domain }}</option>
+              @endif
+          </select>
+      </div>
+      <div class="col-12 col-sm-3 mt-4 mt-sm-0">
+          <label>Module</label>
+          <select class="form-control" required="true" name="skillset" id="skillset" onchange="yesnoChecked(this)">
+              <option selected="selected" value="">Select</option>
+              @if(!empty($skillset))
+                <option value="{{ $skillset }}" selected>{{ $skillset }}</option>
+              @endif
+          </select>
+      </div>
+      
+      
         
         <div class="col-md-6" style="display:flex !important; align-items: flex-end !important;">
             <button type="submit" class="btn btn-sm btn-success" id="getskillattributes" hidden="true">Get Skillset Related

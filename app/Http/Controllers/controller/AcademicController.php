@@ -405,19 +405,58 @@ public function save(Request $request)
     
 
     public function academicDashboard()
-    {
-       $controller_name=session()->get('Controller_Name');
+{
+    // Retrieve session data
+    $controller_name = session()->get('Controller_Name');
     $sesid = session()->get('Controller_ID');
+    $aid = session()->get('Controller_ADMIN_ID');
+
+    // Redirect to login if the session ID is not set
     if (!$sesid) {
         return redirect('/login');
     }
 
+    // Fetch all training types
+    $result['trainingtype'] = DB::table('trainingtypes')->get();
 
-       $result['image']=controllers::where('id',$sesid)->get();
-        return view('controller.dashboard',$result);
+    // Iterate through the training types and add dynamic properties
+    foreach ($result['trainingtype'] as $trainingType) {
+        // Fetch assigned count
+        $assigned = DB::table('studentassignations')
+            ->where('trainingtype', $trainingType->id)
+            ->where('cyclestatus', 1)
+            ->where('aid', $aid)
+            ->count();
+
+        // Fetch attended count
+        $attended = DB::table('studentassignations')
+            ->where('trainingtype', $trainingType->id)
+            ->where('cyclestatus', 2)
+            ->where('aid', $aid)
+            ->count();
+
+        // Fetch completed count
+        $completed = DB::table('studentassignations')
+            ->where('trainingtype', $trainingType->id)
+            ->where('cyclestatus', '>', 2)
+            ->where('aid', $aid)
+            ->count();
+
+        // Assign dynamic properties to the training type object
+        $trainingType->assigned = $assigned;
+        $trainingType->attended = $attended;
+        $trainingType->completed = $completed;
     }
+
+    // Fetch controller image or other related data
+    $result['image'] = controllers::where('id', $sesid)->get();
+
+    // Return the view with the result data
+    return view('controller.dashboard', $result);
+}
     
-    public function domain(Request $request){
+        
+        public function domain(Request $request){
         $aid=session()->get('ADMIN_ID');
         $controller_id=session()->get('Controller_ID');
 

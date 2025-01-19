@@ -73,6 +73,7 @@
                             @if($item->status == 0)
                                 <button type="submit" name="status" value="1" class="btn btn-success btn-sm">Validate</button>
                                 <button type="submit" name="status" value="-1" class="btn btn-danger btn-sm">Reject</button>
+                                <a href="{{ route('nontech.manager.raise.account.editraise_expense', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
                             @elseif($item->status == 1)
                                 <button type="submit" name="status" value="-1" class="btn btn-danger btn-sm">Reject</button>
                             @elseif($item->status == -1)
@@ -81,6 +82,14 @@
                                 <span class="text-success">Approved</span>
                             @endif
                         </form>
+                        
+                        @if($nontechmanagerId == 6)
+                            <form action="{{ route('expense.destroy', $item->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

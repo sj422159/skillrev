@@ -3,6 +3,40 @@
 @section('container')
 <div class="container">
     <h2>Expenses {{ ucfirst($type) }}</h2>
+    <form method="GET" class="mb-4" id="filter-form">
+        <div class="row">
+            <div class="col-md-4">
+                <select name="groupid" class="form-control" onchange="this.form.submit()">
+                    <option value="">Select Group</option>
+                    @foreach($groups as $id => $group)
+                        <option value="{{ $id }}" {{ request('groupid') == $id ? 'selected' : '' }}>
+                            {{ $group }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="categoryid" class="form-control" onchange="this.form.submit()">
+                    <option value="">Select Category</option>
+                    @foreach($categories as $id => $category)
+                        <option value="{{ $id }}" {{ request('categoryid') == $id ? 'selected' : '' }}>
+                            {{ $category }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="subcatid" class="form-control" onchange="this.form.submit()">
+                    <option value="">Select Subcategory</option>
+                    @foreach($subcategories as $id => $subcategory)
+                        <option value="{{ $id }}" {{ request('subcatid') == $id ? 'selected' : '' }}>
+                            {{ $subcategory }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </form>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -19,9 +53,9 @@
         <tbody>
             @forelse($expenses as $expense)
             <tr>
-                <td>{{ $expense->group->Group }}</td>
-                <td>{{ $expense->category->Category }}</td>
-                <td>{{ $expense->subcategory->subcategory }}</td>
+                    <td>{{ $expense->group->Group ?? 'N/A' }}</td>
+                    <td>{{ $expense->category->Category ?? 'N/A' }}</td>
+                    <td>{{ $expense->subcategory->subcategory ?? 'N/A' }}</td>
                 <td>
                     @php
                         $items = json_decode($expense->item_names, true);

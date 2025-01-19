@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\category;
+use App\Models\controllers;
 use App\Models\skillset;
 use Redirect,Response;
 
@@ -13,6 +14,7 @@ class AcademicReport extends Controller
 {
     public function reports(){
         $aid=session()->get('Controller_ADMIN_ID'); 
+        $Controller_ID=session()->get('Controller_ID'); 
      
         $d=DB::table('admins')->where("id",$aid)->get();
         $result['train']=DB::table('trainings')->where('aid',$aid)->where('status',1)->get();
@@ -27,6 +29,14 @@ class AcademicReport extends Controller
         ->where('students.aid',$aid)
         ->select('studentbookings.*','students.sname','students.slname','trainings.trainingname','lmssections.section','students.image')
         ->get();;
+        $controller = controllers::find($Controller_ID); 
+
+        $result['layout'] = match ($controller->Controller_role_ID) {
+            1 => 'controller/academ/layout',
+            2 => 'controller/exam/elayout',
+            3 => 'controller/account/Alayout',
+            default => 'layouts/default',
+        };
         return view('controller.academ.reports',$result);
     }
     public function fetchstu(request $request){

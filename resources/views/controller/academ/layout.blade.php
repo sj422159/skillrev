@@ -219,7 +219,7 @@
 
 
  
-                         <!--     <li class="nav-item">
+                          <li class="nav-item">
                             <a href="#" class="nav-link @yield('manage_select')">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
@@ -238,8 +238,8 @@
                                     </a>
                                 </li>
 
-                              <li class="nav-item">
-                                    <a href="{{url('admin/assignments')}}" class="nav-link">
+                            <li class="nav-item">
+                                    <a href="{{url('academic_controller/assignments')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Assignment Reports
@@ -247,7 +247,7 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
+                                 <!--     <li class="nav-item">
                                     <a href="{{url('admin/attendance/view/months')}}" class="nav-link"
                                         class="nav-link @yield('report_select')">
                                         <i class="far fa-circle nav-icon"></i>

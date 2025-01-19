@@ -289,10 +289,10 @@ class nontechmanagercontroller extends Controller{
         }
         elseif ($department[0]->category == 6) {
             
-            $approvedCount = DB::table('exp_raise')->where('status', 2)->where('aid', $aid)->count();  // status = 2 (approved)
-            $rejectedCount = DB::table('exp_raise')->where('status', -1)->where('aid', $aid)->count(); // status = -1 (rejected)
-            $validatecount = DB::table('exp_raise')->where('status', 1)->where('aid', $aid)->count();   // status = 1 (pending)
-            $totalCount = DB::table('exp_raise')->where('status', 0)->where('aid', $aid)->count(); // Total records in expense_item table
+            $approvedCount = DB::table('exp_raise')->where('status', 2)->where('aid', $aid)->distinct('subcatid')->count('subcatid');  // status = 2 (approved)
+            $rejectedCount = DB::table('exp_raise')->where('status', -1)->where('aid', $aid)->distinct('subcatid')->count('subcatid'); // status = -1 (rejected)
+            $validatecount = DB::table('exp_raise')->where('status', 1)->where('aid', $aid)->distinct('subcatid')->count('subcatid');   // status = 1 (pending)
+            $totalCount = DB::table('exp_raise')->where('status', 0)->where('aid', $aid)->distinct('subcatid')->count('subcatid'); // Total records in expense_item table
         
             // Prepare the data to be passed to the view
             $result['approvedCount'] = $approvedCount;

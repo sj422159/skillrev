@@ -1,7 +1,13 @@
 @extends($layout)
-@section('title','Reports')
+@section('title','Assignments')
 @section('reports','active')
 @section('container')
+
+
+
+
+
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
 <style type="">
@@ -19,14 +25,14 @@ td{
 
 <div class="col-12" style="margin:10px;background-color: #fff;padding:5px;margin-top:0px;padding-top: 10px;">
   
-<form action="{{url('academic_controller/reports/sectionwise')}}" method="post">
+<form action="{{url('admin/assignments/trainingwise')}}" method="post">
     @csrf
     <div class="form-row">
           <div class="col-12 col-sm-3 mt-2 mt-sm-0" style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
             <label>CLASS</label>
             <select  class="form-control disabled" required  name="class" id="class" data-val="{{$section}}" required onchange="sec(this)">
                 <option value="">Select Class</option>
-                @foreach($category as $list)
+                @foreach($class as $list)
                 @if($cl==$list->id)
                 <option selected value="{{$list->id}}">{{$list->categories}}</option>
                 @else
@@ -77,9 +83,12 @@ td{
                           <th>Id</th>
                           <th>Profile Picture </th>
                           <th>Student Name </th>
+                          <th>Training Type</th>
                           <th>Training Name</th>
-                          <th>Section</th>
-                          <th>Action</th>
+                          <th>Question</th>
+                          <th>Answer</th>
+                          <th>Evaluated Answer</th>
+                          <th>Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -87,53 +96,44 @@ td{
                       	$count=1;
                       	@endphp
                       	@foreach($data as $list)
-                         <tr>
-                         	<td><b>{{$count}}</b></td>
-                         	<td><img src="{{asset('studentimages')}}/{{$list->image}}" height="40px" width="40px" /></td>
-                          <td>{{$list->sname}} {{$list->slname}}</td>
-                          <td>{{$list->trainingname}}</td> 
-                         	<td>{{$list->section}}</td>
-                         		<td>
-                            @if($list->preapprove!=0)
-                            @if($list->prereport!="0")
-                           <a href="{{url('admin/examreport')}}/{{$list->id}}/{{$list->prereport}}" class="btn btn-primary btn-sm">Pre</a>
-                                 
-                           @else
-                              <a href="" class="btn btn-primary btn-sm disabled" style="margin-right: 4px" >PRE</a>
-                           @endif
-                           @else
-                            <a href="" class="btn btn-primary btn-sm disabled" style="margin-right: 4px" >PRE</a>
-                           @endif
+                        <tr>
+                        <td><b>{{$count}}</b></td>
+                        <td><img src="{{asset('studentimages')}}/{{$list->image}}" height="40px" width="40px" /></td>
+                        <td>{{$list->sname}} {{$list->slname}}</td>
+                        <td>{{$list->type}}</td> 
+                        <td>{{$list->trainingname}}</td> 
 
-                             @if($list->studentassignmentid)
-                           <a href="{{url('admin/assignmentreport')}}/{{$list->studentassignmentid}}" class="btn btn-info btn-sm">Assignment</a> 
-                           @else
-                           <a href="" class="btn btn-info btn-sm disabled">Assignment</a> 
-                           @endif
+                <td><a href="{{url('assignmentcontent/question')}}/{{$data[0]->questioncontent}}"target="_blank">View</a></td>
+                @if($list->status==2 || $list->status==3 || $list->status==4)
+                <td><a href="{{url('assignmentcontent/answer')}}/{{$data[0]->answercontent}}" target="_blank">View</a></td>
+                @else
+                <td><a href="#">Pending</a></td>
+                @endif
 
+                @if($list->status==3 || $list->status==4)
+                <td> <a href="{{url('assignmentcontent/correctanswer')}}/{{$data[0]->correctanswercontent}}" target="_blank">View</a></td>
+                @else
+                <td><a href="#">Pending</a></td>
+                @endif
+                
+               
 
-                            @if($list->postreport=="0")
-                            <a href="" class="btn btn-success btn-sm disabled" style="margin-right: 4px" >POST</a>
-                            @else
-                              <a href="{{url('admin/examreport')}}/{{$list->id}}/{{$list->postreport}}" class="btn btn-success btn-sm">Post</a>
-                            @endif	
-                          </td>
-                         	</td>
-                         </tr>
-                         @php
-                         $count++;
-                         @endphp
+                        <td>
+                        @if($list->status==1)
+                        <a href="#">Assigned</a>
+                        @elseif($list->status==2)
+                        <a href="#">Submitted</a>
+                        @elseif($list->status==3)
+                        <a href="#">Corrected</a>
+                        @elseif($list->status==4)
+                        <a href="#">Completed</a>
+                        @endif
+                        </td>
+                        </tr>
+                        @php
+                        $count++;
+                        @endphp
                       	@endforeach
-                       
-                              
-                             
-                         
-                                                  
-                        
-                         
-                       
-                        
-                      
                       </tbody>
                     </table>
                 </div>

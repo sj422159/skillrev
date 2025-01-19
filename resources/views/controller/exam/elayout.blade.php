@@ -155,33 +155,33 @@
 
 
                         <li class="nav-item">
-                            {{-- <a href="#" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
                                     Assesment Mgmt
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
-                            </a> --}}
+                            </a>
                             <ul class="nav nav-treeview" style="display: none;">
                                 <li class="nav-item">
-                                    {{-- <a href="{{url('exam_controller/assesments')}}" class="nav-link"
+                                    <a href="{{url('exam_controller/assesments')}}" class="nav-link"
                                         class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Assesment Creation
                                         </p>
-                                    </a> --}}
+                                    </a>
                                 </li>
                                 <li class="nav-item">
-                                    {{-- <a href="{{url('exam_controller/questions')}}" class="nav-link"
+                                  <a href="{{url('exam_controller/questions')}}" class="nav-link"
                                         class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Question Bank
                                         </p>
-                                    </a> --}}
+                                    </a>
                                 </li>
-                               {{--      <li class="nav-item">
+                               <li class="nav-item">
                                     <a href="{{url('exam_controller/questions/mismatch')}}" class="nav-link"
                                         class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
@@ -190,7 +190,7 @@
                                         </p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                   {{--     <li class="nav-item">
                                     <a href="{{url('exam_controller/questions/improper')}}" class="nav-link"
                                         class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
@@ -203,7 +203,7 @@
                         </li>
 
 
-                    <li class="nav-item">
+                  <li class="nav-item">
                             <a href="#" class="nav-link @yield('manage_select')">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
