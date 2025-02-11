@@ -42,12 +42,21 @@ class AcademicReport extends Controller
     public function fetchstu(request $request){
         $aid=session()->get('Controller_ADMIN_ID'); 
          $d=DB::table('admins')->where("id",$aid)->get();
-        
+         $Controller_ID=session()->get('Controller_ID'); 
          $result['train']=DB::table('trainings')->where('aid',$aid)->where('status',1)->get();
          $result['tri']=$request->post('training');
          $result['section']=$request->post('section');
+         $result['category']=DB::table('categories')->where('aid',$aid)->get();
          $result['class']=DB::table('categories')->where('aid',$aid)->get();
          $result['cl']=$request->post('class');
+        $controller = controllers::find($Controller_ID); 
+
+        $result['layout'] = match ($controller->Controller_role_ID) {
+            1 => 'controller/academ/layout',
+            2 => 'controller/exam/elayout',
+            3 => 'controller/account/Alayout',
+            default => 'layouts/default',
+        };
          $result['data']=DB::table('studentbookings')
                             ->join('students','studentbookings.sid','students.id')
                             ->join('trainings','studentbookings.trainingid','trainings.id')

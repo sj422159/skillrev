@@ -1,4 +1,4 @@
-@extends('admin/layout')
+@extends($layout)
 @section('title','Section Report')
 @section('reports','active')
 @section('container')
@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header" style="display:flex;justify-content:flex-end;">
                       @if($swot!=0)
-                    <a href="{{url('admin/exam/swot')}}/{{$swot}}" class="btn btn-success btn-sm">SWOT</a>
+                    <a href="{{url('controller/exam/swot')}}/{{$swot}}" class="btn btn-success btn-sm">SWOT</a>
                     @endif
                 </div>
              <!-- /.card-header -->
@@ -91,7 +91,7 @@
                                   
                                   <td>
 
-                                  <form method="post" action="{{url('admin/exam/detailedreport')}}" id="formw{{$c}}">
+                                  <form method="post" action="{{url('controller/exam/detailedreport')}}" id="formw{{$c}}">
                       @csrf
                     @php
                       $num=0;

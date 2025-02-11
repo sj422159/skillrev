@@ -105,7 +105,7 @@
 
             
 
-    <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
+        <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
         <div class="inner">
             <h3 style="color: #fff">0</h3>
             <p>TBD</p>

@@ -6,7 +6,7 @@
     <div class="col-6">
         <div class="card card-primary">
             <div class="card-header">
-                <h3 class="card-title" style="color:#fff !important;">Create Group</h3>
+                <h3 class="card-title" style="color:#fff !important;">Create Education</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
@@ -30,7 +30,7 @@
                     </select>
                     </div>
                     <div class="col-12 col-sm-6 mt-2 mt-sm-0">
-                        <label for="jobgroup">Group</label>
+                        <label for="jobgroup">Education</label>
                         <input type="text" class="form-control" id="jobgroup" required="true" placeholder="Enter Group Name" name="group" value="{{$group}}">
                     </div>
                     <input type="hidden" name="id" value="{{$id}}">

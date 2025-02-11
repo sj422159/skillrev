@@ -170,6 +170,12 @@ use App\Http\Controllers\controller\AcademicController;
 use App\Http\Controllers\controller\ExaminationController;
 use App\Http\Controllers\controller\account\AccountController;
 use App\Http\Controllers\controller\controllerlife;
+use App\Http\Controllers\controller\controllerattendancecontroller;
+use App\Http\Controllers\controller\controllercompetitionreportcontroller;
+use App\Http\Controllers\controller\controlleranalyticcontroller;
+use App\Http\Controllers\controller\controllerassignmentanalyticcontroller;
+use App\Http\Controllers\controller\controllerattendanceanalyticcontroller;
+use App\Http\Controllers\controller\controllercompetitionanalyticcontroller;
 
 use App\Http\Controllers\controller\academic\AcademicGroupController;
 use App\Http\Controllers\controller\academic\AcademicStandardController;
@@ -2045,7 +2051,6 @@ Route::get('controller/logout',function(){
     });
 
 
-Route::get('/nontech/manager/hostel/expense/subcategory', [HostelExpenseController::class, 'subcategory'])->name('expense.subcategory');
 Route::get('/nontech/manager/hostel/expense/items', [HostelExpenseController::class, 'subitem'])->name('expense.subitems');
 Route::get('nontech/manager/hostel/expense/subcategory/create', [HostelExpenseController::class, 'createSubcategory'])->name('subcategory.create');
 Route::get('item/create', [HostelExpenseController::class, 'create_item'])->name('item.create');
@@ -2080,7 +2085,8 @@ Route::prefix('account/manager')->group(function () {
 Route::get('/nontech/manager/raise/expense', [HostelExpenseController::class, 'showRaisedExpenses'])->name('expense.raised_expenses');
 Route::get('/nontech/manager/raise/expense/approve', [HostelExpenseController::class, 'showapprovedRaisedExpenses'])->name('expense.approved_expenses');
 Route::get('/nontech/manager/raise/raise_expense', [HostelExpenseController::class, 'showRaiseExpenseForm'])->name('nontech.manager.raise.raise_expense');
-Route::post('/nontech/manager/raise/store_expense', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
+Route::post('/nontech/manager/raise/store_expense/{id?}', [HostelExpenseController::class, 'storeRaisedExpense'])
+    ->name('nontech.manager.raise.store_expense');
 Route::delete('nontech/manager/raise/delete-expense/{id}', [HostelExpenseController::class, 'destroyraise'])->name('nontech.manager.raise.delete_expense');
 Route::match(['get', 'post'], 'nontech/manager/raise/expense/{id?}', [HostelExpenseController::class, 'storeRaisedExpense'])->name('nontech.manager.raise.store_expense');
 
@@ -2159,9 +2165,40 @@ Route::get('controller/exam/swot/{id}',[controllerlife::class,'swot']);
 
 Route::get('academic_controller/assignments',[Academicassignmentscontroller::class,'reports']);
 Route::post('academic_controller/assignments/trainingwise',[Academicassignmentscontroller::class,'fetchstu']);
-
+Route::get('controller/assignmentreport/{id}',[Academicassignmentscontroller::class,'assignmentreport']);
 
 Route::get('faculty/content/skillattribute',[FacultyContentController::class, 'contentska']);
 Route::post('faculty/content/skillattribute/byskillset',[FacultyContentController::class, 'contentskabyskillset']);
 Route::get('faculty/content/skillattribute/domain',[FacultyContentController::class,'getdomain']);
 Route::get('faculty/content/skillattribute/skillset',[FacultyContentController::class,'getskillset']);
+
+Route::get('controller/attendance/view/months',[controllerattendancecontroller::class,'months']);
+Route::any('controller/attendance/view/sections',[controllerattendancecontroller::class,'getsections']);
+Route::any('controller/attendance/view/dates',[controllerattendancecontroller::class,'getdates']);
+Route::post('controller/attendance/view/students/bydate',[controllerattendancecontroller::class,'students']);
+
+Route::get('controller/competition/reports',[controllercompetitionreportcontroller::class,'competition']);
+Route::post('controller/competition/reports/view',[controllercompetitionreportcontroller::class,'competitionreports']);
+
+
+Route::get('controller/analytics',[controlleranalyticcontroller::class,'index']);
+Route::post('controller/analytics/fetch',[controlleranalyticcontroller::class,'fetch']);
+Route::get('controller/analytic/data/pre/',[controlleranalyticcontroller::class,'predata']);
+Route::get('controller/analytic/data/post/',[controlleranalyticcontroller::class,'postdata']);
+
+Route::get('controller/classby/section/{id}',[Academicassignmentscontroller::class,'classby']);
+
+Route::get('controller/analytic/assignment',[controllerassignmentanalyticcontroller::class,'index']);
+Route::get('controller/trainings/get',[controllerassignmentanalyticcontroller::class,'gettrainings']);
+Route::post('controller/analytics/assignment/fetch',[controllerassignmentanalyticcontroller::class,'fetch']);
+Route::get('controller/analytic/assignment/notcompleted',[controllerassignmentanalyticcontroller::class,'notcompleted']);
+Route::get('controller/analytic/assignment/completed',[controllerassignmentanalyticcontroller::class,'completed']);
+
+Route::get('controller/analytics/attendance',[controllerattendanceanalyticcontroller::class,'index']);
+Route::post('controller/analytics/attendance/fetch',[controllerattendanceanalyticcontroller::class,'fetch']);
+Route::get('controller/analytic/attendance/fetch/datewise',[controllerattendanceanalyticcontroller::class,'datewise']);
+
+
+Route::get('controller/analytics/competition',[controllercompetitionanalyticcontroller::class,'index']);
+Route::post('controller/analytics/competition/fetch',[controllercompetitionanalyticcontroller::class,'fetch']);
+Route::get('controller/competition/bysupervisor/{id}',[controllercompetitionanalyticcontroller::class,'getcompetition']);

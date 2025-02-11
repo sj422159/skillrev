@@ -3,7 +3,7 @@
 @section('container')
 <div class="container">
     <h2>Expenses for {{ ucfirst($module) }}</h2>
-    <a href="{{ route('nontech.manager.raise.raise_expense') }}" class="btn btn-primary">Raise New Expense</a>
+    {{-- <a href="{{ route('nontech.manager.raise.raise_expense') }}" class="btn btn-primary">Raise New Expense</a> --}}
     <form method="GET" class="mb-4" id="filter-form">
         <div class="row">
             <div class="col-md-4">

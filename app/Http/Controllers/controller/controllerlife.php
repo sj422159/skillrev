@@ -380,7 +380,14 @@ class controllerlife extends Controller
 }
     $result['finalassname']=$asfname;
  
-   
+    $Controller_id = session()->get('Controller_ID');
+    $controller = controllers::find($Controller_id);
+    $result['layout'] = match ($controller->Controller_role_ID) {
+      1 => 'controller/academ/layout',
+      2 => 'controller/exam/elayout',
+      3 => 'controller/account/Alayout',
+      default => 'layouts/default',
+    };
    return view('controller.sectionreport',$result);
 }
 
@@ -406,6 +413,14 @@ public function detailedreport( request $request){
     $result['count']=count($data);
     $result['aname']=$request->post('aname');
     $result['subs']=$request->post('attr');
+    $Controller_id = session()->get('Controller_ID');
+    $controller = controllers::find($Controller_id);
+    $result['layout'] = match ($controller->Controller_role_ID) {
+      1 => 'controller/academ/layout',
+      2 => 'controller/exam/elayout',
+      3 => 'controller/account/Alayout',
+      default => 'layouts/default',
+    };
    return view('controller.detailedreport',$result);
 }
 

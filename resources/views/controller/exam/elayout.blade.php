@@ -190,7 +190,7 @@
                                         </p>
                                     </a>
                                 </li>
-                                   {{--     <li class="nav-item">
+                                       <li class="nav-item">
                                     <a href="{{url('exam_controller/questions/improper')}}" class="nav-link"
                                         class="@yield('Questions_select')">
                                         <i class="far fa-circle nav-icon"></i>
@@ -200,10 +200,10 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> 
 
 
-                  <li class="nav-item">
+                                           <li class="nav-item">
                             <a href="#" class="nav-link @yield('manage_select')">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
@@ -214,7 +214,7 @@
                             <ul class="nav nav-treeview" style="display: none;">
                                
                                 <li class="nav-item">
-                                    <a href="{{url('admin/reports')}}" class="nav-link">
+                                    <a href="{{url('academic_controller/reports')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Academic Reports
@@ -222,8 +222,8 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a href="{{url('admin/assignments')}}" class="nav-link">
+                            <li class="nav-item">
+                                    <a href="{{url('academic_controller/assignments')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Assignment Reports
@@ -232,7 +232,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="{{url('admin/attendance/view/months')}}" class="nav-link"
+                                    <a href="{{url('controller/attendance/view/months')}}" class="nav-link"
                                         class="nav-link @yield('report_select')">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
@@ -241,8 +241,8 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a href="{{url('admin/competition/reports')}}" class="nav-link"
+                                    <li class="nav-item">
+                                    <a href="{{url('controller/competition/reports')}}" class="nav-link"
                                         class="nav-link @yield('report_select')">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
@@ -252,10 +252,9 @@
                                 </li>
 
                             </ul>
-                        </li> --}}
+                        </li>
 
-
-                        {{-- <li class="nav-item">
+                        <li class="nav-item">
                             <a href="#" class="nav-link @yield('manage_select')">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>
@@ -267,7 +266,7 @@
                             
 
                                 <li class="nav-item">
-                                    <a href="{{url('admin/analytics')}}" class="nav-link">
+                                    <a href="{{url('controller/analytics')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Academic Analytics
@@ -275,8 +274,9 @@
                                     </a>
                                 </li>
 
+                         <li class="nav-item">
                                 <li class="nav-item">
-                                    <a href="{{url('admin/analytic/assignment')}}" class="nav-link">
+                                    <a href="{{url('controller/analytic/assignment')}}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Assignment Analytics
@@ -284,8 +284,8 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a href="{{url('admin/analytics/attendance')}}" class="nav-link"
+                             <li class="nav-item">
+                                    <a href="{{url('controller/analytics/attendance')}}" class="nav-link"
                                         class="nav-link @yield('report_select')">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
@@ -294,8 +294,8 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a href="{{url('admin/analytics/competition')}}" class="nav-link"
+                                  <li class="nav-item">
+                                    <a href="{{url('controller/analytics/competition')}}" class="nav-link"
                                         class="nav-link @yield('report_select')">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
@@ -305,7 +305,7 @@
                                 </li>
 
                             </ul>
-                        </li> --}}
+                        </li> 
 
                     </ul>
                 </nav>

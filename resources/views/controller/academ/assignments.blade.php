@@ -3,11 +3,6 @@
 @section('reports','active')
 @section('container')
 
-
-
-
-
-
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
 <style type="">
@@ -25,7 +20,7 @@ td{
 
 <div class="col-12" style="margin:10px;background-color: #fff;padding:5px;margin-top:0px;padding-top: 10px;">
   
-<form action="{{url('admin/assignments/trainingwise')}}" method="post">
+<form action="{{url('academic_controller/assignments/trainingwise')}}" method="post">
     @csrf
     <div class="form-row">
           <div class="col-12 col-sm-3 mt-2 mt-sm-0" style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
@@ -169,7 +164,7 @@ td{
                         
            $('#section').html('');
             $.ajax({
-              url:'{{url("admin/classby/section/{id}")}}',
+              url:'{{url("account/classby/section/{id}")}}',
               type:'GET',
               data:{id:classid},
               dataType: "json",
@@ -193,7 +188,7 @@ td{
                         
            $('#section').html('');
             $.ajax({
-              url:'{{url("admin/classby/section/{id}")}}',
+              url:'{{url("account/classby/section/{id}")}}',
               type:'GET',
               data:{id:classid},
               dataType: "json",

@@ -136,5 +136,85 @@
                 <a href="/account/manager/expenses/approved" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
+
+        <div class="col-lg-4 col-8">
+            <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
+                 <div class="inner">
+                     <h3 style="color: #fff" id="profiles">0</h3>
+                     <p>Indent Delivered</p>
+                 </div>
+                 <div class="icon">
+                     <i class="ion ion-stats-bars"></i>
+                 </div>                
+                 <a href="{{url('#')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+             
+        </div>
+         <div class="col-lg-4 col-8">
+            <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
+                 <div class="inner">
+                     <h3 style="color: #fff" id="profiles">{{$approvedCount}}</h3>
+                     <p> Approved Expense</p>
+                 </div>
+                 <div class="icon">
+                     <i class="ion ion-stats-bars"></i>
+                 </div>                
+                 <a href="{{url('nontech/manager/raise/expense/approve')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            
+         </div>
+         <div class="col-lg-4 col-8">
+            <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
+                 <div class="inner">
+                     <h3 style="color: #fff" id="profiles">0</h3>
+                     <p> Raise Expense</p>
+                 </div>
+                 <div class="icon">
+                     <i class="ion ion-stats-bars"></i>
+                 </div>                
+                 <a href="{{url('nontech/manager/raise/expense')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+             </div>
+           
+         </div>
+        {{-- <div class="col-lg-4 col-8">
+            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
+                <div class="inner">
+                    <h3 style="color: #fff">0</h3>
+                    <p>Vendor performance</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">More Details<i
+                        class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-8">
+            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
+                <div class="inner">
+                    <h3 style="color: #fff">0</h3>
+                    <p>Vendor Selected</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer">More Details<i
+                        class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div> --}}
+        {{-- <div class="col-lg-4 col-8">
+            <div class="small-box bg-danger" style="background-image:linear-gradient(to right,#2193b0,#6dd5ed);">
+                <div class="inner">
+                    <h3 style="color: #fff">{{$addvendor}}</h3>
+                    <p>Add Vendor</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{{ route('vendor.list') }}" class="small-box-footer">More Details 
+                    <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div> --}}
 </div>
 @endsection

@@ -59,8 +59,9 @@ class Examquestionbankcontroller extends Controller
         ]);
         if($validator->passes()){
             $skill_attr=$request->post('skillattribute');
+            $section=$request->post('section');
             $aid=session()->get('Controller_ADMIN_ID');
-            Excel::import(new questionsImport($skill_attr,$aid),request()->file('excel')->store('temp'));
+            Excel::import(new questionsImport($section,$skill_attr,$aid),request()->file('excel')->store('temp'));
              
             $msg="Questions Uploaded Successfully";
             $request->session()->flash('success',$msg);
@@ -70,7 +71,6 @@ class Examquestionbankcontroller extends Controller
         return redirect()->back()->with(['errors'=>$validator->errors()->all()]);
         }
     }
-
     public function editQuestion(Request $request,$id){
         $result['questiontype']=DB::table('questiontypes')->get();
         $resarr=questionbank::where(['id'=>$id])->get();

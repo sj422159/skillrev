@@ -85,6 +85,11 @@
                            <td>
                            @if($list->postgiven!=0)
                                 <a href="{{url('controller/examreport')}}/{{$list->id}}/{{$list->prereport}}" class="btn btn-primary btn-sm">Pre</a>
+                                @if($list->studentassignmentid)
+                                <a href="{{url('controller/assignmentreport')}}/{{$list->studentassignmentid}}" class="btn btn-info btn-sm">Assignment</a> 
+                                @else
+                                <a href="" class="btn btn-info btn-sm disabled">Assignment</a> 
+                                @endif
                                  <a href="{{url('controller/examreport')}}/{{$list->id}}/{{$list->postreport}}" class="btn btn-success btn-sm">Post</a>
                            @else
                            <button class="btn btn-secondary btn-sm">Not Applicable</button>

@@ -14,8 +14,9 @@ class questionsImport implements ToModel ,WithStartRow
     * @return \Illuminate\Database\Eloquent\Model|null
     */
 
-    public function  __construct($skill_attr,$aid)
+    public function  __construct($section,$skill_attr,$aid)
     {
+        $this->section= $section;
         $this->skill_attr= $skill_attr;
         $this->aid= $aid;
     }
@@ -29,6 +30,7 @@ class questionsImport implements ToModel ,WithStartRow
     {
         return new questionbank([
             'aid'=>$this->aid,
+            'section'=>$this->section,
             'skillattribute'=>$this->skill_attr,
             'qtype'  => (String) $row[0],
             'qtext'   => (String) $row[1],

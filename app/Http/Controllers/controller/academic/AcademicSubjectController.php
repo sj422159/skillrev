@@ -164,19 +164,15 @@ class AcademicSubjectController extends Controller
     public function getSubjectTypes(Request $request, $id) {
         $controller_id = session()->get('Controller_ID');
         $Controller_ADMIN_ID = session()->get('Controller_ADMIN_ID');
-        $id = $_GET['myID'];  // Get the group ID from the request
+        $id = $_GET['myID']; 
         
         $group = DB::table('groups')->where('id', $id)->first();
-        
-        // Initialize the subjectTypes as an array
         $subjectTypes = [];
     
         if ($group && $group->gtype == 2) {
-            // If group type is 2, assign the subject type as "Curricular"
             $subjectTypes[] = ['type' => 'Curricular'];
             $subjectTypes[] = ['type' => 'ExtraCurricular']; 
         } elseif ($group && $group->gtype == 1) {
-            // If group type is 1, assign the subject type as "Mandatory"
             $subjectTypes[] = ['type' => 'Mandatory'];
         }
     

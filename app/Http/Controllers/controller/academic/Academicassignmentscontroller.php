@@ -38,7 +38,7 @@ class Academicassignmentscontroller extends Controller
 
     public function fetchstu(request $request){
         $aid=session()->get('Controller_ADMIN_ID');
-        $Controller_ID=session()->get('Controller_ADMIN_ID');
+        $Controller_ID=session()->get('Controller_ID');
         $result['train']=DB::table('trainings')->where('aid',$aid)->where('status',1)->get();
         $result['class']=DB::table('categories')->where('aid',$aid)->get(); 
         $result['cl']=$request->post('class');
@@ -64,5 +64,30 @@ class Academicassignmentscontroller extends Controller
             default => 'layouts/default',
         };
         return view('controller.academ.assignments',$result);
-    }      
+    }
+    public function classby(){
+        $id = $_GET['id'];
+          $res = DB::table('lmssections')
+         ->where('lmssections.classid', $id)
+         ->get();
+         return Response::json($res);
+     }
+    public function assignmentreport($id){
+        $Controller_ID=session()->get('Controller_ID');
+        $controller = controllers::find($Controller_ID); 
+
+        $result['layout'] = match ($controller->Controller_role_ID) {
+            1 => 'controller/academ/layout',
+            2 => 'controller/exam/elayout',
+            3 => 'controller/account/Alayout',
+            default => 'layouts/default',
+        };
+        $result['data']=DB::table('studentassignmentbookings')
+                                ->join('trainings','studentassignmentbookings.trainingid','trainings.id')
+                                 ->where('studentassignmentbookings.id',$id)
+                                 ->select('studentassignmentbookings.*','trainings.trainingname')->get();
+
+        
+        return view('controller.academ.assignmentreportsection',$result);
+    }
 }

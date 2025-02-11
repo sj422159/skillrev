@@ -16,7 +16,7 @@
     @csrf
     <div class="form-row">
         <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-            <label>Group</label>
+            <label>Education</label>
             <select class="form-control" aria-required="true" aria-invalid="false" name="groupid" id="category" onchange="yesnoChecked(this)">
                 <option value="">Select</option>
                 @foreach($groups as $list)

@@ -96,7 +96,7 @@ td{
                          		<td>
                             @if($list->preapprove!=0)
                             @if($list->prereport!="0")
-                           <a href="{{url('admin/examreport')}}/{{$list->id}}/{{$list->prereport}}" class="btn btn-primary btn-sm">Pre</a>
+                           <a href="{{url('controller/examreport')}}/{{$list->id}}/{{$list->prereport}}" class="btn btn-primary btn-sm">Pre</a>
                                  
                            @else
                               <a href="" class="btn btn-primary btn-sm disabled" style="margin-right: 4px" >PRE</a>
@@ -106,7 +106,7 @@ td{
                            @endif
 
                              @if($list->studentassignmentid)
-                           <a href="{{url('admin/assignmentreport')}}/{{$list->studentassignmentid}}" class="btn btn-info btn-sm">Assignment</a> 
+                           <a href="{{url('controller/assignmentreport')}}/{{$list->studentassignmentid}}" class="btn btn-info btn-sm">Assignment</a> 
                            @else
                            <a href="" class="btn btn-info btn-sm disabled">Assignment</a> 
                            @endif
@@ -115,7 +115,7 @@ td{
                             @if($list->postreport=="0")
                             <a href="" class="btn btn-success btn-sm disabled" style="margin-right: 4px" >POST</a>
                             @else
-                              <a href="{{url('admin/examreport')}}/{{$list->id}}/{{$list->postreport}}" class="btn btn-success btn-sm">Post</a>
+                              <a href="{{url('controller/examreport')}}/{{$list->id}}/{{$list->postreport}}" class="btn btn-success btn-sm">Post</a>
                             @endif	
                           </td>
                          	</td>
@@ -124,16 +124,6 @@ td{
                          $count++;
                          @endphp
                       	@endforeach
-                       
-                              
-                             
-                         
-                                                  
-                        
-                         
-                       
-                        
-                      
                       </tbody>
                     </table>
                 </div>
@@ -169,7 +159,7 @@ td{
                         
            $('#section').html('');
             $.ajax({
-              url:'{{url("admin/classby/section/{id}")}}',
+              url:'{{url("account/classby/section/{id}")}}',
               type:'GET',
               data:{id:classid},
               dataType: "json",
@@ -193,7 +183,7 @@ td{
                         
            $('#section').html('');
             $.ajax({
-              url:'{{url("admin/classby/section/{id}")}}',
+              url:'{{url("account/classby/section/{id}")}}',
               type:'GET',
               data:{id:classid},
               dataType: "json",

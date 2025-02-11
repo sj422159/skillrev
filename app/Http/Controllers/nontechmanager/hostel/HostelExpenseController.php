@@ -142,7 +142,8 @@ class HostelExpenseController extends Controller
     {
         $nontechManagerId = session()->get('NONTECH_MANAGER_ID');
         $nontechManagerAdminId = session()->get('NONTECH_MANAGER_ADMIN_ID');
-                if (!$nontechManagerId) {
+
+        if (!$nontechManagerId) {
             return redirect()->back()->with('error', 'Non-Tech Manager ID not found in session.');
         }
 
@@ -153,7 +154,7 @@ class HostelExpenseController extends Controller
         $result['categories'] = expense_cat::where('expense_cat.aid', $nontechManagerAdminId)
             ->distinct()
             ->get(['id', 'Category']);
-        
+
         if ($id) {
             $result['subcategory'] = expense_subcat::findOrFail($id);
         } else {
@@ -173,19 +174,19 @@ class HostelExpenseController extends Controller
         $category = $department->category;
         switch ($category) {
             case '1':
-               $result['layout'] = 'nontechmanager/transport/layout';
+                $result['layout'] = 'nontechmanager/transport/layout';
                 break;
             case '2':
-               $result['layout'] = 'nontechmanager/infrastructure/layout';
+                $result['layout'] = 'nontechmanager/infrastructure/layout';
                 break;
             case '3':
-               $result['layout'] = 'nontechmanager/cafeteria/layout';
+                $result['layout'] = 'nontechmanager/cafeteria/layout';
                 break;
             case '4':
-               $result['layout'] = 'nontechmanager/hostel/layout';
+                $result['layout'] = 'nontechmanager/hostel/layout';
                 break;
             case '5':
-               $result['layout'] = 'nontechmanager/library/layout';
+                $result['layout'] = 'nontechmanager/library/layout';
                 break;
             case '6':
                 $result['layout'] = 'nontechmanager/account/layout';

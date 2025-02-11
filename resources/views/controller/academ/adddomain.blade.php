@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <div class="form-row">
                         <div class="col-12 col-sm-4 mt-2 mt-sm-0">
-                            <label for="jobskill">Group</label>
+                            <label for="jobskill">Education</label>
                             <select id="mainbranch" name="groupid" class="form-control" required="true">
                                 <option value="">Select</option>
                                 @foreach($groups as $list)
@@ -23,7 +23,7 @@
                         </div>
 
                         <div class="col-12 col-sm-4 mt-2 mt-sm-0">
-                            <label for="branchname">Standard</label>
+                            <label for="branchname">Specialisation</label>
                             <select name="category" class="form-control" required="true" id="subbranch">
                                 <option value="">Select</option>
                             </select>

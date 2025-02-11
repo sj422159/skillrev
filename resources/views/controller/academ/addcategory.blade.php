@@ -15,7 +15,7 @@
                 <div class="card-body">
                 <div class="form-row">
                     <div class="col-12 col-sm-6">
-                        <label for="jobskill">Group</label>
+                        <label for="jobskill">Education</label>
                         <select id="subbranch" name="groupid" type="text" class="form-control" aria-required="true" aria-invalid="false" required="true">
                             <option value="">Select</option>
                             @foreach($groups as $list)
@@ -28,7 +28,7 @@
                         </select>
                     </div>
                     <div class="col-12 col-sm-6">
-                        <label for="jobskill">Standard</label>
+                        <label for="jobskill">Specialisation</label>
                         <select id="subbranch" name="standardid" type="text" class="form-control" aria-required="true" aria-invalid="false" required="true">
                             <option value="">Select</option>
                             @foreach($standards as $list)

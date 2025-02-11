@@ -13,7 +13,7 @@
                 <div class="card-body">
                 <div class="form-row">
                     <div class="col-12 col-sm-3 mt-4 mt-sm-0">
-                        <label for="jobskill">Standard</label>
+                        <label for="jobskill">Specialisation</label>
                         <select id="mainbranch" name="category" type="text" class="form-control" aria-required="true" aria-invalid="false" required="true">
                             <option value="">Select</option>
                             @foreach($categories as $list)

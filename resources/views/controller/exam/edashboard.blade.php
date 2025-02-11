@@ -97,7 +97,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>                
-        <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+        <a href="{{url('exam_controller/questions')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
     </div>
     <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkblue,blue);">
         <div class="inner">
@@ -120,7 +120,7 @@
                 <div class="icon">
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{url('exam_controller/assesments')}}" class="small-box-footer">More Details<i class="fas fa-arrow-circle-right"></i></a>
             </div>
             <div class="small-box bg-info" style="background-image: linear-gradient(to right,darkgreen,lightgreen);">
                 <div class="inner">
